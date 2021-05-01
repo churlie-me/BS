@@ -1,0 +1,9 @@
+C:\Users\CJ\source\Repos\BS\BS.Core\bin\Release\netcoreapp2.2\BS.Core.deps.json
+C:\Users\CJ\source\Repos\BS\BS.Core\bin\Release\netcoreapp2.2\BS.Core.dll
+C:\Users\CJ\source\Repos\BS\BS.Core\bin\Release\netcoreapp2.2\BS.Core.pdb
+C:\Users\CJ\source\Repos\BS\BS.Core\obj\Release\netcoreapp2.2\BS.Core.csprojAssemblyReference.cache
+C:\Users\CJ\source\Repos\BS\BS.Core\obj\Release\netcoreapp2.2\BS.Core.AssemblyInfoInputs.cache
+C:\Users\CJ\source\Repos\BS\BS.Core\obj\Release\netcoreapp2.2\BS.Core.AssemblyInfo.cs
+C:\Users\CJ\source\Repos\BS\BS.Core\obj\Release\netcoreapp2.2\BS.Core.csproj.CoreCompileInputs.cache
+C:\Users\CJ\source\Repos\BS\BS.Core\obj\Release\netcoreapp2.2\BS.Core.dll
+C:\Users\CJ\source\Repos\BS\BS.Core\obj\Release\netcoreapp2.2\BS.Core.pdb

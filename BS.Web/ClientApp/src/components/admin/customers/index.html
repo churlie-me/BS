@@ -1,0 +1,250 @@
+<template>
+    <require from="../../../extensions/progress/progress.dialog.html"></require>
+    <div class="admin-container">
+      <div class="row">
+        <div class="col-9">
+            <h3 class="card-title">Customers</h3>
+        </div>
+      </div>
+        <div class="row">
+          <div class="col-4">
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon1"><i class="mdi mdi-magnify"></i></span>
+              <input type="text" value.bind="dbocustomers.search" class="form-control" placeholder="Search Customers" keyup.trigger="_search()" disabled.bind="(dbocustomers.customers == undefined)">
+            </div>
+          </div>
+        </div>
+        <div class="card card-body" if.bind="!dbocustomers.customers">
+          <div class="col-3" style="text-align: center; margin: auto;">
+            <span class="spinner-border spinner-border-sm" style="width: 3rem; height: 3rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+            <label>Even geduld aub...</label>
+          </div>
+        </div>
+        <div if.bind="dbocustomers.customers">
+            <div class="card card-body" if.bind="dbocustomers.customers.length == 0" style="text-align: center;">No customers so far.</div>
+            <div class="card card-body mt-3" if.bind="dbocustomers.customers.length > 0">
+                <table class="display nowrap table table-hover table-striped table-bordered">
+                    <thead>
+                        <tr>
+                          <th>First Name</th>
+                          <th>Last Name</th>
+                          <th>Street</th>
+                          <th>ZipCode</th>
+                          <th>City</th>
+                          <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      <tr repeat.for="customer of dbocustomers.customers">
+                        <td>${ customer.firstName }</td>
+                        <td>${ customer.lastName }</td>
+                        <td>${ customer.address.street }</td>
+                        <td>${ customer.address.zipCode }</td>
+                        <td>${ customer.address.city }</td>
+                        <td>
+                          <a class="btn btn-sm btn-icon btn-pure btn-outline-info" data-toggle="modal" data-target="#_customer" click.delegate="setCustomer(customer)">
+                            <i class="icon-eye"></i> View
+                          </a>
+                        </td>
+                      </tr>
+                    </tbody>
+                </table>
+                <div style="width: 100%;">
+                  <nav style="float: right" aria-label="...">
+                    <ul class="pagination">
+                      <li class.bind="(dbocustomers.page == 1)? 'page-item disabled' : 'page-item'">
+                        <a class="page-link" tabindex="-1" click.delegate="previous()">Previous</a>
+                      </li>
+                      <li class.bind="isActive((p + 1), dbocustomers.page)? 'page-item active': 'page-item'" repeat.for="p of dbocustomers.pageCount"><a class="page-link" click.delegate="goToPage(p + 1)"> ${p + 1} <span class="sr-only" if.bind="isActive((p + 1), dbocustomers.page)">(current)</span></a></li>
+                      <li class.bind="(dbocustomers.page == dbocustomers.pageCount)? 'page-item disabled' : 'page-item'">
+                        <a class="page-link" click.delegate="next()">Next</a>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--Create User Modal-->
+    <div id="_customer" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="padding-left: 0px !important;">
+        <div class="modal-dialog" style="max-width: 80%; margin-top: 0px !important; margin-bottom: 0px !important; height: 100%;">
+            <div class="modal-content" style="border: 0px;border-radius: 0px;height: 100%;">
+              <div class="modal-header" style="background: #6c757d; color: #fff;">
+                  <h4 class="modal-title" id="myModalLabel">Customer</h4>
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true" #x_store style="color: #fff;">×</button>
+              </div>
+              <div class="modal-body">
+                  <div class="row">
+                    <div class="col-12">
+                      <h4 style="font-size: 34px;">${ customer.firstName } ${ customer.lastName }</h4>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12">
+                      <!-- Nav tabs -->
+                      <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#defaults" role="tab"><span class="hidden-sm-up"><i class="mdi mdi-account"></i></span> <span class="hidden-xs-down">Defaults</span></a> </li>
+                        <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#appointments" role="tab"><span class="hidden-sm-up"><i class="mdi mdi-calendar"></i></span> <span class="hidden-xs-down">Appointments</span></a> </li>
+                        <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#orders" role="tab"><span class="hidden-sm-up"><i class="mdi mdi-receipt"></i></span> <span class="hidden-xs-down">Orders</span></a> </li>
+                      </ul>
+                      <!-- Tab panes -->
+                      <div class="tab-content tabcontent-border">
+                        <div class="tab-pane active" id="defaults" role="tabpanel">
+                          <div class="row">
+                            <div class="col-6">
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        Account Details
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="row">
+                                            <div class="col-6">${ customer.firstName }</div>
+                                            <div class="col-6">${ customer.lastName }</div>
+                                        </div>
+                                        <div class="row mt-4">
+                                            <div class="col-12">${ customer.contact.email }</div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-6">
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <label>Contact Details</label>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="row">
+                                            <div class="col-12">${ customer.contact.tel }</div>
+                                        </div>
+                                        <div class="row mt-4">
+                                            <div class="col-12">${ customer.contact.email }</div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                          </div>
+                          <div class="row mt-5">
+                            <div class="col-6">
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        Address Details
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="row">
+                                            <div class="col-12">${ customer.address.street }</div>
+                                        </div>
+                                        <div class="row mt-4">
+                                          <div class="col-12">${ customer.address.zipCode }</div>
+                                      </div>
+                                        <div class="row mt-4">
+                                            <div class="col-12">${ customer.address.city }</div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="tab-pane" id="appointments" role="tabpanel">
+                          <div class="row" if.bind="!dboAppointments.appointments">
+                            <div class="col-3" style="text-align: center; margin: auto;">
+                              <span class="spinner-border spinner-border-sm" style="width: 3rem; height: 3rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+                              <label>Even geduld aub...</label>
+                            </div>
+                          </div>
+                          <div if.bind="dboAppointments.appointments">
+                            <div class="card card-body mt-4" if.bind="dboAppointments.appointments.length == 0" style="text-align: center;">Customer has no appointments made so far.</div>
+                            <div class="card card-body mt-3" if.bind="dboAppointments.appointments.length > 0">
+                                <table class="display nowrap table table-hover table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                          <th>Appointment Date</th>
+                                          <th>Branch</th>
+                                          <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr repeat.for="appointment of dboAppointments.appointments">
+                                        <td>${ appointment.appointmentDate }</td>
+                                        <td>${ appointment.branch.name }</td>
+                                        <td>${ appstatuses[appointment.status] }</td>
+                                      </tr>
+                                    </tbody>
+                                </table>
+
+                                <div style="width: 100%;" if.bind="dboAppointments.appointments.length > 0">
+                                  <nav style="float: right" aria-label="...">
+                                    <ul class="pagination">
+                                      <li class.bind="(dboAppointments.page == 1)? 'page-item disabled' : 'page-item'">
+                                        <a class="page-link" tabindex="-1" click.delegate="appointmentsPrevious()">Previous</a>
+                                      </li>
+                                      <li class.bind="isActive((p + 1), dboAppointments.page)? 'page-item active': 'page-item'" repeat.for="p of dboAppointments.pageCount"><a class="page-link" click.delegate="appointmentsGoToPage(p + 1)"> ${p + 1} <span class="sr-only" if.bind="isActive((p + 1), dboAppointments.page)">(current)</span></a></li>
+                                      <li class.bind="(dboAppointments.page == dboAppointments.pageCount)? 'page-item disabled' : 'page-item'">
+                                        <a class="page-link" click.delegate="appointmentsNext()">Next</a>
+                                      </li>
+                                    </ul>
+                                  </nav>
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="tab-pane" id="orders" role="tabpanel">
+                          <div class="row" if.bind="!dboOrders.orders">
+                            <div class="col-3" style="text-align: center; margin: auto;">
+                              <span class="spinner-border spinner-border-sm" style="width: 3rem; height: 3rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+                              <label>Even geduld aub...</label>
+                            </div>
+                          </div>
+                          <div if.bind="dboOrders" style="width: 100%">
+                            <div class="card card-body mt-4" if.bind="dboOrders.orders.length == 0" style="text-align: center;">Customer has no orders made so far.</div>
+                            <div class="card card-body mt-3" if.bind="dboOrders.orders.length > 0">
+                                <table class="display nowrap table table-hover table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>OrderNo</th>
+                                            <th>Order Date</th>
+                                            <th>Status</th>
+                                            <th>Order Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr repeat.for="order of dboOrders.orders">
+                                            <td>${ order.orderNo }</td>
+                                            <td>${ order.orderDate }</td>
+                                            <td>${ statuses[order.status] }</td>
+                                            <td>${ order.orderTotal }</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <div style="width: 100%;" if.bind="dboOrders.orders.length > 0">
+                                  <nav style="float: right" aria-label="...">
+                                    <ul class="pagination">
+                                      <li class.bind="(dboOrders.page == 1)? 'page-item disabled' : 'page-item'">
+                                        <a class="page-link" tabindex="-1" click.delegate="ordersPrevious()">Previous</a>
+                                      </li>
+                                      <li class.bind="isActive((p + 1), dboOrders.page)? 'page-item active': 'page-item'" repeat.for="p of dboOrders.pageCount"><a class="page-link" click.delegate="ordersGoToPage(p + 1)"> ${p + 1} <span class="sr-only" if.bind="isActive((p + 1), dboAppointments.page)">(current)</span></a></li>
+                                      <li class.bind="(dboOrders.page == dboOrders.pageCount)? 'page-item disabled' : 'page-item'">
+                                        <a class="page-link" click.delegate="ordersNext()">Next</a>
+                                      </li>
+                                    </ul>
+                                  </nav>
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+              <div class="modal-footer" style="position: absolute;width: 100%;bottom: 0;">
+                  <button type="button" class="btn btn-secondary waves-effect btn-sm" data-dismiss="modal" style="width: 120px;">Close</button>
+              </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <progress.dialog></progress.dialog>
+</template>

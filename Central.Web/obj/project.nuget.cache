@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "tLpcy/Cwcub/y7UPXk0F14LOt5+pmejdUTJ0ITOwvrxsOkHY+taemmwlUOF70yApT7ckJzTDUP0LVLgREuiwJQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\CJ\\source\\Workspaces\\BS\\Central.Web\\Central.Web.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\CJ\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.12\\microsoft.netcore.app.host.win-x64.3.1.12.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,245 @@
+<template bindable="invoice">
+  <!--Create User Modal-->
+  <div id="_invoice" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="padding: 0px !important;">
+    <div class="modal-dialog" style="max-width: 100%; margin-top: 0px !important; margin-bottom: 0px !important; height: 100%;">
+        <div class="modal-content" style="border: 0px;border-radius: 0px;height: 100%;">
+          <div class="modal-header" style="background: #6c757d; color: #fff;">
+            <h4 class="noPrint modal-title" id="myModalLabel">Invoice</h4>
+            <button type="button" disabled.bind="invoice.isBusy" class="noPrint close" aria-hidden="true" style="color: #fff;" click.delegate="invoice.exitCheck()">×</button>
+          </div>
+          <div class="modal-body" style="background: #efefef; overflow-y: auto;">
+            <div class="noPrint container" style="padding-right: 0;">
+              <div class="row mb-3">
+                <div class="col-12">
+                  <span class="float-right hidden-print">
+                    <button if.bind="(invoice.orderstate == 'done' && !invoice.isBusy) && invoice.authenticationservice.mode != 'client'" class="btn btn-sm bs-btn btn-info m-b-10 p-l-5" click.delegate="invoice.editOrder()"><i class="fa fa-file t-plus-1 text-danger fa-fw fa-lg"></i> Edit Order </button>
+                    <button if.bind="(invoice.orderstate == 'edit' && !invoice.isBusy) && invoice.authenticationservice.mode != 'client'" class="btn btn-sm bs-btn btn-info m-b-10 p-l-5" click.delegate="invoice.saveOrder()"><i class="fa fa-file t-plus-1 text-danger fa-fw fa-lg"></i> Update Order</button>
+                    <button if.bind="invoice.orderstate == 'done' && !invoice.isBusy" href="javascript:;" onclick="window.print();" class="noPrint btn bs-btn btn-sm btn-warning m-b-1 p-l-5"><i class="fa fa-print t-plus-1 fa-fw fa-lg"></i> Print</button>
+                    <button if.bind="invoice.isBusy" type="button" class="btn btn-secondary waves-effect btn-sm" style="width: 120px;">
+                      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Please wait...
+                    </button>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="container" if.bind="!invoice.order">
+              <div class="row">
+                <div class="col-3" style="text-align: center; margin: auto;">
+                  <span class="spinner-border spinner-border-sm" style="width: 3rem; height: 3rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+                  <label>Even geduld aub...</label>
+                </div>
+              </div>
+            </div>
+            <div id="inv_doc" style="width: 100%;">
+              <div class="container" style="background: #fff;" if.bind="invoice.order">
+                <header class="py-3 px-5">
+                  <div class="row">
+                      <div class="col-6">
+                          <a target="_blank" href="#">
+                            <img class="img-fluid" if.bind="invoice.storeservice.store.logo" style="max-height: 100px;" src="data:'image/jpeg';base64,${invoice.storeservice.store.logo}">
+                            <img if.bind="!invoice.storeservice.store.logo" src="http://placehold.it/300x64" data-holder-rendered="true" />
+                          </a>
+                      </div>
+                      <div class="col-6">
+                        <div class="float-right" style="text-align: right;">
+                          <h2 class="name">
+                              <a target="_blank" href="#" style="color: #000000;">${ invoice.storeservice.store.name }</a>
+                          </h2>
+                          Street Address<br>
+                          City, Zip Code<br>
+                          Phone: (123) 456-7890<br>
+                        </div>
+                      </div>
+                  </div>
+                  <hr>
+                </header>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="invoice px-5">
+                      <!-- begin invoice-header -->
+                      <div class="row">
+                          <div class="col-6 invoice-to">
+                            <strong>Billed To</strong>
+                            <address class="m-t-5 m-b-5">
+                                ${ invoice.order.user.firstName } ${ order.user.lastName }<br>
+                                ${ invoice.order.user.address.street }<br>
+                                ${ invoice.order.user.address.city }<br>
+                                Phone: ${ invoice.order.user.contact.tel }<br>
+                            </address>
+                          </div>
+                          <div class="col-6 invoice-date" style="text-align: right;">
+                            <strong>Invoice</strong>
+                            <div class="invoice-detail">
+                                # ${ invoice.order.orderNo }<br>
+                            </div>
+                            <div class="date text-inverse m-t-5">${ invoice.order.orderDate }</div>
+                          </div>
+                      </div>
+                      <!-- end invoice-header -->
+                      <!-- begin invoice-content -->
+                      <div class="invoice-content">
+                          <!-- begin table-responsive -->
+                          <div style="min-height: 500px;">
+                            <h3>ORDER SUMMARY</h3>
+                            <table class="table table-striped">
+                              <thead>
+                                <tr class="line">
+                                  <td><strong>#</strong></td>
+                                  <td><strong>ITEM</strong></td>
+                                  <td><strong>QTY</strong></td>
+                                  <td class="text-right"><strong>PRICE</strong></td>
+                                  <td class="text-right"><strong>SUBTOTAL</strong></td>
+                                  <td if.bind="invoice.orderstate == 'edit'"></td>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr repeat.for="item of invoice.order.orderItems" if.bind="!item.deleted">
+                                  <td>${ invoice.order.orderItems.indexOf(item) + 1 }</td>
+                                  <td><strong>${ item.name }</strong></td>
+                                  <td style="padding-left: 30px;" if.bind="invoice.orderstate == 'done' || (invoice.orderstate == 'edit' && item.serviceId)">${ item.quantity }</td>
+                                  <td if.bind="invoice.orderstate == 'edit' && !item.serviceId"><input disabled.bind="invoice.isBusy" type="number" style="width: 70px;" value.bind="item.quantity" class="form-control" min="1" change.delegate="invoice.qtyChanged()"> </td>
+                                  <td class="text-right">EUR ${ item.price }</td>
+                                  <td class="text-right">EUR ${ item.price * item.quantity}</td>
+                                  <td if.bind="invoice.orderstate == 'edit'"><button if.bind="!item.serviceId" class="btn btn-icon" style="color: #f00;" click.delegate="invoice.deleteItem(item)" title="Delete Order Item"><i class="ti-close"></i></button></td>
+                                </tr>
+                              </tbody>
+                            </table>
+                            <div class="row" if.bind="invoice.orderstate == 'edit'">
+                              <div class="col-12">
+                                <button disabled.bind="invoice.isBusy" type="button" class="btn btn-outline-secondary btn-sm float-right" click.delegate="invoice.addItems()">Add Items</button>
+                              </div>
+                            </div>
+                            <div class="row" style="margin-top: 100px">
+                              <div class="col-8">
+                                <!-- begin invoice-note -->
+                                <div class="invoice-note">
+                                  <p class="extra-notes">
+                                    <strong>Extra Notes</strong><br>
+                                    Please take note that goods or services once sold or rendered are not refundable.<br>
+                                    Thanks a lot.
+                                  </p>
+                                </div>
+                                <!-- end invoice-note -->
+                              </div>
+                              <div class="col-4">
+                                <table class="table table-striped float-right" style="max-width: 200px;">
+                                  <tr>
+                                    <td class="text-right"><strong>Taxes</strong></td>
+                                    <td class="text-right"><strong>N/A</strong></td>
+                                  </tr>	
+                                  <tr>
+                                    <td class="text-right"><strong>Total</strong></td>
+                                    <td class="text-right"><strong>EUR ${ invoice.order.orderTotal }</strong></td>
+                                  </tr>
+                                </table>
+                              </div>
+                            </div>
+                          <!-- end table-responsive -->
+                      </div>
+                      <!-- end invoice-content -->
+                      <hr>
+                      <!-- begin invoice-footer -->
+                      <div class="invoice-footer">
+                          <p class="text-center m-b-5 f-w-600">
+                            THANK YOU FOR YOUR BUSINESS
+                          </p>
+                          <p class="text-center">
+                            Invoice was created on a computer and is valid without the signature and seal.
+                          </p>
+                      </div>
+                      <!-- end invoice-footer -->
+                    </div>
+                </div>
+              </div>
+            </div>
+           </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!--Add Products Modal-->
+<div id="products" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+        <form submit.delegate="onSave()">
+          <div class="modal-header">
+              <h4 class="modal-title" id="myModalLabel">Add Products</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+          <div class="modal-body">
+            <div if.bind="!invoice.dboproducts.products"> 
+              <div class="col-3" style="text-align: center; margin: auto;">
+                <span class="spinner-border spinner-border-sm" style="width: 3rem; height: 3rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+                <label>Even geduld aub...</label>
+              </div>
+            </div>
+            <div if.bind="invoice.dboproducts.products"> 
+              <div class="card card-body" if.bind="invoice.dboproducts.products.length == 0" style="text-align: center;">No products registered so far.</div>
+              <div style="width: 100%;" if.bind="invoice.dboproducts.products.length > 0">
+                <table class="display nowrap table table-hover table-striped table-bordered" style="margin-top: 10px;">
+                  <thead>
+                      <tr>
+                        <th></th>
+                        <th>Name</th>
+                        <th>Price</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                    <tr repeat.for="product of invoice.dboproducts.products">
+                        <td><input id="${product.id}" checked.bind="invoice.isProductChecked(product)" click.delegate="invoice.onProductSelected(product)" type="checkbox"></td>
+                        <td>${ product.name }</td>
+                        <td>${ product.saleItem.price }</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div style="width: 100%;" if.bind="invoice.dboproducts.products.length > 0">
+                  <nav style="float: right" aria-label="...">
+                    <ul class="pagination">
+                      <li class.bind="(invoice.dboproducts.page == 1)? 'page-item disabled' : 'page-item'">
+                        <a class="page-link" tabindex="-1" click.delegate="invoice.previous()">Previous</a>
+                      </li>
+                      <li class.bind="((p + 1) == invoice.dboproducts.page)? 'page-item active': 'page-item'" repeat.for="p of invoice.dboproducts.pageCount"><a class="page-link" click.delegate="invoice.goToPage(p + 1)"> ${p + 1} <span class="sr-only" if.bind="(p + 1) == invoice.dboproducts.page">(current)</span></a></li>
+                      <li class.bind="(invoice.dboproducts.page == invoice.dboproducts.pageCount)? 'page-item disabled' : 'page-item'">
+                        <a class="page-link" click.delegate="invoice.next()">Next</a>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer" style="width:100%">
+            <button type="button" class="btn btn-outline-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 120px; padding: .2rem .75rem;">Cancel</button>
+            <button type="button" class="btn btn-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 120px; padding: .2rem .75rem;">Save</button>
+          </div>
+        </form>
+      </div>
+  </div>
+</div>
+
+<div id="warning" class="modal fade in" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+  <div class="modal-dialog" >
+      <div class="modal-content">
+          <div class="modal-header" style="border: 0;padding: 0;">
+              <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true" #x_pleasewait>×</button>
+          </div>
+          <div class="modal-body" style="text-align: center;">
+              <div class="card-body">
+                  <h4 class="card-title">${ invoice.message.title }</h4>
+                  <label>${ invoice.message.message }</label>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 120px; padding: .2rem .75rem;">Cancel</button>
+            <button type="button" class="btn btn-secondary btn-sm waves-effect" data-dismiss="modal" click.delegate="invoice.confirmClosure()" style="min-width: 120px; padding: .2rem .75rem;">Ok</button>
+          </div>
+      </div>
+      <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+  </template>
+  

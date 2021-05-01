@@ -1,0 +1,18 @@
+.footer-widget-area
+{
+    padding-top: 20px;
+    background: #f7f7f7;;
+    color: #000000;
+}
+
+.footer_shop_name {
+    text-transform: uppercase;
+    color: #cccccc;
+    font-size: 18px;
+    line-height: 2;
+}
+
+ul {
+  list-style: none;
+  padding: 0px 10px;
+}

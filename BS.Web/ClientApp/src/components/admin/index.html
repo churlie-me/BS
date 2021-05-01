@@ -1,0 +1,91 @@
+<template>
+  <require from="./appointments/appointment/appointment.module.html"></require>
+  <require from="../../extensions/progress/progress.dialog.html"></require>
+  <div class="admin-container">
+    <div class="row mb-2">
+      <div class="col-2">
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+          <label class="btn btn-secondary active">Calendar</label>
+          <label class="btn btn-secondary" click.delegate="navigateScheduler()"> Schedular</label>
+        </div>
+      </div>
+      <button class="ml-2 col-2 btn btn-secondary" click.delegate="newAppointment()">Add New Appointment</button>
+    </div>
+    <div class="row">
+      <div class="col-3">
+        <div class="row mt-2">
+          <div class="col-12">
+            <label style="font-size: 28px;">Filters</label>
+          </div>
+        </div>
+        <!--<div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1"><i class="mdi mdi-magnify"></i></span>
+          <input type="text" class="form-control" value.bind="dboAppointments.search" placeholder="Search By Stylist" aria-label="Stylist" aria-describedby="basic-addon1">
+        </div>-->
+        <div class="form-group" if.bind="authenticationService.account.type == 1">
+          <label>Branch</label>
+          <select class="form-control" value.bind="dboAppointments.branchId">
+              <option model.bind="undefined">Choose</option>
+              <option repeat.for="branch of branches" model.bind="branch.id">${ branch.name }</option>
+          </select>
+        </div>
+
+        <div class="form-group" if.bind="authenticationService.account.type == 1">
+          <label>Staff</label>
+          <select class="form-control" value.bind="dboAppointments.stylistId">
+              <option model.bind="undefined">Choose</option>
+              <option repeat.for="staff of dboStaff.accounts" model.bind="staff.id">${ staff.user.firstName }</option>
+          </select>
+        </div>
+
+        <!--To -->
+        <span id="basic-addon1">From</span>
+        <input type="date" value.bind="dboAppointments.from" class="form-control mb-1">
+
+        <!--From -->
+        <span id="basic-addon1">To</span>
+        <input type="date" value.bind="dboAppointments.to" class="form-control">
+
+        <button type="button" class="btn btn-secondary btn-sm btn-block mt-3" click.delegate="onApplyFilters()">Apply Filters</button>
+        <button type="button" class="btn btn-outline-secondary btn-sm btn-block mt-3" click.delegate="onClearFilters()">Clear Filters</button>
+      </div>
+      <div class="col-9">
+        <div if.bind="events" class="calendar"></div>
+      </div>
+    </div>
+  </div>
+  <appointment.module appmodule.bind="appmodule"></appointment.module>
+  <progress.dialog></progress.dialog>
+  <!--Create Seat Modal-->
+  <div id="_appointment" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form submit.delegate="onSaveAppointment()">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Appointment</h4>
+                    <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true" #x_store>×</button>
+                </div>
+                <div class="modal-body" style="min-height: 150px;">
+                    <div class="form-group">
+                      <div style="font-size: 16px;"> <strong>Service :</strong> ${ appointment.service.name } </div>
+                      <div style="font-size: 16px;"> <strong>Custmer :</strong> ${ appointment.user.firstName } ${ appointment.user.lastName } </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Staff</label>
+                        <select class="form-control" value.bind="appointment.accountId">
+                            <option model.bind="undefined">Choose</option>
+                            <option repeat.for="staff of dboStaff.accounts" model.bind="staff.id">${ staff.user.firstName }</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-secondary btn-sm waves-effect" style="min-width: 120px;">Save</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 120px;">Cancel</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+</template>

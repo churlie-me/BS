@@ -1,0 +1,86 @@
+<template>
+  <require from="../../../extensions/progress/progress.dialog.html"></require>
+  <require from="../appointments/appointment/appointment.module.html"></require>
+  <div class="admin-container">
+    <div class="row mb-2">
+      <div class="col-12">
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+          <label class="btn btn-secondary" checked click.delegate="navigateScheduler()">Calendar</label>
+          <label class="btn btn-secondary active">Schedular</label>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-8">
+        <h2>Gantt View</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div  class="col-12">
+        <div class="gantt">
+          <div class="col-3" style="text-align: center; margin: 150px auto;">
+            <span class="spinner-border spinner-border-sm" style="width: 3rem; height: 3rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+            <label>Even geduld aub...</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <progress.dialog></progress.dialog>
+  <!--Create Appointment Modal-->
+  <div id="_appointment" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form submit.delegate="onSave()">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Appointment</h4>
+                    <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true" #x_store>×</button>
+                </div>
+                <div class="modal-body" style="min-height: 150px;">
+                    <div class="form-group">
+                      <div style="font-size: 16px;"> <strong>Service :</strong> ${ appointment.service.name } </div>
+                      <div style="font-size: 16px;"> <strong>Custmer :</strong> ${ appointment.user.firstName } ${ appointment.user.lastName } </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="appointmentStatus">Status</label>
+                      <select class="form-control col-9" value.bind="appointment.status" disabled.bind="isBusy">
+                        <option model.bind="status.code" repeat.for="status of statuses">${ status.name }</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Staff</label>
+                          <div class="row">
+                          <select class="form-control col-9" value.bind="appointment.accountId" disabled.bind="isActive || isBusy" change.delegate="checkAvailabilty($event)">
+                              <option value.bind="undefined">Choose</option>
+                              <option repeat.for="employee of dboStaff.staff" value.bind="employee.id">${ employee.user.firstName }</option>
+                          </select>
+                          <div class="col-3">
+                            <a href="#" style="text-decoration: underline;" click.delegate="activateStylistSelection()">Change</a>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="availabilty" if.bind="avaliability" style="color: #f00;">Not available at the time of this appointment</label>
+                    </div>
+                    <div class="form-group">
+                      <label for="serviceProvided" if.bind="serviceProvided" style="color: #f00;">The selected stylist does not provide the above service</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                  <button if.bind="isBusy" type="button" class="btn btn-secondary waves-effect btn-sm" style="width: 120px;">
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                      Please wait...
+                  </button>
+                  <button type="submit" class="btn btn-secondary btn-sm waves-effect" style="min-width: 120px;" if.bind="!isBusy">Save</button>
+                  <button type="button" class="btn btn-outline-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 120px;" disabled.bind="isBusy">Cancel</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<appointment.module appmodule.bind="appmodule"></appointment.module>
+</template>

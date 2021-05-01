@@ -1,0 +1,140 @@
+<template>
+    <require from="../../../extensions/info/info.dialog.html"></require>
+    <div slot="_content">
+        <div class="row mb-3">
+            <div class="col-12">
+                <h3>Mijn Account</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        Account Details
+                        <button type="button" class="btn btn-sm btn-icon btn-pure btn-outline float-right" data-toggle="modal" data-target="#_account"><i class="mdi mdi-pencil"></i></button>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-6">${ _authenticationService.account.user.firstName }</div>
+                            <div class="col-6">${ _authenticationService.account.user.lastName }</div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-12">${ _authenticationService.account.email }</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-6">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <label>Contact Details</label>
+                        <button type="button" class="btn btn-sm btn-icon btn-pure btn-outline float-right" data-toggle="modal" data-target="#_account"><i class="mdi mdi-pencil"></i></button>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-12">${ _authenticationService.account.user.contact.phone }</div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-12">${ _authenticationService.account.user.contact.email }</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-6">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        Adresgegevens
+                        <button type="button" class="btn btn-sm btn-icon btn-pure btn-outline float-right" data-toggle="modal" data-target="#_account"><i class="mdi mdi-pencil"></i></button>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-12">${ _authenticationService.account.user.address.street }</div>
+                        </div>
+                        <div class="row mt-4">
+                          <div class="col-12">${ _authenticationService.account.user.address.zipCode }</div>
+                      </div>
+                        <div class="row mt-4">
+                            <div class="col-12">${ _authenticationService.account.user.address.city }</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!--Create Account Modal-->
+        <div id="_account" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form submit.delegate="onSaveAccount()">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="myModalLabel">Bewerk Account</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="form-group col-6">
+                                    <label>Voornaam</label>
+                                    <input type="text" value.bind="_authenticationService.account.user.firstName & validate" class="form-control" disabled.bind="isBusy">
+                                </div>
+                                <div class="form-group col-6">
+                                    <label>Achternaam</label>
+                                    <input type="text" value.bind="_authenticationService.account.user.lastName & validate" class="form-control" disabled.bind="isBusy">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#_address" role="tab"><span class="hidden-sm-up"><i class="ti-home"></i></span> <span class="hidden-xs-down">Adres</span></a> </li>
+                                    <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#_contacts" role="tab"><span class="hidden-sm-up"><i class="ti-user"></i></span> <span class="hidden-xs-down">Contacten</span></a> </li>
+                                </ul>
+                                <div class="tab-content tabcontent-border" style="width: 100%;">
+                                    <div class="tab-pane active" id="_address" role="tabpanel" style="padding: 10px 10px 0px 10px;">
+                                        <div class="row">
+                                            <div class="form-group col-md-12 mb-2">
+                                                <label>Straat</label>
+                                                <input type="text" value.bind="_authenticationService.account.user.address.street & validate" class="form-control" placeholder="Luther str" disabled.bind="isBusy">
+                                            </div>
+                                            <div class="form-group col-md-12 mb-2">
+                                              <label>Postcode</label>
+                                              <input type="text" value.bind="_authenticationService.account.user.address.zipCode & validate" class="form-control" placeholder="ZipCode" disabled.bind="isBusy">
+                                            </div>
+                                            <div class="form-group col-md-12 mb-2">
+                                                <label>Stad</label>
+                                                <input type="text" value.bind="_authenticationService.account.user.address.city & validate" class="form-control" placeholder="City Name" disabled.bind="isBusy">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="_contacts" role="tabpanel" style="padding: 10px 10px 0px 10px;">
+                                        <div class="row">
+                                            <div class="form-group col-md-12 mb-2">
+                                                <label>Email</label>
+                                                <input type="text" value.bind="_authenticationService.account.user.contact.email & validate" class="form-control" placeholder="e.g johndoe@example.com" disabled.bind="isBusy">
+                                            </div>
+                                            <div class="form-group col-md-12 mb-2">
+                                                <label>Telefoon</label>
+                                                <input type="text" value.bind="_authenticationService.account.user.contact.phone & validate" class="form-control" placeholder="e.g +(000) 123 456" disabled.bind="isBusy">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button disabled.bind="isBusy" type="button" class="btn btn-outline-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 120px; padding: .2rem .75rem;">Annuleren</button>
+                            <button if.bind="!isBusy" type="submit" class="btn btn-secondary btn-sm waves-effect" style="min-width: 120px; padding: .2rem .75rem;">Sparen</button>
+                            <button if.bind="isBusy" class="btn btn-secondary btn-sm" type="button" style="min-width: 120px;" disabled>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Wacht alsjeblieft...
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <info.dialog message.bind="msg"></info.dialog>
+    </div>
+</template>

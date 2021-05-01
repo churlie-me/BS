@@ -1,0 +1,14 @@
+<template bindable="page, pager">
+  <require from="../row/row.module.html"></require>
+  <div if.bind="page">
+    <section repeat.for="_row of page.rows" show.bind="_row.deleted == 0" style.bind="pager.bindBackgroundStyles(_row)">
+      <row.module prow.bind="_row" rowmodule.bind="rowModule"></row.module>
+    </section>
+  </div>
+  <div class="row" if.bind="!page" style="padding: 175px 0px;">
+    <div class="col-3" style="text-align: center; margin: auto;">
+      <span class="spinner-border spinner-border-sm" style="width: 3rem; height: 3rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+      <label>Even geduld aub...</label>
+    </div>
+  </div>
+</template>

@@ -1,0 +1,146 @@
+<template>
+  <require from="./appointment/appointment.module.html"></require>
+    <div class="admin-container">
+      <div class="row">
+        <div class="col-9">
+            <h3 class="card-title">Store Appointments</h3>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-2">
+        <div class="form-group">
+          <select class="form-control" value.bind="dboAppointments.branchId" disabled.bind="_authentication.account.type != 1">
+              <option model.bind="undefined">Select Branch</option>
+              <option repeat.for="branch of _storeService.store.branches" model.bind="branch.id">${ branch.name }</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="form-group">
+          <select class="form-control" value.bind="dboAppointments.stylistId" disabled.bind="_authentication.account.type != 1">
+              <option model.bind="undefined">Select Stylist</option>
+              <option repeat.for="staff of dboStaff.accounts" model.bind="staff.id">${ staff.user.firstName }</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">From</span>
+          <input type="date" class="form-control" value.bind="dboAppointments.from" aria-label="Stylist" aria-describedby="basic-addon1" disabled.bind="(dboAppointments.appointments == undefined)">
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">To</span>
+          <input type="date" class="form-control" value.bind="dboAppointments.to" aria-label="Stylist" aria-describedby="basic-addon1" disabled.bind="(dboAppointments.appointments == undefined)">
+        </div>
+      </div>
+      <div class="col-2">
+        <button type="button" class="btn btn-secondary btn-block mb-3" disabled.bind="(dboAppointments.appointments == undefined)" click.delegate="onFilterApplied()">Apply Filters</button>
+      </div>
+    </div>
+
+        <div class="text-center my-5" if.bind="!dboAppointments.appointments">
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="width: 5rem; height: 5rem;"></span>
+          <p class="mt-2">Please wait...</p>
+        </div>
+        <div if.bind="dboAppointments.appointments">
+            <div class="card card-body mt-4" if.bind="dboAppointments.appointments.length == 0" style="text-align: center;">No store appointments made so far.</div>
+            <div class="card card-body mt-3" if.bind="dboAppointments.appointments.length > 0">
+              <table class="display nowrap table table-hover table-striped table-bordered">
+                  <thead>
+                      <tr>
+                          <th style="cursor: pointer;" click.delegate="filter('appointment_date_desc')">Appointment Date <i class="mdi mdi-swap-vertical" style="float: right;"></i></th>
+                          <th>Customer</th>
+                          <th>Status</th>
+                          <th>Action</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr repeat.for="appointment of dboAppointments.appointments">
+                        <td>${ dateConverter.view(appointment.appointmentDate) }</td>
+                        <td>${ appointment.user.firstName } ${ appointment.user.lastName }</td>
+                        <td>${ statuses[appointment.status].name }</td>
+                        <td>
+                          <button type="button" class="btn btn-sm btn-icon btn-pure btn-outline-secondary" data-toggle="modal" data-target="#contact-request" click.delegate="requestCustomerContact(appointment)"><i class="icon-phone"></i> Request Customer Contact</button>
+                          <a href="javascript:;" class="btn btn-sm btn-icon btn-pure btn-outline-secondary" click.delegate="viewAppointment(appointment)"><i class="icon-note"></i> Edit Appointment</a>
+                          <!--<a href="#" class="btn btn-sm btn-icon btn-pure btn-outline"><i class="icon-trash"></i></a>-->
+                        </td>
+                      </tr>
+                  </tbody>
+              </table>
+
+              <div style="width: 100%;" if.bind="dboAppointments.appointments.length > 0">
+                <nav style="float: right" aria-label="...">
+                  <ul class="pagination">
+                    <li class.bind="(dboAppointments.page == 1)? 'page-item disabled' : 'page-item'">
+                      <a class="page-link" tabindex="-1" click.delegate="previous()">Previous</a>
+                    </li>
+                    <li class.bind="isActive((p + 1), dboAppointments.page)? 'page-item active': 'page-item'" repeat.for="p of dboAppointments.pageCount"><a class="page-link" click.delegate="goToPage(p + 1)"> ${p + 1} <span class="sr-only" if.bind="isActive((p + 1), dboAppointments.page)">(current)</span></a></li>
+                    <li class.bind="(dboAppointments.page == dboAppointments.pageCount)? 'page-item disabled' : 'page-item'">
+                      <a class="page-link" click.delegate="next()">Next</a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Customer Contact Request Modal-->
+    <div id="contact-request" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form submit.delegate="onSaveReason()">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">Contact Request</h4>
+                        <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true" #x_store>×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Reason</label>
+                            <select class="form-control" value.bind="request.reasonId" disabled.bind="isBusy">
+                              <option model.bind="undefined">Choose</option>
+                              <option model.bind="reason.id" repeat.for="reason of reasons">${ reason.content }</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button if.bind="isBusy" type="button" class="btn btn-secondary waves-effect btn-sm" style="width: 120px;">
+                          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Please wait...
+                        </button>
+                        <button if.bind="!isBusy" type="submit" class="btn btn-secondary waves-effect btn-sm" style="min-width: 120px;">Submit</button>
+                        <button disabled.bind="isBusy" type="button" class="btn btn-outline-secondary waves-effect btn-sm" data-dismiss="modal" style="min-width: 120px;">Cancel</button>
+                    </div>
+                </div>
+            </form>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <!--Customer Contact Modal-->
+    <div id="customer-contact" if.bind="appointment" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Customer Contact</h4>
+                    <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true" #x_store>×</button>
+                </div>
+                <div class="modal-body" style="text-align: center;">
+                    <h5 style="text-transform: capitalize;">${ appointment.user.firstName } ${ appointment.user.lastName }</h5>
+                    <h3>${ appointment.user.contact.phone }</h3>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary waves-effect btn-sm" data-dismiss="modal" style="min-width: 120px;">Done</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+  <appointment.module appmodule.bind="appmodule"></appointment.module>
+  <progress.dialog></progress.dialog>
+</template>

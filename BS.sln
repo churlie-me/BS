@@ -1,0 +1,79 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30523.141
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BS.Core", "BS.Core\BS.Core.csproj", "{C6F3881E-83A3-4F9A-A559-B88E0B7EB1C5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BS.Data", "BS.Data\BS.Data.csproj", "{0BD310FA-40BB-41C8-B0F4-7C37FF2AE417}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BS.Api", "BS.Api\BS.Api.csproj", "{3853F0CE-3503-409B-91A3-E31D6C991625}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BS.Web", "BS.Web\BS.Web.csproj", "{4E755134-69DC-44E5-93B4-1A8D7C2235E2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Central.Web", "Central.Web\Central.Web.csproj", "{280AE485-113A-4AE8-AA81-1A3DAE32AE73}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Central.Api", "Central.Api\Central.Api.csproj", "{D172C4AA-5356-4EA9-905D-477242995F2F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Central.Data", "Central.Data\Central.Data.csproj", "{A78BF6E0-CA96-4063-A5BB-BFFD1CE04825}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C6F3881E-83A3-4F9A-A559-B88E0B7EB1C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6F3881E-83A3-4F9A-A559-B88E0B7EB1C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6F3881E-83A3-4F9A-A559-B88E0B7EB1C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6F3881E-83A3-4F9A-A559-B88E0B7EB1C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BD310FA-40BB-41C8-B0F4-7C37FF2AE417}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BD310FA-40BB-41C8-B0F4-7C37FF2AE417}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BD310FA-40BB-41C8-B0F4-7C37FF2AE417}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BD310FA-40BB-41C8-B0F4-7C37FF2AE417}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3853F0CE-3503-409B-91A3-E31D6C991625}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3853F0CE-3503-409B-91A3-E31D6C991625}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3853F0CE-3503-409B-91A3-E31D6C991625}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3853F0CE-3503-409B-91A3-E31D6C991625}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E755134-69DC-44E5-93B4-1A8D7C2235E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E755134-69DC-44E5-93B4-1A8D7C2235E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E755134-69DC-44E5-93B4-1A8D7C2235E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E755134-69DC-44E5-93B4-1A8D7C2235E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{280AE485-113A-4AE8-AA81-1A3DAE32AE73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{280AE485-113A-4AE8-AA81-1A3DAE32AE73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{280AE485-113A-4AE8-AA81-1A3DAE32AE73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{280AE485-113A-4AE8-AA81-1A3DAE32AE73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D172C4AA-5356-4EA9-905D-477242995F2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D172C4AA-5356-4EA9-905D-477242995F2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D172C4AA-5356-4EA9-905D-477242995F2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D172C4AA-5356-4EA9-905D-477242995F2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A78BF6E0-CA96-4063-A5BB-BFFD1CE04825}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A78BF6E0-CA96-4063-A5BB-BFFD1CE04825}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A78BF6E0-CA96-4063-A5BB-BFFD1CE04825}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A78BF6E0-CA96-4063-A5BB-BFFD1CE04825}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2C52E1B6-1219-484E-88FC-31CE51BF40F7}
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 5
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://tfs.tracewise.com:8079/tfs/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = BS.Api\\BS.Api.csproj
+		SccProjectName1 = BS.Api
+		SccLocalPath1 = BS.Api
+		SccProjectUniqueName2 = BS.Core\\BS.Core.csproj
+		SccProjectName2 = BS.Core
+		SccLocalPath2 = BS.Core
+		SccProjectUniqueName3 = BS.Data\\BS.Data.csproj
+		SccProjectName3 = BS.Data
+		SccLocalPath3 = BS.Data
+		SccProjectUniqueName4 = BS.Web\\BS.Web.csproj
+		SccProjectName4 = BS.Web
+		SccLocalPath4 = BS.Web
+	EndGlobalSection
+EndGlobal

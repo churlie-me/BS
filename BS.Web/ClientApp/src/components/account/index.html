@@ -1,0 +1,35 @@
+<template>
+  <require from="../../extensions/progress/progress.dialog.html"></require>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="card">
+                    <div class="card-body">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <a href="#/account/" class="waves-effect waves-dark sidebar-link"><i class="mdi mdi-face"></i> Mijn Account</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="#/account/appointments/" class="waves-effect waves-dark sidebar-link"><i class="mdi mdi-calendar-multiple"></i> Afspraken</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="#/account/orders/" class="waves-effect waves-dark sidebar-link"><i class="mdi mdi-receipt"></i> Bestellingen</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="#/account/password/" class="waves-effect waves-dark sidebar-link"><i class="mdi mdi-lock"></i> Wachtwoord Wijzigen</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="card">
+                    <div class="card-body" style="min-height: 300px;">
+                        <slot name="_content"></slot>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <progress.dialog></progress.dialog>
+</template>

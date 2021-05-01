@@ -1,0 +1,87 @@
+<template>
+  <div class="admin-container">
+    <div class="row">
+      <div class="col-9">
+          <h3 class="card-title">Branding Pages</h3>
+      </div>
+      <div class="col-3" if.bind="dbopages.pages">
+          <a class="btn btn-secondary btn-block btn-sm" href="#/admin/pages/page/">Add New Page</a>
+      </div>
+    </div>
+    <div class="card card-body">
+      <div class="row" if.bind="!dbopages.pages">
+        <div class="col-3" style="text-align: center; margin: auto;">
+          <span class="spinner-border spinner-border-sm" style="width: 3rem; height: 3rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+          <label>Even geduld aub...</label>
+        </div>
+      </div>
+      <div if.bind="dbopages.pages">
+        <div class="row text-center" if.bind="dbopages.pages.length == 0">
+          <label style="margin: auto;">No pages created so far.</label>
+        </div>
+        <table if.bind="dbopages.pages.length > 0" class="display nowrap table table-hover table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Slug</th>
+                    <th>Is Home Page</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr repeat.for="page of dbopages.pages">
+                    <td>
+                        ${ dbopages.pages.indexOf(page) + 1}
+                    </td>
+                    <td>${ page.title }</td>
+                    <td>${ page.slug }</td>
+                    <td>${ page.isHomePage }</td>
+                    <td>
+                      <a href="#/admin/pages/page/?pageId=${page.id}" title="Edit Page" class="btn btn-sm btn-icon btn-pure btn-outline"><i class="icon-note"></i></a>
+                      <a href="#" class="btn btn-sm btn-icon btn-pure btn-outline" data-toggle="modal" data-target="#warning" click.delegate="initPage(page)"><i class="icon-trash"></i></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="width: 100%;" if.bind="dbopages.pages.length > 0">
+          <nav style="float: right" aria-label="...">
+            <ul class="pagination">
+              <li class.bind="(dbopages.page == 1)? 'page-item disabled' : 'page-item'">
+                <a class="page-link" tabindex="-1" click.delegate="previous()">Previous</a>
+              </li>
+              <li class.bind="((p + 1) == dbopages.page)? 'page-item active': 'page-item'" repeat.for="p of dbopages.pageCount"><a class="page-link" click.delegate="goToPage(p + 1)"> ${p + 1} <span class="sr-only" if.bind="(p + 1) == dbopages.page">(current)</span></a></li>
+              <li class.bind="(dbopages.page == dbopages.pageCount)? 'page-item disabled' : 'page-item'">
+                <a class="page-link" click.delegate="next()">Next</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div id="warning" class="modal fade in" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" >
+      <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="myModalLabel">Warning!!!</h4>
+              <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+          <div class="modal-body">
+            <div class="text-center"><label>Are you sure about deleting this page?</label></div>
+          </div>
+          <div class="modal-footer">
+              <button disabled.bind="isBusy == true" type="button" class="btn btn-outline-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 120px; padding: .2rem .75rem;">Cancel</button>
+              <button if.bind="!isBusy" type="button" class="btn btn-secondary btn-sm waves-effect" style="min-width: 120px; padding: .2rem .75rem;" click.delegate="save()">Delete</button>
+              <button if.bind="isBusy" type="button" class="btn btn-secondary waves-effect btn-sm" style="width: 120px;">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  Please wait...
+              </button>
+          </div>
+      </div>
+      <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+</template>

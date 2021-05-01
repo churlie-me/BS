@@ -1,0 +1,245 @@
+<template>
+    <require from="../../../extensions/progress/progress.dialog.html"></require>
+    <require from="./reasons/reasons.html"></require>
+    <div class="admin-container">
+        <form>
+            <div class="row">
+                <div class="col-md-10"></div>
+                <div class="col-md-2">
+                    <button type="button" click.delegate="SaveStore()"  class="btn btn-block btn-secondary btn-sm">Save</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                      <h5>Name</h5>
+                      <input type="text" value.bind="store.name" class="form-control" placeholder="Name">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <h5>Slug</h5>
+                        <input type="text" value.bind="store.slug" class="form-control" placeholder="Slug">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                      <h5>Store Id</h5>
+                      <input type="text" value.bind="store.id" class="form-control" placeholder="Slug" disabled>
+                  </div>
+              </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 class="card-title">Store Settings</h4>
+                    <h6 class="card-subtitle mb-3">Set all your store's settings here</h6>
+                    <div class="card card-body">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#defaults" role="tab"><span class="hidden-sm-up"><i class="mdi mdi-home"></i></span> <span class="hidden-xs-down">Defaults</span></a> </li>
+                            <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#settings" role="tab"><span class="hidden-sm-up"><i class="mdi mdi-settings-box"></i></span> <span class="hidden-xs-down">Page Settings</span></a> </li>
+                            <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#schedule" role="tab"><span class="hidden-sm-up"><i class="mdi mdi-calendar-clock" style="font-size: 15px;"></i></span> <span class="hidden-xs-down">Working Schedule</span></a> </li>
+                            <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#reasons" role="tab"><span class="hidden-sm-up"><i class="mdi mdi-equal-box"></i></span> <span class="hidden-xs-down">Request Reasons</span></a> </li>
+                            <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#email" role="tab"><span class="hidden-sm-up"><i class="mdi mdi-equal-box"></i></span> <span class="hidden-xs-down">Email Settings</span></a> </li>
+                        </ul>
+                        <!-- Tab panes -->
+                        <div class="tab-content tabcontent-border">
+                            <div class="tab-pane active" id="defaults" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-lg-6 col-xs-12">
+                                      <label style="font-weight: bold;" for="logo">Store Logo</label>
+                                        <div class="image-area-2 .logo mt-4">
+                                            <img id="imageResult" src="data:'image/jpeg';base64,${store.logo}" alt="" class="img-fluid rounded shadow-sm mx-auto d-block">
+                                        </div>
+                                        <!-- Upload image input-->
+                                        <input type="hidden" value.bind="store.logo">
+                                        <div class="input-group mt-5 mb-5">
+                                            <input id="logo" change.delegate="OnLogoChanged()" accept="image/png, image/jpeg" type="file" class="form-control border-0">
+                                            <label id="upload-label" for="upload" class="btn btn-light btn-block rounded-pill shadow-sm"> <i class="fa fa-cloud-upload mr-2 text-muted"></i> CHOOSE FILE</label>
+                                        </div>
+                                        <p class="font-italic mt-3 text-center">(Your logo should be 500 x 500)</p>
+                                    </div>
+                                    <div class="col-lg-6 col-xs-12">
+                                      <label style="font-weight: bold;" for="logo">Site Box Background</label>
+                                        <div class="image-area mt-4">
+                                            <img id="imageResult" src="data:'image/jpeg';base64,${store.storeImage}" alt="" class="img-fluid rounded shadow-sm mx-auto d-block">
+                                        </div>
+                                        <!-- Upload image input-->
+                                        <div class="input-group mt-5 mb-5">
+                                            <input id="storeImage" change.delegate="OnImageChanged()" accept="image/png, image/jpeg" type="file" class="form-control border-0">
+                                            <label id="upload-label" for="upload" class="btn btn-light btn-block rounded-pill shadow-sm"> <i class="fa fa-cloud-upload mr-2 text-muted"></i> CHOOSE FILE</label>
+                                        </div>
+                                        <p class="font-italic mt-3 text-center">(Your image should be 1400 x 500)</p>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                  <div class="col-lg-6 col-xs-12">
+                                    <label style="font-weight: bold;" for"url">Store Url</label>
+                                    <input type="url" class="form-control" value.bind="store.url" placeholder="http://www.example.com" />
+
+                                    <div class="form-group">
+                                      <label style="font-weight: bold;" for"storeDesc">Store Description</label><i>(To appear in footer)</i>
+                                      <textarea value.bind="store.storeDesc" rows="4" class="form-control"></textarea>
+                                    </div>
+                                  </div>
+                                  <div class="col-lg-6 col-xs-12">
+                                    <div class="form-group">
+                                      <label style="font-weight: bold;" for="appurl">Android App Url</label>
+                                      <input type="url" class="form-control" value.bind="store.androidAppUrl" placeholder="https://play.google.com/store/apps/details?id=com.app.app" />
+                                    </div>
+                                    <div class="form-group">
+                                      <label style="font-weight: bold;" for="appurl">IOS App Url</label>
+                                      <input type="url" class="form-control" value.bind="store.iosAppUrl" placeholder="https://apps.apple.com/ug/app/appname/idxxxxxxxxx" />
+                                    </div>
+                                  </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="settings" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="control-label text-right col-md-3">Primary Color</label>
+                                            <div class="col-md-9">
+                                                <input type="text" value.bind="store.primaryColor" class="colorpicker form-control" id="primary-color"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="control-label text-right col-md-3">Secondary Color</label>
+                                            <div class="col-md-9">
+                                                <input type="text" value.bind="store.secondaryColor" class="colorpicker form-control" id="secondary-color"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                      <div class="form-group row">
+                                        <label class="control-label text-right col-md-3">Header Background Color</label>
+                                        <div class="col-md-9">
+                                            <input type="text" value.bind="store.headerBackgroundColor" class="colorpicker form-control" id="header-background-color"/>
+                                        </div>
+                                      </div>
+                                      <div class="form-group row">
+                                        <label class="control-label text-right col-md-3">Header Text Color</label>
+                                        <div class="col-md-9">
+                                            <input type="text" value.bind="store.headerTextColor" class="colorpicker form-control" id="header-text-color"/>
+                                        </div>
+                                      </div>
+                                      <div class="form-group row">
+                                        <label class="control-label text-right col-md-3">Footer Background Color</label>
+                                        <div class="col-md-9">
+                                            <input type="text" value.bind="store.footerBackgroundColor" class="colorpicker form-control" id="footer-background-color"/>
+                                        </div>
+                                      </div>
+                                      <div class="form-group row">
+                                        <label class="control-label text-right col-md-3">Footer Text Color</label>
+                                        <div class="col-md-9">
+                                            <input type="text" value.bind="store.footerTextColor" class="colorpicker form-control" id="footer-text-color"/>
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane p-20" id="schedule" role="tabpanel">
+                                <label>Working Days</label>
+                                <div repeat.for="schedule of store.schedules" class="form-group">
+                                    <div class="row">
+                                        <div class="col-7">
+                                            <label style="text-transform: capitalize;">${ week[schedule.day] }</label>
+                                        </div>
+                                        <div class="col-2">
+                                            <div class="checkbox checkbox-primary float-left" style="margin-right: 30px;">
+                                                <input id="${week[schedule.day]}_open" checked.bind="schedule.status" model.bind="0" name="${week[schedule.day]}" type="radio" click.delegate="StatusChanged(schedule)" data-toggle="modal" data-target="#_schedule">
+                                                <label for="${week[schedule.day]}_open"> Open </label>
+                                            </div>
+                                            <div class="checkbox checkbox-primary float-left p-b-10">
+                                                <input id="${week[schedule.day]}_closed" checked.bind="schedule.status" model.bind="1" name="${week[schedule.day]}" type="radio" click.delegate="StatusChanged(schedule)">
+                                                <label for="${week[schedule.day]}_closed"> Closed </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <label if.bind="schedule.openAt && schedule.status == 0" class="float-left" style="margin-right: 5px;">${ timeValueConverter.view(schedule.openAt) }</label>
+                                            <label if.bind="schedule.status == 1" class="float-left" style="margin-right: 5px;">--:--</label>
+                                            <label class="float-left" style="margin-right: 5px;">To</label>
+                                            <label if.bind="schedule.closedAt && schedule.status == 0" class="float-left">${ timeValueConverter.view(schedule.closedAt) }</label>
+                                            <label if.bind="schedule.status == 1" class="float-left">--:--</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="reasons" role="tabpanel">
+                              <reasons reasonsmodule.bind="reasonsModule"></reasons>
+                            </div>
+                            <div class="tab-pane" id="email" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-lg-6 col-xs-12">
+                                      <div class="form-group">
+                                        <label style="font-weight: bold;" for"mail">Sender Email</label>
+                                        <input type="email" class="form-control" value.bind="store.senderEmail" placeholder="no-reply@example.com" />
+                                      </div>
+                                      <div class="form-group">
+                                        <label style="font-weight: bold;" for"host">Email Host</label>
+                                        <input type="email" class="form-control" value.bind="store.host" placeholder="mail.example.com" />
+                                      </div>
+                                      <div class="form-group">
+                                        <label style="font-weight: bold;" for"port">Email Port Number <i>(Optional - Applies to gmail, microsoft, and ymail accounts)</i></label>
+                                        <input type="email" class="form-control" value.bind="store.port" placeholder="587" />
+                                      </div>
+                                    </div>
+                                    <div class="col-lg-6 col-xs-12">
+                                      <div class="form-group">
+                                        <input type="checkbox" id="issslenabled" checked.bind="store.isSslEnabled" class="fonm-control au-target" au-target-id="152">
+                                        <label for="issslenabled">IsSslEnabled</label>
+                                      </div>
+                                      <div class="form-group">
+                                        <label style="font-weight: bold;" for="appurl">Email Password</label>
+                                        <input type="password" class="form-control" value.bind="store.senderEmailPassword"/>
+                                      </div>
+                                    </div>
+                                  </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <progress.dialog></progress.dialog>
+    <div id="_schedule" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form submit.delegate="onSubmitSchedule()">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">Schedule</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Day</label>
+                            <input type="text" style="text-transform: capitalize;" disabled value="${ week[schedule.day] }" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Open At</label>
+                                    <input type="time" value.bind="schedule.openAt" class="form-control" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Closed At</label>
+                                    <input type="time" value.bind="schedule.closedAt" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 120px; padding: .2rem .75rem;">Cancel</button>
+                        <button type="submit" class="btn btn-secondary btn-sm waves-effect" style="min-width: 120px; padding: .2rem .75rem;">Save</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</template>

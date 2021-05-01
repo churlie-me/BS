@@ -1,0 +1,81 @@
+<template>
+  <require from="../../../extensions/progress/progress.dialog.html"></require>
+  <require from="../invoice/invoice.module.html"></require>
+    <div slot="admin-container">
+        <div class="row mb-1">
+            <div class="col-12">
+              <h3>Store Orders</h3>
+            </div>
+        </div>
+        <div class="row">
+          <div class="col-3">
+            <div class="input-group mb-3">
+              <span style="background: transparent; border: 0px;" class="input-group-text" id="basic-addon1">Status</span>
+              <select value.bind="dboorder.status" class="form-control" change.delegate="statusChanged()">
+                <option model.bind="status.code" repeat.for="status of statuses">${ status.desc }</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="card card-body" if.bind="!dboorder.orders">
+            <div class="col-3" style="text-align: center; margin: auto;">
+              <span class="spinner-border spinner-border-sm" style="width: 3rem; height: 3rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+              <label>Even geduld aub...</label>
+            </div>
+          </div>
+          <div if.bind="dboorder.orders" style="width: 100%">
+              <div class="card card-body mt-4" if.bind="dboorder.orders.length == 0" style="text-align: center;">No orders made so far.</div>
+              <div class="card card-body mt-3" if.bind="dboorder.orders.length > 0">
+                  <table class="display nowrap table table-hover table-striped table-bordered">
+                      <thead>
+                          <tr>
+                              <th>OrderNo</th>
+                              <th style="cursor: pointer;" click.delegate="filter('appointment_date_desc')">Order Date <i class="mdi mdi-swap-vertical" style="float: right;"></i> </th>
+                              <th>Status</th>
+                              <th>Order Total</th>
+                              <th>Actions</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                        <tr repeat.for="order of dboorder.orders">
+                          <td>${ order.orderNo }</td>
+                          <td>${ order.orderDate }</td>
+                          <td>${ statuses[order.status].desc }</td>
+                          <td>${ order.orderTotal }</td>
+                          <td>
+                            <button class="btn btn-outline-secondary btn-sm mr-1" click.delegate="viewOrder(order)" style="min-width: 60px;">View</button>
+                            <button if.bind="!isBusy && order.status != 1 && order.status != 4" class="btn btn-outline-danger btn-sm mr-1" click.delegate="cancelOrder(order)" style="min-width: 60px;">Cancel</button>
+                            <button if.bind="!isBusy && order.status != 1 && order.status != 4" class="btn btn-outline-danger btn-sm" click.delegate="completeOrder(order)" style="min-width: 60px;">Complete Order</button>
+                            <button if.bind="isBusy && order.id == _order.id" class="btn btn-secondary btn-sm" type="button" disabled>
+                              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                              Wait...
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                  </table>
+                  <div style="width: 100%;" if.bind="dboorder.orders.length > 0">
+                    <nav style="float: right" aria-label="...">
+                      <ul class="pagination">
+                        <li class.bind="(dboorder.page == 1)? 'page-item disabled' : 'page-item'">
+                          <a class="page-link" tabindex="-1" click.delegate="previous()">Previous</a>
+                        </li>
+                        <li class.bind="((p + 1) == dboorder.page)? 'page-item active': 'page-item'" repeat.for="p of dboorder.pageCount"><a class="page-link" click.delegate="goToPage(p + 1)"> ${p + 1} <span class="sr-only" if.bind="isActive((p + 1), dboorder.page)">(current)</span></a></li>
+                        <li class.bind="(dboorder.page == dboorder.pageCount)? 'page-item disabled' : 'page-item'">
+                          <a class="page-link" click.delegate="next()">Next</a>
+                        </li>
+                      </ul>
+                    </nav>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <!--Invoice-->
+      <invoice.module invoice.bind="_invoice"></invoice.module>
+      <!--<receipt order.bind="_order" store.bind="_storeService.store"></receipt>-->
+      <!--dialog-->
+      <progress.dialog></progress.dialog>
+    </div>
+</template>

@@ -1,0 +1,267 @@
+﻿<template>
+  <require from="../../extensions/info/info.dialog.html"></require>
+    <div class="container pager" style="padding-top: 10px; padding-bottom: 40px;">
+      <div if.bind="!_storeService.store">
+        <div class="card card-body" if.bind="!stores">
+          <div class="col-3" style="text-align: center; margin: auto;">
+            <span class="spinner-border spinner-border-sm" style="width: 4rem; height: 4rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+            <label>Even geduld aub...</label>
+          </div>
+        </div>
+        <div class="row" if.bind="stores.length == 0"><label style="width: 100%; text-align: center; margin: 25px 0px;">No stores available at the moment</label></div>
+        <div class="row" if.bind="stores.length > 0">
+            <div class="col-md-3" repeat.for="store of stores">
+            <a click.delegate="onSelectStore()">
+                <div class="card card-body">
+                    <img class="ing-fluid" if.bind="store.logo" src="data:'image/jpeg';base64,${store.logo}">
+                    <img class="img-fluid" if.bind="!store.logo" src="http://placehold.it/400x400" alt="store">
+                    <h3 class="text-center mt-10">${ store.name }</h3>
+                </div>
+            </a>
+            </div>
+        </div>
+      </div>
+      <div if.bind="_storeService.store">
+        <style if.bind="branches.length > 1">
+          #progressbar li {
+            width: 12.5%;
+          }
+        </style>
+        <style if.bind="branches.length == 1">
+          #progressbar li {
+            width: 14.2857%;
+          }
+        </style>
+        <form id="reservation">
+          <ul id="progressbar">
+            <li class="step active" if.bind="branches.length > 1"></li>
+            <li if.bind="branches.length == 0" class="step active"></li>
+            <li if.bind="branches.length > 0" class="step"></li>
+            <li class="step"></li>
+            <li class="step"></li>
+            <li class="step"></li>
+            <li class="step"></li>
+            <li class="step"></li>
+            <li class="step"></li>
+          </ul>
+            <!-- Fieldsets -->
+            <fieldset if.bind="branches.length > 1">
+              <div class="row">
+                <a click.delegate="onBranchSelected(branch)" repeat.for="branch of branches" class="btn btn-outline-secondary col ${ branch.active }" style="text-align: center; text-decoration: none; color: #000">
+                  ${ branch.name }
+                </a>
+              </div>
+            </fieldset>
+              <fieldset>
+                <div class="form-group" if.bind="types">
+                  <div class="row">
+                      <a click.delegate="onTypeSelected(type)" repeat.for="type of types" class="col ${ type.active }" style="text-align: center; text-decoration: none; color: #000">
+                          <img if.bind="type.active != 'active' && type.darkIcon" src="data:'image/jpeg';base64,${type.darkIcon}" alt="" class="img-fluid">
+                          <img if.bind="type.active == 'active' && type.lightIcon" src="data:'image/jpeg';base64,${type.lightIcon}" alt="" class="img-fluid">
+
+                          <i class="mdi mdi-human-greeting" if.bind="!type.darkIcon && !type.lightIcon" style="font-size: 80px;line-height: initial;"></i>
+                          <h3 style="text-transform: uppercase;">${ type.type }</h3>
+                      </a>
+                  </div>
+              </div>
+
+              <div class="row mt-5" if.bind="!types">
+                <div class="col-3" style="text-align: center; margin: auto;">
+                  <span class="spinner-border spinner-border-sm" style="width: 3rem; height: 3rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+                  <label>Even geduld aub...</label>
+                </div>
+              </div>
+              </fieldset>
+              <fieldset>
+                <div class="row card card-body" if.bind="!dboservices.services">
+                  <div class="col-3" style="text-align: center; margin: auto;">
+                    <span class="spinner-border spinner-border-sm" style="width: 3rem; height: 3rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+                    <label>Even geduld aub...</label>
+                  </div>
+                </div>
+                <div class="form-group" if.bind="dboservices.services">
+                  <div class="row" if.bind="dboservices.services.length > 0">
+                    <div class="col-md-6 col-xs-12" repeat.for="_service of dboservices.services">
+                      <div class="my-2 p-2 ${_service.active}" style="min-height: 100px; border: 1px solid; cursor: pointer;" click.delegate="onServiceSelected(_service.id)">
+                        <h4>${ _service.name }</h4>
+                        <label>${ _service.description.substring(0, 120) }</label>
+                      </div>
+                    </div>
+                  </div>
+                    
+                  <div style="width: 100%;" if.bind="dboservices.services.length > 0">
+                    <nav style="float: right" aria-label="...">
+                      <ul class="pagination">
+                        <li class.bind="(dboservices.page == 1)? 'page-item disabled' : 'page-item'">
+                          <a class="page-link" tabindex="-1" click.delegate="Vorige()">Vorige</a>
+                        </li>
+                        <li class.bind="((p + 1) == dboservices.page)? 'page-item active': 'page-item'" repeat.for="p of dboservices.pageCount"><a class="page-link" click.delegate="goToPage(p + 1)"> ${p + 1} <span class="sr-only" if.bind="((p + 1) == dboservices.page)">(current)</span></a></li>
+                        <li class.bind="(dboservices.page == dboservices.pageCount)? 'page-item disabled' : 'page-item'">
+                          <a class="page-link" click.delegate="next()">De volgende</a>
+                        </li>
+                      </ul>
+                    </nav>
+                  </div>
+                </div>
+              </fieldset>
+              <fieldset>
+                <div class="form-group" disabled.bind="isBusy">
+                    <h3>Selecteer de gewenste stylist</h3>
+                    <div class="row">
+                        <div class="col-md-6 col-xs-12" click.delegate="onNoPreferenceSelected($event)">
+                            <div if.bind="stylist" class="my-2 p-2" style="min-height: 100px; border: 1px solid; padding-top: 20px;" >
+                                <h5 class="ml-3 my-4">Geen voorkeur</h5>
+                            </div>
+                            <div if.bind="!stylist" class="my-2 p-2 active" style="min-height: 100px; border: 1px solid; padding-top: 20px;">
+                                <h5 class="ml-3 my-4">Geen voorkeur</h5>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 col-xs-12" repeat.for="stylist of service.accountBranchServices">
+                          <div class="my-2 p-2 ${stylist.active}" style="min-height: 100px; border: 1px solid; cursor: pointer;" click.delegate="onStylistSelected(stylist)">
+                            <h5 class="ml-3 my-4" if.bind="!stylist.account.user">Anoniem</h5>
+                            <h5 class="ml-3 my-4" if.bind="stylist.account.user">${ stylist.account.user.firstName } ${ stylist.account.user.lastName }</h5>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+              </fieldset>
+              <fieldset>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="datepicker"></div>
+                        </div>
+                    </div>
+                </div>
+              </fieldset>
+              <fieldset>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div>
+                                <div class="card-title" style="padding:3px 10px;border:1px solid;color:#fff;text-align:center;background:#000;margin:0px -15px;"><label style="margin-bottom: 0px;">SELECT APPOINTMENT TIME</label></div>
+                                <div class="card-body" style="border: 1px solid; margin-top: 15px;" if.bind="day.status == 0">
+                                  <div class="row" if.bind="availableslots">
+                                    <div class="col-md-2" repeat.for="slot of availableslots" if.bind="availableslots.length > 0">
+                                      <div style="border:1px solid;text-align:center;" class="mb-2 ${slot.active}" click.delegate="onTimeSelected(slot.interval)">
+                                          <label>${ slot.interval }</label>
+                                      </div>
+                                    </div>
+                                    <div class="col-md-12 py-5 text-center" if.bind="availableslots.length == 0">
+                                      <label>De stylist ${ stylist.user.firstName } is volledig bezet voor de dag, selecteer een andere dag of een andere stylist die beschikbaar is</label>
+                                    </div>
+                                  </div>
+                                  <div class="row" if.bind="!availableslots">
+                                    <div class="col-3" style="text-align: center; margin: auto;">
+                                      <span class="spinner-border spinner-border-sm" style="width: 3rem; height: 3rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+                                      <label>Even geduld aub...</label>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="card card-body text-center mt-5" if.bind="day.status == 1" style="font-size: 35px;">
+                                  <label>Sorry, we zijn gesloten op deze dag</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </fieldset>
+              <fieldset>
+                <label style="margin: auto">U bent er bijna, kunt u de onderstaande informatie controleren en bevestigen?</label>
+                <div class="row">
+                    <div class="col-md-6"><b>Afspraak : </b></div>
+                    <div class="col-md-6">${AppointmentDate}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6"><b>Gewenste stylist : </b></div>
+                    <div class="col-md-6">${ stylist? stylist.account.user.firstName : 'Geen voorkeur' }</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6"><b>Aangevraagde service : </b></div>
+                    <div class="col-md-6">${ service.name }</div>
+                </div>
+              </fieldset>
+              <fieldset>
+                <div class="row">
+                    <h5>Je contactgegevens</h5>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-6">
+                          <label>Voornaam</label>
+                          <input type="text" value.bind="_authenticationService.account.user.firstName" class="form-control" placeholder="First Name">
+                        </div>
+                        <div class="col-md-6">
+                          <label>Achternaam</label>
+                          <input type="text" value.bind="_authenticationService.account.user.lastName" class="form-control" placeholder="Last Name">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                  <label>Email</label>
+                    <div class="row">
+                        <div class="col-md-12"><input type="email" value.bind="_authenticationService.account.user.contact.email" class="form-control" placeholder="Email Address"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-12">
+                          <label>Telefoon</label>
+                          <input type="tel" value.bind="_authenticationService.account.user.contact.phone" class="form-control" placeholder="Tel">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6 mb-2">
+                      <label>Straat</label>
+                      <input type="text" value.bind="_authenticationService.account.user.address.street" class="form-control" placeholder="Luther str" disabled.bind="isBusy">
+                  </div>
+                  <div class="col-md-6 mb-2">
+                    <label>Postcode</label>
+                    <input type="text" value.bind="_authenticationService.account.user.address.zipCode" class="form-control" placeholder="Luther str" disabled.bind="isBusy">
+                  </div>
+                  <div class="col-md-12 mb-2">
+                      <label>Staad</label>
+                      <input type="text" value.bind="_authenticationService.account.user.address.city" class="form-control" placeholder="City Name" disabled.bind="isBusy">
+                  </div>
+              </div>
+                <div class="form-group m-b-10">
+                    <div class="col-md-12">
+                        <div class="checkbox checkbox-primary p-b-10">
+                            <input id="terms-conditions" type="checkbox">
+                            <label for="terms-conditions"> Ik ga akkoord met de algemene voorwaarden</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group m-b-10">
+                    <div class="col-md-12">
+                        <div class="checkbox checkbox-primary p-b-10">
+                            <input id="store-news" type="checkbox">
+                            <label for="store-news">Ik wil updates en nieuws ontvangen van ${ _storeService.store.name }</label>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <div style="text-align: center;">
+                    <label>Bedankt voor het maken van een reservering. U ontvangt een bevestigingsmail.</label>
+                </div>
+            </fieldset>
+			
+			<div style="overflow:auto;" if.bind="types">
+			  <div style="float:right;">
+          <button if.bind="!isBusy && currentPage != 0" type="button" class="btn btn-sm btn-outline-secondary" style="width: 150px;" id="prevBtn" click.delegate="nextPrev(-1)">Vorige</button>
+          <button if.bind="!isBusy" type="button" class="btn btn-sm btn-secondary" style="width: 150px;" id="nextBtn" click.delegate="nextPrev(1)">VorigeDe volgende</button>
+          <!--<button if.bind="currentPage == 7 || currentPage == 8" class="btn btn-sm btn-secondary" style="width: 150px;" click.delegate="startOver()">Done</button>-->
+          <button if.bind="isBusy" class="btn btn-sm btn-secondary btn-block" type="button" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Even geduld aub...
+          </button>
+			  </div>
+			</div>
+    </form>
+    </div>
+    <info.dialog message.bind="msg"></info.dialog>
+    </div>
+</template>

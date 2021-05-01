@@ -1,0 +1,92 @@
+<template bindable="storeservice">
+    <require from="./bsfooter.css"></require>
+    <footer class="footer-widget-area" css="${ (storeservice.store.footerBackgroundColor != undefined)? 'background:' + storeservice.store.footerBackgroundColor + ';' : ''} ${ (storeservice.store.footerTextColor != undefined)? 'color:' + storeservice.store.footerTextColor + ';' : '' }">
+        <div class="footer-top section-padding">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3 col-md-6">
+                        <div class="widget-item">
+                            <div class="widget-title">
+                                <div class="widget-logo mb-3">
+                                    <a if.bind="!storeservice.store && !storeservice.getHomePage()" class="navbar-brand" href="#"><label>B&S</label></a>
+                                    <a if.bind="storeservice.store && storeservice.getHomePage()" class="navbar-brand" href="#" css="${ (storeservice.store.footerTextColor != undefined)? 'color:' + storeservice.store.footerTextColor : '' }">
+                                      <img class="img-fluid" style="max-height: 50px; margin-right: 5px" src="data:'image/jpeg';base64,${ storeservice.store.logo }">
+                                      <span class="footer_shop_name">${ storeservice.store.name? storeservice.store.name : 'Store Name' }</span>
+                                    </a>
+                                    <a if.bind="storeservice.store && !storeservice.getHomePage()" class="navbar-brand" href="./" css="${ (storeservice.store.footerTextColor != undefined)? 'color:' + storeservice.store.footerTextColor : '' }">
+                                      <img class="img-fluid" if.bind="storeservice.store.logo" style="max-height: 50px; margin-right: 5px" src="data:'image/jpeg';base64,${ storeservice.store.logo }">
+                                      <label>${ storeservice.store.name }</label>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="widget-body">
+                                <p>${ storeservice.store.storeDesc? storeservice.store.storeDesc : 'Deze plek voelt eenzaam, voeg iets toe' }</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="widget-item">
+                            <h6 class="widget-title">Neem contact op</h6>
+                            <div class="widget-body" repeat.for="branch of storeservice.store.branches">
+                              <label>${ branch.name }</label>
+                                <address class="contact-block">
+                                    <ul>
+                                        <li><i class="pe-7s-home"></i>${branch.address.street}, ${ branch.address.city }</li>
+                                        <li><i class="pe-7s-mail"></i> <a css="${ storeservice.store.footerTextColor? 'color:' + storeservice.store.footerTextColor + ';' : '' }" href="mailto:${ branch.contact.email }">${ branch.contact.email }</a></li>
+                                        <li><i class="pe-7s-call"></i> <a css="${ storeservice.store.footerTextColor? 'color:' + storeservice.store.footerTextColor + ';' : '' }" href="tel:${ branch.contact.phone }">${ branch.contact.tel }</a></li>
+                                    </ul>
+                                </address>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="widget-item">
+                            <h6 class="widget-title">Informatie</h6>
+                            <div class="widget-body">
+                                <ul class="info-list">
+                                    <li><a css="${ storeservice.store.footerTextColor? 'color:' + storeservice.store.footerTextColor + ';' : '' }" href="#">About us</a></li>
+                                    <li><a css="${ storeservice.store.footerTextColor? 'color:' + storeservice.store.footerTextColor + ';' : '' }" href="#">Delivery Information</a></li>
+                                    <li><a css="${ storeservice.store.footerTextColor? 'color:' + storeservice.store.footerTextColor + ';' : '' }" href="#">Privacy Policy</a></li>
+                                    <li><a css="${ storeservice.store.footerTextColor? 'color:' + storeservice.store.footerTextColor + ';' : '' }" href="#">Terms &amp; Conditions</a></li>
+                                    <li><a css="${ storeservice.store.footerTextColor? 'color:' + storeservice.store.footerTextColor + ';' : '' }" href="#">Contact us</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="widget-item">
+                            <h6 class="widget-title">Download de app hier</h6>
+                            <div class="widget-body social-link">
+                                <div class="row mb-3">
+                                  <div class="col-8">
+                                    <a href="${ storeservice.store.androidAppUrl? storeservice.store.androidAppUrl: 'javascript:;' }">
+                                      <img src="../../static/assets/images/google_play_badge.png" style="width: 100%;" />
+                                    </a>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-8" style="padding: 0px 8px;">
+                                    <a href="${ storeservice.store.iosAppUrl? storeservice.store.iosAppUrl: 'javascript:;' }">
+                                      <img src="../../static/assets/images/apple_store_badge.png" style="width: 100%;" />
+                                    </a>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="copyright-text text-center">
+                            <p>Aangedreven door <a css="${ storeservice.store.footerTextColor? 'color:' + storeservice.store.footerTextColor + ';' : '' }" href="#">Bimsoft NV</a> 2020</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</template>

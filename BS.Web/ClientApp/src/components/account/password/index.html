@@ -1,0 +1,60 @@
+<template>
+  <require from="../../../extensions/info/info.dialog.html"></require>
+    <div slot="_content">
+        <div class="row mb-3">
+            <div class="col-12">
+                <h3>Wachtwoord Wijzigen</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div if.bind="error" style="color: #f00;">${ error }</div>
+                <form submit.delegate="changePassword()">
+                    <div class="form-group">
+                        <label>Huidig ​​Wachtwoord</label>
+                        <input type="password" class="form-control" value.bind="dboAccount.currentPassword & validate" disabled.bind="isBusy">
+                    </div>
+                    <div class="form-group">
+                        <label>Nieuw Paswoord</label>
+                        <input type="password" value.bind="dboAccount.newPassword & validate" class="form-control" disabled.bind="isBusy">
+                    </div>
+                    <div class="form-group">
+                        <label>Bevestig Wachtwoord</label>
+                        <input type="password" value.bind="dboAccount.confirmedPassword & validate" class="form-control" disabled.bind="isBusy">
+                    </div>
+                    <div class="float-right">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" style="min-width: 120px;" disabled.bind="isBusy">Cancel</button>
+                        <button if.bind="!isBusy" type="submit" class="btn btn-secondary btn-sm" style="min-width: 120px;">Save</button>
+                        <button if.bind="isBusy" class="btn btn-secondary btn-sm" type="button" style="min-width: 120px;" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Wacht Alsjeblieft..
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <info.dialog message.bind="msg"></info.dialog>
+    
+        <div id="logInfo" class="modal fade in" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" >
+                <div class="modal-content">
+                    <div class="modal-header" style="border: 0;padding: 0;">
+                        <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body" style="text-align: center;">
+                        <div class="card-body">
+                            <h4 class="card-title">${ _message.title }</h4>
+                            <label>${ _message.message }</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm waves-effect" click.delegate="logout()"  style="min-width: 120px; padding: .2rem .75rem;">Ok</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+    </div>
+</template>

@@ -1,0 +1,86 @@
+<template>
+    <div class="admin-container">
+        <div class="row">
+          <div class="col-9">
+            <h3 class="card-title">Store Services</h3>
+          </div>
+          <div class="col-3">
+            <a class="btn btn-secondary btn-sm btn-block ai-btn" href="#/admin/service/">Add New Service</a>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-4">
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon1"><i class="mdi mdi-magnify"></i></span>
+              <input type="text" value.bind="dboservices.search" class="form-control" placeholder="Search Services" keyup.trigger="_search()" disabled.bind="(dboservices.services == undefined)">
+            </div>
+          </div>
+        </div>
+        <div class="row card card-body mt-3" if.bind="!dboservices.services">
+          <div class="col-3" style="text-align: center; margin: auto;">
+            <span class="spinner-border spinner-border-sm" style="width: 3rem; height: 3rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+            <label>Even geduld aub...</label>
+          </div>
+        </div>
+        <div class="card card-body mt-3" if.bind="dboservices.services">
+            <div class="card card-body" if.bind="dboservices.services.length == 0" style="text-align: center;">No store services so far.</div>
+            <table if.bind="dboservices.services.length > 0" class="display nowrap table table-hover table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr repeat.for="service of dboservices.services">
+                        <td>${ service.name }</td>
+                        <td>${ service.saleItem.price }</td>
+                        <td>
+                          <a href="#/admin/service/?serviceId=${service.id}" class="btn btn-sm btn-icon btn-pure btn-outline"><i class="icon-note"></i></a>
+                          <a href="#" class="btn btn-sm btn-icon btn-pure btn-outline" data-toggle="modal" data-target="#warning" click.delegate="initService(service)"><i class="icon-trash"></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="width: 100%;" if.bind="dboservices.services.length > 0">
+              <nav style="float: right" aria-label="...">
+                <ul class="pagination">
+                  <li class.bind="(dboservices.page == 1)? 'page-item disabled' : 'page-item'">
+                    <a class="page-link" tabindex="-1" click.delegate="previous()">Previous</a>
+                  </li>
+                  <li class.bind="isActive((p + 1), dboservices.page)? 'page-item active': 'page-item'" repeat.for="p of dboservices.pageCount"><a class="page-link" click.delegate="goToPage(p + 1)"> ${p + 1} <span class="sr-only" if.bind="isActive((p + 1), dboservices.page)">(current)</span></a></li>
+                  <li class.bind="(dboservices.page == dboservices.pageCount)? 'page-item disabled' : 'page-item'">
+                    <a class="page-link" click.delegate="next()">Next</a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+        </div>
+    </div>
+
+    <div id="warning" class="modal fade in" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog" >
+          <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Warning!!!</h4>
+                  <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+              </div>
+              <div class="modal-body">
+                <div class="text-center"><label>Are you sure about deleting this service?</label></div>
+              </div>
+              <div class="modal-footer">
+                  <button disabled.bind="isBusy == true" type="button" class="btn btn-outline-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 120px; padding: .2rem .75rem;">Cancel</button>
+                  <button if.bind="!isBusy" type="button" class="btn btn-secondary btn-sm waves-effect" style="min-width: 120px; padding: .2rem .75rem;" click.delegate="save()">Delete</button>
+                  <button if.bind="isBusy" type="button" class="btn btn-secondary waves-effect btn-sm" style="width: 120px;">
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                      Please wait...
+                  </button>
+              </div>
+          </div>
+          <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+  </div>
+</template>

@@ -1,0 +1,31 @@
+<template bindable="prow, rowmodule">
+  <div class="container">
+    <div class="row mt-3">
+      <div class="col-${ 12/prow.columns.length }" repeat.for="_column of prow.columns">
+        <div style="width: 100%">
+          <div if.bind="_column.contents.length > 0">
+            <div repeat.for="_content of _column.contents" show.bind="_content.deleted == 0">
+              <div if.bind="_content.contentType == 0">
+                <h2>${ _content.title }</h2>
+                <h6>${ _content.subTitle }</h6>
+              </div>
+              <div if.bind="_content.contentType == 1">
+                ${ _content.text }
+              </div>
+              <div if.bind="_content.contentType == 2">
+                <img src="data:'image/jpeg';base64,${_content.image}" alt="Image" class="img-fluid">
+              </div>
+              <div if.bind="_content.contentType == 3">
+                <a class="btn btn-secondary" style="margin:auto;" href="{_content.url}">${ _content.urlText }</a>
+              </div>
+              <div if.bind="_content.contentType == 4" css="width: 100%; height: ${_content.space}px;"></div>
+              <div class="row" if.bind="_content.contentType == 5" style="margin-bottom: 3px; min-height: 30px;">
+                <row.module prow.bind="_content.row" rowmodule.bind="rowmodule" style="width: 100%;"></row.module>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

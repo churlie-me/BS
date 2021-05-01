@@ -1,0 +1,134 @@
+<template bindable="storeservice, authentication, cart">
+    <div class="g-translate row">
+      <div class="col-12">
+        <select onchange="doGTranslate(this);" class="g-translate form-control">
+          <option value="nl|ar" data-image="assets/images/ic_arabic.png"> Arabic</option>
+          <option value="nl|zh-CN" data-image="assets/images/ic_chinese.png"> Chinese</option>
+          <option value="nl|hr" data-image="assets/images/ic_croatia.png">Croatian</option>
+          <option value="nl|cs" data-image="assets/images/ic_czech.png">Czech</option>
+          <option value="nl|da" data-image="assets/images/ic_danish.png">Danish</option>
+          <option value="nl|nl" selected data-image="assets/images/ic_dutch.png"> Dutch</option>
+          <option value="nl|en" data-image="assets/images/ic_english.png">English</option>
+          <option value="nl|tl" data-image="assets/images/ic_filipino.png">Filipino</option>
+          <option value="nl|fi" data-image="assets/images/ic_finish.png">Finnish</option>
+          <option value="nl|fr" data-image="assets/images/ic_french.png">French</option>
+          <option value="nl|de" data-image="assets/images/ic_german.png">German</option>
+          <option value="nl|el" data-image="assets/images/ic_greek.png">Greek</option>
+          <option value="nl|is" data-image="assets/images/ic_icelandish.png">Icelandic</option>
+          <option value="nl|ga" data-image="assets/images/ic_irish.png">Irish</option>
+          <option value="nl|it" data-image="assets/images/ic_italian.png">Italian</option>
+          <option value="nl|ja" data-image="assets/images/ic_japanese.png">Japanese</option>
+          <option value="nl|ko" data-image="assets/images/ic_korean.png">Korean</option>
+          <option value="nl|no" data-image="assets/images/ic_norwegian.png">Norwegian</option>
+          <option value="nl|fa" data-image="assets/images/ic_persian.png">Persian</option>
+          <option value="nl|pl" data-image="assets/images/ic_polish.png">Polish</option>
+          <option value="nl|pt" data-image="assets/images/ic_portuguese.png">Portuguese</option>
+          <option value="nl|ru" data-image="assets/images/ic_russian.png">Russian</option>
+          <option value="nl|es" data-image="assets/images/ic_spanish.png">Spanish</option>
+          <option value="nl|sv" data-image="assets/images/ic_swedish.png">Swedish</option>
+          <option value="nl|cy" data-image="assets/images/ic_walish.png">Welsh</option>
+        </select>
+        <div id="google_translate_element2"></div>
+      </div>
+    </div>
+    <header class="topheader" id="top" css="${ (storeservice.store.headerBackgroundColor != undefined)? 'background:' + storeservice.store.headerBackgroundColor : '' }">
+        <div class="fix-width">
+            <nav class="navbar navbar-expand-md navbar-light p-l-0">
+                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
+                <!-- Logo will be here -->
+                <a if.bind="!storeservice.store && !storeservice.getHomePage()" class="navbar-brand" href="#"><label>B&S</label></a>
+                <a if.bind="storeservice.store && !storeservice.getHomePage()" class="navbar-brand" href="#" css="${ (storeservice.store.headerTextColor != undefined)? 'color:' + storeservice.store.headerTextColor : '' }">
+                  <img class="img-fluid" if.bind="storeservice.store.logo" style="max-height: 50px; margin-right: 5px" src="data:'image/jpeg';base64,${ storeservice.store.logo }">
+                  <label>${ storeservice.store.name }</label>
+                </a>
+                <a if.bind="storeservice.store && storeservice.getHomePage()" class="navbar-brand" href="#" css="${ (storeservice.store.headerTextColor != undefined)? 'color:' + storeservice.store.headerTextColor : '' }">
+                  <img class="img-fluid" if.bind="storeservice.store.logo" style="max-height: 50px; margin-right: 5px" src="data:'image/jpeg';base64,${ storeservice.store.logo }">
+                  ${ storeservice.store.name }
+                </a>
+                <!-- This is the navigation menu -->
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav ml-auto stylish-nav">
+                        <li class="nav-item" repeat.for="_page of storeservice.store.pages" if.bind="!_page.isHomePage">
+                          <a class="nav-link" href="#/page/${ _page.slug }" css="${ (storeservice.store.headerTextColor != undefined)? 'color:' + storeservice.store.headerTextColor : '' }" >${ _page.title }</a>
+                        </li>
+                        <li class="nav-item" if.bind="storeservice.store">
+                            <a class="nav-link" href="#/services" css="${ (storeservice.store.headerTextColor != undefined)? 'color:' + storeservice.store.headerTextColor : '' }">Diensten</a>
+                        </li>
+                        <li class="nav-item" if.bind="storeservice.store">
+                            <a class="nav-link" href="#/shop" css="${ (storeservice.store.headerTextColor != undefined)? 'color:' + storeservice.store.headerTextColor : '' }">Winkel</a>
+                        </li>
+                        <li class="nav-item" if.bind="storeservice.store">
+                          <a class="nav-link" href="#/jobs" css="${ (storeservice.store.headerTextColor != undefined)? 'color:' + storeservice.store.headerTextColor : '' }">Jobs</a>
+                        </li>
+                        <li class="nav-item" if.bind="storeservice.store">
+                          <a class="nav-link" href="#/news" css="${ (storeservice.store.headerTextColor != undefined)? 'color:' + storeservice.store.headerTextColor : '' }">Nieuws</a>
+                        </li>
+                        <li class="nav-item" if.bind="storeservice.store">
+                            <a class="nav-link" href="#/reservation/" css="${ (storeservice.store.headerTextColor != undefined)? 'color:' + storeservice.store.headerTextColor : '' }">Reservering</a> 
+                        </li>
+                        <li class="nav-item" if.bind="!authentication.account"> 
+                            <a class="m-t-5 btn btn-secondary btn-sm font-13 mt-1" href="#/signin" style="width:120px;"><i class="icon icon-user"></i> ACCOUNT</a> 
+                        </li>
+                        <li class="nav-item dropdown" if.bind="authentication.account">
+                            <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark pro-pic pt-1" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" css="${ (storeservice.store.headerTextColor != undefined)? 'color:' + storeservice.store.headerTextColor : '' }">
+                                <img src="http://placehold.it/400x400" alt="user" class="rounded-circle mr-3" width="30">
+                                <label>Hoi, ${ authentication.account.user.firstName }</label>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink"> 
+                                <a class="dropdown-item" href="#/account"><i class="mdi mdi-face"></i> Mijn rekening</a>
+                                <a class="dropdown-item" href="#/account/appointments"><i class="mdi mdi-calendar-multiple"></i> Afspraken</a>
+                                <a class="dropdown-item" href="#/account/orders"><i class="mdi mdi-receipt"></i> Bestellingen</a>
+                                <a class="dropdown-item" click.delegate="authentication.logout()"><i class="mdi mdi-logout"></i> Uitloggen</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark pro-pic pt-1 font-18 mt-1" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="icon icon-bag"></i>
+                                <span class="cart-items">${ cart.items.length }</span>
+                            </a>
+                            <div class="dropdown-menu px-3" style="min-width: 280px;" aria-labelledby="navbarDropdownMenuLink">
+                                <div class="row">
+                                    <div class="col-6"><span>${ cart.items.length } ITEMS</span></div>
+                                    <div class="col-6"><a class="float-right" href="#/cart">
+                                      BEKIJK WINKELWAGEN</a></div>
+                                </div>
+                                <hr>
+                                <div class="row" if.bind="cart.items.length == 0">
+                                    <span style="margin: auto;">Geen artikelen in winkelwagen</span>
+                                </div>
+                                <div if.bind="cart.items.length > 0">
+                                    <div class="row" repeat.for="orderItem of cart.items">
+                                        <div class="col-8">
+                                            <div class="ml-2" style="font-weight: 400;">
+                                                <h5>${ orderItem.item.name }</h5>
+                                                <label>${ orderItem.quantity } x ${ orderItem.item.saleItem.price }</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <img class="img-fluid" if.bind="orderItem.item.image" style="max-width: 60px;" src="data:'image/jpeg';base64,${orderItem.item.image}">
+                                            <img class="img-fluid" if.bind="!orderItem.item.image" style="max-width: 60px;" src="http://placehold.it/400x400" alt="product">
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <h5>Subtotaal : </h5>
+                                        </div>
+                                        <div class="col-6">
+                                            <h5 class="float-right">EUR ${ cart.getTotal() }</h5>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <a href="#/checkout" class="btn btn-secondary btn-block">UITCHECKEN</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </header>
+</template>

@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>BS.Core</id>
+    <version>1.0.0</version>
+    <authors>BS.Core</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Package Description</description>
+    <dependencies>
+      <group targetFramework=".NETCoreApp3.0">
+        <dependency id="Microsoft.AspNetCore.Identity.EntityFrameworkCore" version="5.0.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.EntityFrameworkCore.Proxies" version="5.0.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="C:\Users\CJ\source\Repos\BS\BS.Core\bin\Debug\netcoreapp3.0\BS.Core.runtimeconfig.json" target="lib\netcoreapp3.0\BS.Core.runtimeconfig.json" />
+    <file src="C:\Users\CJ\source\Repos\BS\BS.Core\bin\Debug\netcoreapp3.0\BS.Core.dll" target="lib\netcoreapp3.0\BS.Core.dll" />
+  </files>
+</package>

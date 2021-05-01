@@ -1,0 +1,234 @@
+<template>
+    <require from="../../../extensions/progress/progress.dialog.html"></require>
+    <div class="admin-container">
+        <form>
+            <div class="row">
+                <div class="col-md-10"></div>
+                <div class="col-md-2">
+                    <button type="button" click.delegate="SaveStore()"  class="btn btn-block btn-secondary btn-sm">Save</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="row mb-1">
+                        <div class="col-12">
+                            <h5 class="card-title">Product Details</h5>
+                        </div>
+                    </div>
+                    <div class="card card-body">
+                        <div class="form-group">
+                            <h6>Name</h6>
+                            <input type="text" value.bind="product.name" class="form-control" placeholder="Name">
+                        </div>
+                        <div class="form-group row" style="padding: 0px 10px;">
+                            <h6 class="col-md-12" style="padding: 0px">Category</h6>
+                            <select value.bind="product.categoryId" class="custom-select col-10" id="inlineFormCustomSelect">
+                                <option model.bind="null" selected>Choose...</option>
+                                <option repeat.for="category of categories" model.bind="category.id" [selected]="product.categoryId==category.id">${ category.name }</option>
+                            </select>
+                            <div class="col-md-2" style="padding-right: 0px;">
+                                <button type="button" class="btn btn-block btn-primary btn-sm" data-toggle="modal" data-target="#category">Add</button>
+                            </div>
+                        </div>
+                        <div class="form-group row" style="padding: 0px 10px;">
+                            <h6 class="col-md-12"  style="padding: 0px">Brand</h6>
+                            <select value.bind="product.brandId" class="col-md-10 custom-select" id="inlineFormCustomSelect">
+                                <option model.bind="null" selected>Choose...</option>
+                                <option repeat.for="brand of brands" model.bind="brand.id" [selected]="product.brandId==brand.id">${ brand.name }</option>
+                            </select>
+                            <div class="col-md-2" style="padding-right: 0px;">
+                                <button type="button" class="btn btn-block btn-primary btn-sm" data-toggle="modal" data-target="#brand">Add</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <h6>Price</h6>
+                            <input type="number" value.bind="product.saleItem.price" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <h6 class="control-label">Description</h6>
+                            <textarea rows="4" value.bind="product.description" class="form-control"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-8">
+                            <h5 class="card-title">Instructions</h5>
+                        </div>
+                        <div class="col-4">
+                            <button type="button" class="btn btn-secondary btn-block ai-btn btn-sm" click.delegate="onInitInstruction()" data-toggle="modal" data-target="#instruction">Add New</button>
+                        </div>
+                    </div>
+                    <div class="card card-body">
+                        <div class="form-group">
+                            <div class="row" if.bind="product.instructions">
+                                <div class="col-12">
+                                <div class="panel panel-default panel-body" if.bind="product.instructions.length == 0" style="text-align: center; margin-top: 10px;">No instruction for this product yet</div>
+                                <table if.bind="product.instructions.length > 0" class="display table table-hover table-striped table-bordered" style="margin-top: 10px;">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Description</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr repeat.for="instruction of product.instructions" if.bind="!instruction.deleted">
+                                            <td>${ instruction.title }</td>
+                                            <td>${ instruction.description }</td>
+                                            <td>
+                                              <a data-toggle="modal" data-target="#instruction" href="javascript:;" class="btn btn-sm btn-icon btn-pure btn-outline" click.delegate="onInitInstruction(instruction)"><i class="icon-note"></i></a>
+                                              <a data-toggle="modal" data-target="#warning" href="javascript:;" class="btn btn-sm btn-icon btn-pure btn-outline" click.delegate="onInitInstruction(instruction)"><i class="icon-trash"></i></a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row mb-1">
+                        <div class="col-12">
+                            <h5 class="card-title">Product Image</h5>
+                        </div>
+                    </div>
+                    <div class="card px-3">
+                        <div class="image-area-3 .logo mt-4">
+                            <img id="imageResult" src="data:'image/jpeg';base64,${product.image}" alt="" class="img-fluid rounded shadow-sm mx-auto d-block">
+                        </div>
+                        <!-- Upload image input-->
+                        <input type="hidden" value.bind="product.image">
+
+                        <div class="input-group mt-5 mb-3">
+                            <input id="image" change.delegate="OnArticleChanged()" accept="image/png, image/jpeg" type="file" class="form-control border-0">
+                            <label id="upload-label" for="upload" class="btn btn-outline-secondary btn-block rounded-pill shadow-sm"> <i class="fa fa-cloud-upload mr-2 text-muted"></i> CHOOSE FILE</label>
+                        </div>
+                        <p class="font-italic mt-3 text-center">(Your product image should be 500 x 500)</p>
+                    </div>
+                    <h5 class="card-title mt-2">Article Background Image</h5>
+                    <div class="card mt-3 mb-3 px-3">
+                        <div class="image-area mt-4">
+                            <img id="imageResult" src="data:'image/jpg';base64,${product.background}" alt="" class="img-fluid rounded shadow-sm mx-auto d-block">
+                        </div>
+                        <!-- Upload image input-->
+                        <input type="hidden" bind.value="product.background">
+                        <div class="input-group mt-5 mb-3">
+                            <input id="backgroundImage" change.delegate="OnBackgroundChanged()" accept="image/png, image/jpeg" type="file" class="form-control border-0">
+                            <label id="upload-label" for="upload" class="btn btn-outline-secondary btn-block rounded-pill shadow-sm"> <i class="fa fa-cloud-upload mr-2 text-muted"></i> CHOOSE FILE</label>
+                        </div>
+                        <p class="font-italic mt-3 text-center">(Your image should be 1400 x 500)</p>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!--Instruction Modal-->
+    <div id="instruction" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form submit.delegate="OnSaveInstruction()">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">Add Instruction</h4>
+                        <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true" #x_store>×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" value.bind="instruction.title" class="form-control" placeholder="Title">
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea rows="5" value.bind="instruction.description" class="form-control" placeholder="Description"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-secondary bs-btn waves-effect btn-sm">Save</button>
+                        <button type="button" class="btn btn-outline-secondary bs-btn waves-effect btn-sm" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+    <!--Create Category Modal-->
+    <div id="category" if.bind="category" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">Category</h4>
+                        <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true" #x_category>×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" value.bind="data_category" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" click.delegate="OnCreateCategory()" class="btn btn-secondary btn-sm bs-btn waves-effect">Save</button>
+                        <button type="button" class="btn btn-outline-secondary bs-btn waves-effect btn-sm" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <!--Create Brand Modal-->
+    <div id="brand" if.bind="brand" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">Brand</h4>
+                        <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true" #x_category>×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" value.bind="data_brand" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" click.delegate="OnCreateBrand()" class="btn btn-secondary btn-sm bs-btn waves-effect">Save</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm bs-btn waves-effect" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div id="warning" class="modal fade in" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog" >
+          <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Warning!!!</h4>
+                  <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+              </div>
+              <div class="modal-body">
+                <div class="text-center"><label>Are you sure about deleting this instruction?</label></div>
+              </div>
+              <div class="modal-footer">
+                  <button disabled.bind="isBusy == true" type="button" class="btn btn-outline-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 120px; padding: .2rem .75rem;">Cancel</button>
+                  <button if.bind="!isBusy" type="button" class="btn btn-secondary btn-sm waves-effect" style="min-width: 120px; padding: .2rem .75rem;" click.delegate="deleteInstruction()">Delete</button>
+                  <button if.bind="isBusy" type="button" class="btn btn-secondary waves-effect btn-sm" style="width: 120px;">
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                      Please wait...
+                  </button>
+              </div>
+          </div>
+          <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    <progress.dialog></progress.dialog>
+</template>

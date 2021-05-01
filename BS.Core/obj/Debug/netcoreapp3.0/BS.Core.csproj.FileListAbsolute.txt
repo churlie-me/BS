@@ -1,0 +1,12 @@
+C:\Users\CJ\source\Repos\BS\BS.Core\bin\Debug\netcoreapp3.0\BS.Core.deps.json
+C:\Users\CJ\source\Repos\BS\BS.Core\bin\Debug\netcoreapp3.0\BS.Core.runtimeconfig.json
+C:\Users\CJ\source\Repos\BS\BS.Core\bin\Debug\netcoreapp3.0\BS.Core.runtimeconfig.dev.json
+C:\Users\CJ\source\Repos\BS\BS.Core\bin\Debug\netcoreapp3.0\BS.Core.dll
+C:\Users\CJ\source\Repos\BS\BS.Core\bin\Debug\netcoreapp3.0\BS.Core.pdb
+C:\Users\CJ\source\Repos\BS\BS.Core\obj\Debug\netcoreapp3.0\BS.Core.AssemblyInfoInputs.cache
+C:\Users\CJ\source\Repos\BS\BS.Core\obj\Debug\netcoreapp3.0\BS.Core.AssemblyInfo.cs
+C:\Users\CJ\source\Repos\BS\BS.Core\obj\Debug\netcoreapp3.0\BS.Core.csproj.CoreCompileInputs.cache
+C:\Users\CJ\source\Repos\BS\BS.Core\obj\Debug\netcoreapp3.0\BS.Core.dll
+C:\Users\CJ\source\Repos\BS\BS.Core\obj\Debug\netcoreapp3.0\BS.Core.pdb
+C:\Users\CJ\source\Repos\BS\BS.Core\obj\Debug\netcoreapp3.0\BS.Core.genruntimeconfig.cache
+C:\Users\CJ\source\Repos\BS\BS.Core\obj\Debug\netcoreapp3.0\BS.Core.csprojAssemblyReference.cache

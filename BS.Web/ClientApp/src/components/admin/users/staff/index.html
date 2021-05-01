@@ -1,0 +1,375 @@
+<template>
+  <require from="../../../../extensions/progress/progress.dialog.html"></require>
+  <require from="../../../../extensions/info/info.dialog.html"></require>
+  <div class="row">
+    <div class="col-9">
+      <h2>Staff <em if.bind="account">{ ${account.user.firstName} ${account.user.lastName} }</em></h2>
+    </div>
+    <div class="col-3">
+      <button disabled.bind="!account" class="btn btn-secondary btn-block btn-sm" click.delegate="onSave()">Save</button>
+    </div>
+  </div>
+  <div class="row card card-body mt-3" if.bind="!account">
+    <div class="col-3" style="text-align: center; margin: auto;">
+      <span class="spinner-border spinner-border-sm" style="width: 3rem; height: 3rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+      <label>Even geduld aub...</label>
+    </div>
+  </div>
+  <div if.bind="account">
+    <div class="card row p-3 mt-3">
+      <div class="col-12">
+        <ul class="nav nav-tabs" role="tablist">
+          <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#defaults" role="tab"><span class="hidden-sm-up"><i class="mdi mdi-account"></i></span> <span class="hidden-xs-down">Defaults</span></a> </li>
+          <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#services" role="tab"><span class="hidden-sm-up"><i class="mdi mdi-calendar"></i></span> <span class="hidden-xs-down">Affiliated Services</span></a> </li>
+          <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#holidays" role="tab"><span class="hidden-sm-up"><i class="mdi mdi-calendar" click.delegate="getHolidays()"></i></span> <span class="hidden-xs-down">Holidays</span></a> </li>
+        </ul>
+        <div class="tab-content tabcontent-border">
+          <div class="tab-pane active" id="defaults" role="tabpanel">
+            <div class="row">
+              <div class="col-6">
+                  <ul class="list-group">
+                      <li class="list-group-item">
+                          Account Details
+                      </li>
+                      <li class="list-group-item">
+                          <div class="row">
+                              <div class="col-6">${ account.user.firstName }</div>
+                              <div class="col-6">${ account.user.lastName }</div>
+                          </div>
+                          <div class="row mt-4">
+                              <div class="col-12">${ account.email }</div>
+                          </div>
+                      </li>
+                  </ul>
+              </div>
+              <div class="col-6">
+                  <ul class="list-group">
+                      <li class="list-group-item">
+                          Contact Details
+                      </li>
+                      <li class="list-group-item">
+                          <div class="row">
+                              <div class="col-12">${ account.user.contact.tel }</div>
+                          </div>
+                          <div class="row mt-4">
+                              <div class="col-12">${ account.user.contact.email }</div>
+                          </div>
+                      </li>
+                  </ul>
+              </div>
+            </div>
+            <div class="row mt-5">
+              <div class="col-6">
+                  <ul class="list-group">
+                      <li class="list-group-item">
+                          Address Details
+                      </li>
+                      <li class="list-group-item">
+                          <div class="row">
+                              <div class="col-12">${ account.user.address.street }</div>
+                          </div>
+                          <div class="row mt-4">
+                            <div class="col-12">${ account.user.address.zipCode }</div>
+                        </div>
+                          <div class="row mt-4">
+                              <div class="col-12">${ account.user.address.city }</div>
+                          </div>
+                      </li>
+                  </ul>
+              </div>
+              <div class="col-6">
+                <ul class="list-group" style="height: 100%">
+                    <li class="list-group-item">
+                        Allocation
+                        <button type="button" class="btn btn-sm btn-icon btn-pure btn-outline float-right" data-toggle="modal" data-target="#_allocation"><i class="mdi mdi-pencil"></i></button>
+                    </li>
+                    <li class="list-group-item" style="height: 100%;">
+                        <div class="row">
+                            <strong class="col-2">Branch</strong><div class="col-10">${ account.branch.name }</div>
+                        </div>
+                        <div class="row mt-4">
+                          <strong class="col-2">Seat</strong><div class="col-10">${ account.seat.name }</div>
+                      </div>
+                    </li>
+                </ul>
+            </div>
+            </div>
+          </div>
+          <div class="tab-pane" id="services" role="tabpanel">
+            <div if.bind="account.accountBranchServices.length > 0">
+              <div class="row">
+                <div class="col-9"></div>
+                <div class="col-3">
+                  <button class="btn btn-outline-secondary btn-sm btn-block" data-toggle="modal" data-target="#_services">Add Services</button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <table class="display nowrap table table-hover table-striped table-bordered" style="margin-top: 10px;">
+                    <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr repeat.for="abs of account.accountBranchServices" if.bind="abs.deleted == 0">
+                            <td>${ abs.service.name }</td>
+                            <td>
+                                <a class="btn btn-sm btn-icon btn-pure btn-outline" data-toggle="modal" data-target="#_deleteService" click.delegate="initService(abs)"><i class="icon-trash"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div if.bind="account.accountBranchServices.length == 0">
+              <div class="text-center">
+                <div>No services attached</div>
+                <button class="btn btn-outline-secondary btn-sm mt-2" data-toggle="modal" data-target="#_services">Add Services</button>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane" id="holidays" role="tabpanel">
+            <div class="row" if.bind="!_holidays">
+              <div class="col-3" style="text-align: center; margin: auto;">
+                <span class="spinner-border spinner-border-sm" style="width: 3rem; height: 3rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+                <label>Even geduld aub...</label>
+              </div>
+            </div>
+            <div class="row" if.bind="_holidays">
+              <div if.bind="_holidays.length > 0" style="width: 100%">
+                <div class="row">
+                  <div class="col-9"></div>
+                  <div class="col-3">
+                    <button class="btn btn-outline-secondary btn-sm btn-block" data-toggle="modal" data-target="#_holiday" click.delegate="onInitHoliday()">Add Holiday</button>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <table class="display nowrap table table-hover table-striped table-bordered" style="margin-top: 10px;">
+                      <thead>
+                          <tr>
+                              <th>Name</th>
+                              <th>From</th>
+                              <th>To</th>
+                              <th>Action</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr repeat.for="holiday of _holidays">
+                              <td>${ holiday.name }</td>
+                              <td>${ dateConverter.view(holiday.from) }</td>
+                              <td>${ dateConverter.view(holiday.to) }</td>
+                              <td>
+                                <a href="#" class="btn btn-sm btn-icon btn-pure btn-outline" data-toggle="modal" data-target="#_holiday" click.delegate="onInitHoliday(holiday)"><i class="icon-note"></i></a>
+                                <a href="#" class="btn btn-sm btn-icon btn-pure btn-outline" data-toggle="modal" data-target="#_deleteHoliday" click.delegate="onInitHoliday(holiday)"><i class="icon-trash"></i></a>
+                              </td>
+                          </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12" if.bind="_holidays.length == 0">
+                <div class="text-center">
+                  No holidays attached<br>
+                  <button class="btn btn-outline-secondary my-3" style="min-width: 150px;" data-toggle="modal" data-target="#_holiday" click.delegate="onInitHoliday()">Add Holidays</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <progress.dialog></progress.dialog>
+  <info.dialog title.bind="title" message.bind="message"></info.dialog>
+  <!--Attach Services Modal-->
+  <div id="_services" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+          <form submit.delegate="onSave()">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Store Services</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                <label>Branch Affiliated</label>
+                <select class="form-control" value.bind="branchId" disabled>
+                    <option model.bind="undefined">Choose</option>
+                    <option model.bind="branch.id" repeat.for="branch of storeService.store.branches">${ branch.name }</option>
+                </select>
+              </div>
+              <label>Attach Services</label>
+              <div if.bind="dboservices.services"> 
+                <div class="card card-body" if.bind="dboservices.services.length == 0" style="text-align: center;">No services so far.</div>
+                <div style="width: 100%;" if.bind="dboservices.services.length > 0">
+                  <table class="display nowrap table table-hover table-striped table-bordered" style="margin-top: 10px;">
+                    <thead>
+                        <tr>
+                          <th></th>
+                          <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr repeat.for="service of dboservices.services">
+                            <td><input id="${service.id}" checked.bind="isChecked(service)" click.delegate="onServiceSelected(service)" type="checkbox"></td>
+                            <td>${ service.name }</td>
+                        </tr>
+                    </tbody>
+                  </table>
+                  <div>
+                    <nav style="float: right" aria-label="...">
+                      <ul class="pagination">
+                        <li class.bind="(dboservices.page == 1)? 'page-item disabled' : 'page-item'">
+                          <a class="page-link" tabindex="-1" click.delegate="previous()">Previous</a>
+                        </li>
+                        <li class.bind="((p + 1) == dboservices.page)? 'page-item active': 'page-item'" repeat.for="p of dboservices.pageCount"><a class="page-link" click.delegate="goToPage(p + 1)"> ${p + 1} <span class="sr-only" if.bind="isActive((p + 1), dboservices.page)">(current)</span></a></li>
+                        <li class.bind="(dboservices.page == dboservices.pageCount)? 'page-item disabled' : 'page-item'">
+                          <a class="page-link" click.delegate="next()">Next</a>
+                        </li>
+                      </ul>
+                    </nav>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer" style="width:100%">
+              <button type="button" class="btn btn-outline-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 120px; padding: .2rem .75rem;">Cancel</button>
+              <button type="submit" class="btn btn-secondary btn-sm waves-effect" style="min-width: 120px; padding: .2rem .75rem;">Save</button>
+            </div>
+          </form>
+        </div>
+    </div>
+  </div>
+
+    <!--Create Holiday Modal-->
+    <div id="_holiday" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form submit.delegate="onSaveHoliday()">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">Holiday</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" #x_category>×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" value.bind="holiday.name" class="form-control" required disabled.bind="isBusy">
+                        </div>
+                        <div class="form-group">
+                            <label>From</label>
+                            <input type="date" value.bind="holiday.from" class="form-control" required disabled.bind="isBusy">
+                        </div>
+                        <div class="form-group">
+                          <label>To</label>
+                          <input type="date" value.bind="holiday.to" class="form-control" required disabled.bind="isBusy">
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button if.bind="!isBusy" type="button" class="btn btn-outline-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 130px; padding: .2rem .75rem;">Cancel</button>
+                        <button if.bind="!isBusy" type="submit" class="btn btn-secondary btn-sm waves-effect" style="min-width: 130px; padding: .2rem .75rem;">Save</button>
+                        <button if.bind="isBusy" class="btn btn-secondary btn-sm" type="button" style="min-width: 130px; padding: .2rem .75rem;" disabled>
+                          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                          Even geduld aub...
+                      </button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    
+
+    <!--Delete Holiday Modal-->
+    <div id="_deleteHoliday" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <form submit.delegate="onDeleteHoliday()">
+                <div class="modal-header" style="border: 0;padding: 0;">
+                  <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true" #x_pleasewait>×</button>
+                </div>
+                  <div class="modal-body" style="text-align: center;">
+                    <h4 class="card-title">Confirm Delete</h4>
+                    <label>Are you sure you want to delete this holiday?</label>
+                  </div>
+                  <div class="modal-footer">
+                      <button if.bind="!isBusy" type="button" class="btn btn-outline-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 130px; padding: .2rem .75rem;">Cancel</button>
+                      <button if.bind="!isBusy" type="submit" class="btn btn-secondary btn-sm waves-effect" style="min-width: 130px; padding: .2rem .75rem;">Save</button>
+                      <button if.bind="isBusy" class="btn btn-secondary btn-sm" type="button" style="min-width: 130px; padding: .2rem .75rem;" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Even geduld aub...
+                    </button>
+                  </div>
+              </form>
+          </div>
+          <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+  </div>
+
+  <!--Delete Affiliated Service Modal-->
+  <div id="_deleteService" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form submit.delegate="onDeleteAffiliatedService()">
+              <div class="modal-header" style="border: 0;padding: 0;">
+                <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true" #x_pleasewait>×</button>
+              </div>
+                <div class="modal-body" style="text-align: center;">
+                  <h4 class="card-title">Confirm Delete</h4>
+                  <label>Are you sure you want to delete this service?</label>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 130px; padding: .2rem .75rem;">Cancel</button>
+                    <button type="submit" class="btn btn-secondary btn-sm waves-effect" style="min-width: 130px; padding: .2rem .75rem;">Save</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<!--Staff Allocation Modal-->
+<div id="_allocation" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <form submit.delegate="onAllocateStaff()">
+            <div class="modal-header">
+              <h4 class="modal-title" id="myModalLabel">Staff Allocation</h4>
+              <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+              <div class="modal-body">
+                <div class="form-group">
+                  <label>Branch Affiliated</label>
+                  <select class="form-control" value.bind="account.branchId" change.delegate="getBranchSeats(account.branchId)">
+                      <option model.bind="undefined">Choose</option>
+                      <option model.bind="branch.id" repeat.for="branch of storeService.store.branches">${ branch.name }</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Seat</label>
+                  <select class="form-control" value.bind="account.seat.id">
+                      <option model.bind="undefined">Choose</option>
+                      <option model.bind="seat.id" repeat.for="seat of seats">${ seat.name }</option>
+                  </select>
+                </div>
+                <input type="hidden" value.bind="account.id">
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-outline-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 130px; padding: .2rem .75rem;">Cancel</button>
+                  <button type="button" class="btn btn-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 130px; padding: .2rem .75rem;">Save</button>
+              </div>
+          </form>
+      </div>
+      <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+</template>

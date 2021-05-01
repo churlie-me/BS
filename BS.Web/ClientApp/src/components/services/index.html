@@ -1,0 +1,115 @@
+<template>
+    <require from="./services.css"></require>
+    <div style.bind="bindBackgroundStyles()">
+      <div class="container">
+        <div class="row">
+          <div class="col-3" style="margin: auto">
+            <h2 class="text-center" style="color: #fff;">Services</h2>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-10">
+            <input type="text" value.bind="dboservices.search" class="form-control" placeholder="Search Services" disabled.bind="(dboservices.services == undefined)">
+          </div>
+          <div class="col-2">
+            <button class="btn btn-secondary btn-block" click.delegate="filter(undefined, dboservices.search)"><i class="mdi mdi-magnify"></i> Search</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container" style="padding-top: 10px; padding-bottom: 40px;">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="card" if.bind="categories">
+                    <div class="card-body">
+                        <h6 style="font-weight: bold;">Categories</h6>
+                        <div repeat.for="category of categories">
+                          <a href="#" click.delegate="filter(category.id, undefined)"><span>${ category.name }</span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9 order-1 order-lg-2">
+                <div class="card card-body text-center" style="min-height: 300px" if.bind="!dboservices.services">
+                    <label>Please wait...</label>
+                </div>
+                <div class="shop-product-wrapper" if.bind="dboservices.services">
+                    <!-- shop product top wrap start -->
+                    <div class="shop-top-bar" if.bind="products.length > 0">
+                        <div class="row align-items-center">
+                            <div class="col-lg-7 col-md-6 order-2 order-md-1">
+                                <div class="top-bar-left">
+                                    <div class="product-view-mode">
+                                        <a class="active" href="#" data-target="grid-view" data-toggle="tooltip" title="" data-original-title="Grid View"><i class="fa fa-th"></i></a>
+                                        <a href="#" data-target="list-view" data-toggle="tooltip" title="" data-original-title="List View"><i class="fa fa-list"></i></a>
+                                    </div>
+                                    <div class="product-amount">
+                                        <p>Showing 1–16 of 21 results</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-5 col-md-6 order-1 order-md-2">
+                                <div class="top-bar-right">
+                                    <div class="product-short form-group" style="text-align: right;">
+                                        <span>Sort By : </span>
+                                        <select class="form-control" name="sortby" style="float: right; width: auto; margin-left: 31px;">
+                                            <option value="trending">Relevance</option>
+                                            <option value="sales">Name (A - Z)</option>
+                                            <option value="sales">Name (Z - A)</option>
+                                            <option value="rating">Price (Low &gt; High)</option>
+                                            <option value="date">Rating (Lowest)</option>
+                                            <option value="price-asc">Model (A - Z)</option>
+                                            <option value="price-asc">Model (Z - A)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- shop service top wrap start -->
+                    <div class="card card-body" if.bind="dboservices.services.length == 0">
+                        <label>No services added yet</label>
+                    </div>
+
+                    <!-- service item list wrapper start -->
+                    <div class="shop-product-wrap grid-view mbn-30 card card-body " if.bind="dboservices.services.length > 0">
+                      <div class="row">
+                        <!-- service single item start -->
+                        <div class="col-md-6 col-sm-6" repeat.for="service of dboservices.services">
+                            <div class="row">
+                                <!--<div class="col-md-2">
+                                    <div style="vertical-align: middle; text-align: -webkit-center;border: 1px solid;">
+                                        <h1 style="line-height: 4.85rem;">V</h1>
+                                    </div>
+                                </div>-->
+                                <a style="min-height: 100px;border: 1px solid; padding-top: 3px;" click.delegate="onServiceSelected(_service.id)" class="au-target col-md-10 mb-2 active" au-target-id="70">
+                                    <h5>${ service.name }</h5>
+                                    <label>${ service.description.substring(0, 100) }...</label>
+                                </a>
+                            </div>
+                        </div>
+                        <!-- service single item start -->
+                      </div>
+                    </div>
+                    <!-- service item list wrapper end -->
+
+                    <!-- start pagination area -->
+                    <div style="width: 100%;" if.bind="dboservices.services.length > 0">
+                      <nav style="float: right" aria-label="...">
+                        <ul class="pagination">
+                          <li class.bind="(dboservices.page == 1)? 'page-item disabled' : 'page-item'">
+                            <a class="page-link" tabindex="-1" click.delegate="previous()">Previous</a>
+                          </li>
+                          <li class.bind="((p + 1) == dboservices.page)? 'page-item active': 'page-item'" repeat.for="p of dboservices.pageCount"><a class="page-link" click.delegate="goToPage(p + 1)"> ${p + 1} <span class="sr-only" if.bind="((p + 1) == dboservices.page)">(current)</span></a></li>
+                          <li class.bind="(dboservices.page == dboservices.pageCount)? 'page-item disabled' : 'page-item'">
+                            <a class="page-link" click.delegate="next()">Next</a>
+                          </li>
+                        </ul>
+                      </nav>
+                    </div>
+                    <!-- end pagination area -->
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

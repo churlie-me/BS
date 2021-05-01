@@ -1,0 +1,58 @@
+{
+  "name": "BS",
+  "type": "project:application",
+  "paths": {
+    "root": "src",
+    "resources": "resources",
+    "elements": "resources/elements",
+    "attributes": "resources/attributes",
+    "valueConverters": "resources/value-converters",
+    "bindingBehaviors": "resources/binding-behaviors"
+  },
+  "transpiler": {
+    "id": "babel",
+    "fileExtension": ".js"
+  },
+  "build": {
+    "options": {
+      "server": "dev",
+      "extractCss": "prod",
+      "coverage": false
+    }
+  },
+  "platform": {
+    "hmr": false,
+    "open": false,
+    "port": 8080,
+    "host": "localhost",
+    "output": "dist"
+  },
+  "dependencies": [
+    "aurelia-binding",
+    "jquery-ui-bundle",
+    {
+      "name": "aurelia-validation",
+      "path": "../node_modules/aurelia-validation/dist/amd",
+      "main": "aurelia-validation"
+    },
+    {
+        "name": "aurelia-validatejs",
+        "path": "../node_modules/aurelia-validatejs/dist/amd",
+        "main": "aurelia-validatejs"
+    },
+    {
+        "name": "validate.js",
+        "path": "../node_modules/validate.js/",
+        "main": "validate"
+    },
+    {
+      "name": "jquery-ui-bundle",
+      "path": "../node_modules/jquery-ui-bundle",
+      "main": "jquery-ui-bundle",
+      "deps": ["jquery-ui"],
+      "resources": [
+        "jquery-ui.css"
+      ]
+    }
+  ]
+}

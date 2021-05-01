@@ -1,0 +1,80 @@
+<template>
+    <div class="admin-container">
+        <div class="row">
+            <div class="col-md-10"></div>
+            <div class="col-md-2">
+                <button type="button" click.delegate="SaveProfile()"  class="btn btn-block btn-secondary">Save</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <h6>First Name</h6>
+                            <input type="text" value.bind="account.user.firstName" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <h6>Last Name</h6>
+                            <input type="text" value.bind="account.user.lastName" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <h6>Email</h6>
+                            <input type="email" value.bind="account.email" class="form-control" placeholder="john.doe@example.com">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <h6>Password</h6>
+                            <input type="email" value.bind="account.password" class="form-control" placeholder="************">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row" style="padding: 0px 15px;">
+                    <h6 class="col-md-12"  style="padding: 0px">User Role</h6>
+                    <select value.bind="user.roleId" class="col-md-10 custom-select" id="inlineFormCustomSelect">
+                        <option model.bind="null" selected>Choose...</option>
+                        <option repeat.for="role of roles" model.bind="role.id" [selected]="user.roleId==role.id">${ role.name }</option>
+                    </select>
+                    <div class="col-md-2" style="padding-right: 0px;">
+                        <button type="button" class="btn btn-block btn-primary" data-toggle="modal" data-target="#role">Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Create Role Modal-->
+    <div id="role" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">Role</h4>
+                        <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true" #x_category>×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" value.bind="name" class="form-control">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" click.delegate="OnCreateRole()" class="btn btn-info ai-btn waves-effect">Save</button>
+                        <button type="button" class="btn btn-outline-info ai-btn waves-effect" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</template>

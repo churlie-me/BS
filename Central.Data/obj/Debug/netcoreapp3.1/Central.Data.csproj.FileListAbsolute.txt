@@ -1,0 +1,12 @@
+C:\Users\CJ\source\Repos\BS\Central.Data\bin\Debug\netcoreapp3.1\Central.Data.deps.json
+C:\Users\CJ\source\Repos\BS\Central.Data\bin\Debug\netcoreapp3.1\Central.Data.dll
+C:\Users\CJ\source\Repos\BS\Central.Data\bin\Debug\netcoreapp3.1\Central.Data.pdb
+C:\Users\CJ\source\Repos\BS\Central.Data\bin\Debug\netcoreapp3.1\BS.Core.dll
+C:\Users\CJ\source\Repos\BS\Central.Data\bin\Debug\netcoreapp3.1\BS.Core.pdb
+C:\Users\CJ\source\Repos\BS\Central.Data\obj\Debug\netcoreapp3.1\Central.Data.csprojAssemblyReference.cache
+C:\Users\CJ\source\Repos\BS\Central.Data\obj\Debug\netcoreapp3.1\Central.Data.AssemblyInfoInputs.cache
+C:\Users\CJ\source\Repos\BS\Central.Data\obj\Debug\netcoreapp3.1\Central.Data.AssemblyInfo.cs
+C:\Users\CJ\source\Repos\BS\Central.Data\obj\Debug\netcoreapp3.1\Central.Data.csproj.CoreCompileInputs.cache
+C:\Users\CJ\source\Repos\BS\Central.Data\obj\Debug\netcoreapp3.1\Central.Data.csproj.CopyComplete
+C:\Users\CJ\source\Repos\BS\Central.Data\obj\Debug\netcoreapp3.1\Central.Data.dll
+C:\Users\CJ\source\Repos\BS\Central.Data\obj\Debug\netcoreapp3.1\Central.Data.pdb

@@ -1,0 +1,12 @@
+C:\Users\CJ\source\Repos\BS\BS.Data\bin\Debug\netcoreapp2.2\BS.Data.deps.json
+C:\Users\CJ\source\Repos\BS\BS.Data\bin\Debug\netcoreapp2.2\BS.Data.dll
+C:\Users\CJ\source\Repos\BS\BS.Data\bin\Debug\netcoreapp2.2\BS.Data.pdb
+C:\Users\CJ\source\Repos\BS\BS.Data\bin\Debug\netcoreapp2.2\BS.Core.dll
+C:\Users\CJ\source\Repos\BS\BS.Data\bin\Debug\netcoreapp2.2\BS.Core.pdb
+C:\Users\CJ\source\Repos\BS\BS.Data\obj\Debug\netcoreapp2.2\BS.Data.csprojAssemblyReference.cache
+C:\Users\CJ\source\Repos\BS\BS.Data\obj\Debug\netcoreapp2.2\BS.Data.AssemblyInfoInputs.cache
+C:\Users\CJ\source\Repos\BS\BS.Data\obj\Debug\netcoreapp2.2\BS.Data.AssemblyInfo.cs
+C:\Users\CJ\source\Repos\BS\BS.Data\obj\Debug\netcoreapp2.2\BS.Data.csproj.CoreCompileInputs.cache
+C:\Users\CJ\source\Repos\BS\BS.Data\obj\Debug\netcoreapp2.2\BS.Data.csproj.CopyComplete
+C:\Users\CJ\source\Repos\BS\BS.Data\obj\Debug\netcoreapp2.2\BS.Data.dll
+C:\Users\CJ\source\Repos\BS\BS.Data\obj\Debug\netcoreapp2.2\BS.Data.pdb

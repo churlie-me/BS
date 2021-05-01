@@ -1,0 +1,52 @@
+<template>
+  <require from="./row/row.module.html"></require>
+  <require from="../../../extensions/progress/progress.dialog.html"></require>
+  <div class="admin-container">
+    <div class="row">
+      <div class="col-9">
+          <h3 class="card-title">Page Builder</h3>
+      </div>
+      <div class="col-3">
+          <button if.bind="!isBusy" class="btn btn-secondary btn-block btn-sm" type="button" click.delegate="save()">Save</button>
+          <button if.bind="isBusy" class="btn btn-secondary btn-sm btn-block" type="button" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Even geduld aub...
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="form-group">
+          <h5>Title</h5>
+          <input type="text" value.bind="page.title" class="form-control" placeholder="Page Title" disabled.bind="isBusy">
+        </div>
+        <div class="form-group">
+          <h5>Slug</h5>
+          <input type="text" value.bind="page.slug" class="form-control" placeholder="Page Slug" disabled.bind="isBusy">
+        </div>
+        <div class="form-group">
+          <input type="checkbox" checked.bind="page.isHomePage" id="_isHomePage" disabled.bind="isBusy">
+          <label for="_isHomePage">Make Home Page</label>
+        </div>
+        <div class="page-content">
+          <div class="row mb-2" if.bind="page.rows.length > 0">
+            <div class="col-12">
+              <button type="button" class="btn btn-outline-secondary btn-sm bs-btn float-right" click.delegate="addRow()" disabled.bind="isBusy">Add Row</button>
+            </div>
+          </div>
+          <div if.bind="page.rows.length > 0" style="margin-bottom: 40px">
+            <div repeat.for="_row of page.rows" show.bind="_row.deleted == 0">
+              <row.module prow.bind="_row" rowmodule.bind="rowModule"></row.module>
+            </div>
+          </div>
+          <div if.bind="page.rows.length == 0">
+            <div class="row" style="margin: 8rem 0rem !important;">
+              <button style="margin: auto; min-width: 250px;" type="button" class="btn btn-outline-secondary" click.delegate="addRow()" disabled.bind="isBusy">Add Content</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <progress.dialog></progress.dialog>
+</template>

@@ -1,0 +1,274 @@
+.admin-container
+{
+    margin-top: 60px;
+}
+
+.page-layout
+{
+    min-height: 400px;
+}
+
+.asColorPicker-trigger {
+    position: absolute !important;
+    top: 0 !important;
+    right: -35px !important;
+    height: 38px !important;
+    width: 37px !important;
+    border: 0 !important;
+}
+
+.asColorPicker-clear {
+    display: none !important;
+    position: absolute !important;
+    top: 5px !important;
+    right: 10px !important;
+    text-decoration: none !important;
+}
+
+#upload, #logo, #storeImage, #image, #backgroundImage {
+    opacity: 0;
+}
+
+#upload-label {
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    transform: translateY(-50%);
+}
+
+.image-area, .image-area-2, .image-area-3 {
+    border: 2px dashed rgb(47 47 47 / 20%);
+    /*padding: 1rem;*/
+    position: relative;
+}
+
+.image-area::before {
+    content: 'Front Page Image Preview';
+    color: #5d5a5a;
+    text-align: center;
+    font-weight: bold;
+    text-transform: uppercase;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.8rem;
+    z-index: 1;
+}
+
+.image-area img, .image-area-2 img, .image-area-3 img {
+    z-index: 2;
+    max-height: 145px;
+    position: relative;
+}
+
+.image-area-2::before {
+    content: 'Logo Preview';
+    text-align: center;
+    color: #5d5a5a;
+    font-weight: bold;
+    text-transform: uppercase;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.8rem;
+    z-index: 1;
+}
+
+.image-area-3::before
+{
+    content: 'Image Preview';
+    text-align: center;
+    color: #5d5a5a;
+    font-weight: bold;
+    text-transform: uppercase;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.8rem;
+    z-index: 1;
+}
+
+.image-area
+{
+    height: 150px;
+}
+
+.image-area-2
+{
+    max-width: 150px;
+    height: 150px;
+    margin: auto;
+}
+
+.image-area-3
+{
+    width: 150px;
+    height: 150px;
+    margin: auto;
+}
+
+body {
+    margin: 0;
+}
+
+.actions {
+    position: relative;
+    display: block;
+    text-align: right;
+} 
+
+.actions ul {
+    float: right;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.actions ul li a {
+    padding: 7px 0px;
+    border: none;
+    display: inline-flex;
+    width: 150px;
+    justify-content: center;
+    -o-justify-content: center;
+    -ms-justify-content: center;
+    -moz-justify-content: center;
+    -webkit-justify-content: center;
+    align-items: center;
+    -o-align-items: center;
+    -ms-align-items: center;
+    -moz-align-items: center;
+    -webkit-align-items: center;
+    background: #3760e5;
+    border: 1px solid #3760e5;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.actions > ul > li {
+    float: left;
+    margin-left: 8px;
+} 
+
+.actions ul li:hover {
+    background: #2b4ab3;
+}
+
+.actions > ul > li > a[href='#previous']:focus, .wizard-content .wizard > .actions > ul > li > a[href='#previous']:hover {
+    box-shadow: inset 0px 0px 0px 100px rgba(0,0,0,0.02);
+} 
+
+.actions > ul > li > a[href='#previous'] {
+    background-color: #fff;
+    color: #54667a;
+    border: 1px solid #d9d9d9;
+} 
+
+#progressbar {			
+    overflow: hidden;
+    /*CSS counters to number the steps*/
+    counter-reset: step;
+    margin: 20px 0px;
+    padding-inline-start: 0 !important;
+}
+#progressbar li {
+    list-style-type: none;
+    color: white;
+    text-transform: uppercase;
+    font-size: 9px;
+    width: 14.2857%;
+    float: left;
+    position: relative;
+}
+#progressbar li:before {
+    content: counter(step);
+    counter-increment: step;
+    width: 40px;
+    line-height: 40px;
+    display: block;
+    text-align: center;
+    font-size: 16px;
+    color: #333;
+    background: #ccc;
+    border-radius: 50%;
+    margin: 0 auto 5px auto;
+}
+/*progressbar connectors*/
+#progressbar li:after {
+    content: '';
+    width: 100%;
+    height: 2px;
+    background: #ccc;
+    position: absolute;
+    left: -50%;
+    top: 20px;
+    z-index: -1; /*put it behind the numbers*/
+}
+#progressbar li:first-child:after {
+    /*connector not needed before the first step*/
+    content: none; 
+}
+/*marking active/completed steps green*/
+/*The number of the step and the connector before it = green*/
+#progressbar li.active:before,  #progressbar li.active:after{
+    background: #27AE60;
+    color: white;
+}
+
+#reservation fieldset:not(:first-of-type) {
+    display: none;
+}
+
+#reservation fieldset {
+    background: white;
+    border: 0 none;
+    border-radius: 3px;
+    padding: 20px 30px;
+    left: 0;
+    box-sizing: border-box;
+    margin-bottom: 40px;
+}
+a.au-target.col-md-10.active, .au-target.mb-2.active, .au-target.col.active {
+    background: #3e3d3d;
+    color: #fff !important;
+    border: 1px solid #000;
+}
+.pull-right
+{
+    float: right;
+}
+.pull-left
+{
+    float: left;
+}
+.btn
+{
+    border-radius: 0px !important;
+}
+.form-control
+{
+    border-radius: 0px !important;
+}
+/* Responsive */
+@media screen and (max-width: 1199px) {
+   
+}
+
+@media screen and (max-width: 991px) {
+
+}
+
+@media screen and (max-width: 767px) {
+
+}
+
+@media screen and (max-width: 575px) {
+    
+} 

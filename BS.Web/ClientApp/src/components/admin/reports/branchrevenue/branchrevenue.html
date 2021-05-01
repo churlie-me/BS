@@ -1,0 +1,104 @@
+<template bindable="branchpr, store, dboreport, dateprinted">
+  <div class="admin-container">
+    <!--Create User Modal-->
+<div id="branchRevenueReport" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="padding: 0px !important;">
+  <div class="modal-dialog" style="max-width: 100%; margin-top: 0px !important; margin-bottom: 0px !important; height: 100%;">
+      <div class="modal-content" style="border: 0px;border-radius: 0px;height: 100%;">
+        <div class="modal-header" style="background: #6c757d; color: #fff;">
+          <h4 class="noPrint modal-title" id="myModalLabel">Branch Revenue Report</h4>
+          <button type="button" class="noPrint close" data-dismiss="modal" aria-hidden="true" style="color: #fff;">×</button>
+        </div>
+        <div class="modal-body" style="background: #efefef; overflow-y: auto;">
+          <div class="container" style="padding-right: 0;">
+            <div class="row mb-3">
+              <div class="col-12">
+                <span class="float-right hidden-print">
+                  <a href="javascript:;" onclick="window.print()" class="noPrint btn bs-btn btn-sm btn-warning m-b-1 p-l-5"><i class="fa fa-print t-plus-1 fa-fw fa-lg"></i> Print</a>
+                </span>
+              </div>
+            </div>
+          </div>
+        <div class="container" style="background: #fff;">
+          <header class="py-3 px-5">
+            <div class="row">
+                <div class="col-6">
+                    <a target="_blank" href="#">
+                      <img class="img-fluid" if.bind="store.logo" style="max-height: 100px;" src="data:'image/jpeg';base64,${store.logo}">
+                      <img if.bind="!store.logo" src="http://placehold.it/300x64" data-holder-rendered="true" />
+                    </a>
+                </div>
+                <div class="col-6">
+                  <div class="float-right" style="text-align: right;">
+                    <h2 class="name">
+                        <a target="_blank" href="#" style="color: #000000;">${ store.name }</a>
+                    </h2>
+                    Street Address<br>
+                    City, Zip Code<br>
+                    Phone: (123) 456-7890<br>
+                  </div>
+                </div>
+            </div>
+            <hr>
+          </header>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="invoice px-5">
+                <!-- begin invoice-header -->
+                <div class="row">
+                  <h3 style="margin: auto;">BRANCH REVENUE REPORT</h3>
+                </div>
+                <div class="row my-4">
+                  <div class="col-6">
+                    <div>Date Range</div>
+                    <div>From : ${ dboreport.from }</div>
+                    <div>To : ${ dboreport.to }</div>
+                  </div>
+                  <div class="col-6" style="text-align: right;">
+                    <div>Date Printed : ${ dateprinted }</div>
+                  </div>
+                </div>
+                <!-- end invoice-header -->
+                <!-- begin invoice-content -->
+                <div class="invoice-content">
+                  <div class="row">
+                    
+                  </div>
+                    <!-- begin table-responsive -->
+                    <div style="min-height: 500px;">
+                      <table class="table table-striped">
+                        <thead>
+                          <tr class="line">
+                            <td><strong>#</strong></td>
+                            <td><strong>BRANCH</strong></td>
+                            <td class="text-right"><strong>REVENUE</strong></td>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr repeat.for="branchRevenue of branchpr">
+                            <td>${ branchRevenue.indexOf(branchRevenue) + 1 }</td>
+                            <td><strong>${ branchRevenue.branch.name }</strong></td>
+                            <td class="text-right">EUR ${ branchRevenue.revenue }</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    <!-- end table-responsive -->
+                </div>
+                <!-- end invoice-content -->
+                <hr>
+                <!-- begin invoice-footer -->
+                <div class="invoice-footer">
+                    <p class="text-center">
+                      This is only a preview but can be printed
+                    </p>
+                </div>
+                <!-- end invoice-footer -->
+              </div>
+          </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</template>

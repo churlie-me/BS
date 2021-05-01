@@ -1,0 +1,65 @@
+<template>
+  <div style="height: 100%; width: 100%; display: table;">
+    <div class="container" style="padding-top: 50px; padding-bottom: 50px; display: table-cell; vertical-align: middle;">
+        <div class="row">
+            <div class="col-md-6" style="text-align:center; margin: 25px auto;">
+                <!--<img src="../assets/images/logo.png" style="width:50%;">-->
+                <span style="font-weight: bold;font-size: 25px;">Create your store & owner account</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6" style="margin:auto">
+                <form submit.delegate="register()">
+                    <div class="row"><label if.bind="errormessage" style="text-align: center; color: #f00; width: 100%;">${ errormessage }</label></div>
+                    <label>Store Details</label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" id="storeName" value.bind="store.name & validate" placeholder="Store Name" disabled.bind="isBusy" />
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="tel" value.bind="tel & validate" placeholder="Store Contact e.g +(000) 565-565" disabled.bind="isBusy"/>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="street" value.bind="street & validate" placeholder="Store Street / Rd" disabled.bind="isBusy"/>
+                            </div>
+                        </div>
+                    </div>    
+                    <label>Store Manager's Information</label>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="firstName" value.bind="account.user.firstName & validate" autocomplete="off" placeholder="First Name" disabled.bind="isBusy"/>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="firstName" value.bind="account.user.lastName & validate" autocomplete="off" placeholder="Last Name" disabled.bind="isBusy"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="email" value.bind="account.email & validate" autocomplete="off" placeholder="Email" disabled.bind="isBusy"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" id="password" value.bind="account.password & validate" autocomplete="off" placeholder="Password (Must have minimum of 8 characters including 1 non alphanumeric, 1 alphanumeric and 1 numeric)" disabled.bind="isBusy" change.delegate="account.confirmpassword=''" />
+                    </div>
+                    <div class="form-group">
+                      <input type="password" class="form-control" id="cpassword" value.bind="account.confirmPassword & validate" autocomplete="off" placeholder="Confirm Password" disabled.bind="isBusy" />
+                  </div>
+                    
+                    <div class="form-group">
+                        <button if.bind="!isBusy" type="submit" class="btn btn-secondary btn-block btn-sm">MAAK ER EENI</button>
+                        <button if.bind="isBusy" class="btn btn-secondary btn-sm btn-block" type="button" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Even geduld aub...
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+  </div>
+</template>

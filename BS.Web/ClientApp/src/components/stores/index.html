@@ -1,0 +1,24 @@
+<template>
+    <div class="container page-layout" style="padding: 15px;">
+        <div class="card card-body" if.bind="!stores"><p><em>Loading...</em></p></div>
+        <div class="row" if.bind="stores.length == 0"><label style="width: 100%; text-align: center; margin: 25px 0px;">No stores available at the moment</label></div>
+        <div class="row" if.bind="stores.length > 0">
+            <div class="col-md-3" repeat.for="store of stores">
+              <a if.bind="!store.slug" href="#/store?storeId=${ store.id }">
+                  <div class="card card-body">
+                      <img class="ing-fluid" if.bind="store.logo" src="data:'image/jpeg';base64,${store.logo}">
+                      <img class="img-fluid" if.bind="!store.logo" src="http://placehold.it/400x400" alt="store">
+                      <h3 class="text-center mt-10">${ store.name }</h3>
+                  </div>
+              </a>
+              <a if.bind="store.slug" href="#/store/${ store.slug }"  >
+                <div class="card card-body">
+                    <img class="ing-fluid" if.bind="store.logo" src="data:'image/jpeg';base64,${store.logo}">
+                    <img class="img-fluid" if.bind="!store.logo" src="http://placehold.it/400x400" alt="store">
+                    <h3 class="text-center mt-10">${ store.name }</h3>
+                </div>
+              </a>
+            </div>
+        </div>
+    </div>
+</template>

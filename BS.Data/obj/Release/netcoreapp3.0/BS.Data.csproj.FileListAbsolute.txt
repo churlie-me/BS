@@ -1,0 +1,15 @@
+C:\Users\CJ\source\Repos\BS\BS.Data\bin\Release\netcoreapp3.0\BS.Data.deps.json
+C:\Users\CJ\source\Repos\BS\BS.Data\bin\Release\netcoreapp3.0\BS.Data.dll
+C:\Users\CJ\source\Repos\BS\BS.Data\bin\Release\netcoreapp3.0\BS.Data.pdb
+C:\Users\CJ\source\Repos\BS\BS.Data\bin\Release\netcoreapp3.0\BS.Core.dll
+C:\Users\CJ\source\Repos\BS\BS.Data\bin\Release\netcoreapp3.0\BS.Core.pdb
+C:\Users\CJ\source\Repos\BS\BS.Data\obj\Release\netcoreapp3.0\BS.Data.csprojAssemblyReference.cache
+C:\Users\CJ\source\Repos\BS\BS.Data\obj\Release\netcoreapp3.0\BS.Data.AssemblyInfoInputs.cache
+C:\Users\CJ\source\Repos\BS\BS.Data\obj\Release\netcoreapp3.0\BS.Data.AssemblyInfo.cs
+C:\Users\CJ\source\Repos\BS\BS.Data\obj\Release\netcoreapp3.0\BS.Data.csproj.CoreCompileInputs.cache
+C:\Users\CJ\source\Repos\BS\BS.Data\obj\Release\netcoreapp3.0\BS.Data.csproj.CopyComplete
+C:\Users\CJ\source\Repos\BS\BS.Data\obj\Release\netcoreapp3.0\BS.Data.dll
+C:\Users\CJ\source\Repos\BS\BS.Data\obj\Release\netcoreapp3.0\BS.Data.pdb
+C:\Users\CJ\source\Repos\BS\BS.Data\bin\Release\netcoreapp3.0\BS.Data.runtimeconfig.json
+C:\Users\CJ\source\Repos\BS\BS.Data\bin\Release\netcoreapp3.0\BS.Data.runtimeconfig.dev.json
+C:\Users\CJ\source\Repos\BS\BS.Data\obj\Release\netcoreapp3.0\BS.Data.genruntimeconfig.cache

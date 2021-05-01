@@ -1,0 +1,82 @@
+<template>
+    <div class="admin-container">
+      <div class="row">
+        <div class="col-9">
+          <h3 class="card-title">Customer Contact Requests</h3>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1"><i class="mdi mdi-magnify"></i></span>
+            <input type="text" value.bind="dborequests.search" class="form-control" placeholder="Search by Stylist" disabled.bind="(dborequests.requests == undefined)" disabled.bind="(dborequests.requests == undefined)">
+          </div>
+        </div>
+        <div class="col">
+          <select class="form-control" value.bind="dborequests.reasonId" disabled.bind="(dborequests.requests == undefined)">
+            <option model.bind="undefined">Choose</option>
+            <option model.bind="reason.id" repeat.for="reason of reasons">${ reason.content }</option>
+          </select>
+        </div>
+        <div class="col">
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">From</span>
+            <input type="date" class="form-control" value.bind="dborequests.from" aria-label="Stylist" aria-describedby="basic-addon1" disabled.bind="(dborequests.requests == undefined)">
+          </div>
+        </div>
+        <div class="col">
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">To</span>
+            <input type="date" class="form-control" value.bind="dborequests.to" aria-label="Stylist" aria-describedby="basic-addon1" disabled.bind="(dborequests.requests == undefined)">
+          </div>
+        </div>
+        <div class="col">
+          <button type="button" class="btn btn-secondary btn-block mb-3" disabled.bind="(dborequests.requests == undefined)" click.delegate="onFilterApplied()">Apply Filters</button>
+        </div>
+      </div>
+      <div class="row card card-body" if.bind="!dborequests.requests">
+        <div class="col-3" style="text-align: center; margin: auto;">
+          <span class="spinner-border spinner-border-sm" style="width: 3rem; height: 3rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+          <label>Even geduld aub...</label>
+        </div>
+      </div>
+        <div if.bind="dborequests.requests">
+            <div class="card card-body mt-4" if.bind="dborequests.requests.length == 0" style="text-align: center;">No customer contact requests made so far.</div>
+            <div class="card card-body mt-3" if.bind="dborequests.requests.length > 0">
+                <table class="display nowrap table table-hover table-striped table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Requested On</th>
+                        <th>Requested By</th>
+                        <th>Reason</th>
+                        <th>Customer</th>
+                        <th>Contact</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr repeat.for="request of dborequests.requests">
+                        <td>${ request.requestedOn }</td>
+                        <td>${ request.account.user.firstName } ${ request.account.user.lastName }</td>
+                        <td>${ request.reason.content }</td>
+                        <td>${ request.user.firstName } ${ request.user.lastName }</td>
+                        <td>${ request.user.contact.tel }</td>
+                      </tr>
+                    </tbody>
+                </table>
+                <div style="width: 100%;">
+                  <nav style="float: right" aria-label="...">
+                    <ul class="pagination">
+                      <li class.bind="(dborequests.page == 1)? 'page-item disabled' : 'page-item'">
+                        <a class="page-link" tabindex="-1" click.delegate="previous()">Previous</a>
+                      </li>
+                      <li class.bind="isActive((p + 1), dborequests.page)? 'page-item active': 'page-item'" repeat.for="p of dborequests.pageCount"><a class="page-link" click.delegate="goToPage(p + 1)"> ${p + 1} <span class="sr-only" if.bind="isActive((p + 1), dborequests.page)">(current)</span></a></li>
+                      <li class.bind="(dborequests.page == dborequests.pageCount)? 'page-item disabled' : 'page-item'">
+                        <a class="page-link" click.delegate="next()">Next</a>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

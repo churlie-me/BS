@@ -1,0 +1,87 @@
+<template bindable="reasonsmodule">
+    <div class="admin-container">
+        <p if.bind="!reasonsmodule.reasons"><em>Loading...</em></p>
+        <div if.bind="reasonsmodule.reasons">
+            <div class="row">
+                <div class="col-9">
+                    <h3 class="card-title">Contact Request Reasons</h3>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-secondary btn-block btn-sm" data-toggle="modal" data-target="#reason" click.delegate="reasonsmodule.onInitReason()">Create Reason</button>
+                </div>
+            </div>
+            <div class="card card-body mt-4" if.bind="reasonsmodule.reasons.length == 0" style="text-align: center;">No reasons attached yet.</div>
+            <div class="card card-body mt-3" if.bind="reasonsmodule.reasons.length > 0">
+                <table class="display nowrap table table-hover table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Reason</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr repeat.for="reason of reasonsmodule.reasons">
+                            <td>${ reason.content }</td>
+                            <td>
+                              <a class="btn btn-sm btn-icon btn-pure btn-outline" data-toggle="modal" data-target="#reason" click.delegate="reasonsmodule.onInitReason(reason.id)"><i class="icon-note"></i></a>
+                              <a class="btn btn-sm btn-icon btn-pure btn-outline" data-toggle="modal" data-target="#delete" click.delegate="reasonsmodule.onInitReason(reason.id)"><i class="icon-trash"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!--Reason Modal-->
+    <div id="reason" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">Reason</h4>
+                        <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true" #x_store>×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="col-md-12 m-b-20">
+                                <label>Reason</label>
+                                <textarea value.bind="reasonsmodule.reason.content" class="form-control" rows="6"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" click.delegate="reasonsmodule.onSaveReason()" class="btn btn-secondary waves-effect btn-sm" style="min-width: 120px;">Save</button>
+                        <button type="button" class="btn btn-outline-secondary waves-effect btn-sm" data-dismiss="modal" style="min-width: 120px;">Cancel</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <!--Delete Reason Modal-->
+    <div id="delete" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <form>
+                  <div class="modal-header">
+                      <h4 class="modal-title" id="myModalLabel">Reason</h4>
+                      <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true" #x_store>×</button>
+                  </div>
+                  <div class="modal-body" style="text-align: center;">
+                    <h4 class="card-title">Confirm Delete</h4>
+                    <label>Are you sure you want to delete this reason?</label>
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" click.delegate="reasonsmodule.onDeleteReason()" class="btn btn-secondary waves-effect btn-sm" style="min-width: 120px;">Save</button>
+                      <button type="button" class="btn btn-outline-secondary waves-effect btn-sm" data-dismiss="modal" style="min-width: 120px;">Cancel</button>
+                  </div>
+              </form>
+          </div>
+          <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+  </div>
+</template>

@@ -1,0 +1,167 @@
+<template>
+  <require from="../../../extensions/info/info.dialog.html"></require>
+  <<require from="../../admin/invoice/invoice.module.html"></require>
+  <div slot="_content">
+      <div class="row mb-3">
+        <div class="col-12">
+            <h3>Mijn Afspraken</h3>
+        </div>
+      </div>
+
+      <div if.bind="!dboAppointments.appointments">
+        <div class="col-3" style="text-align: center; margin: auto;">
+          <span class="spinner-border spinner-border-sm" style="width: 3rem; height: 3rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+          <label>Even geduld aub...</label>
+        </div>
+      </div>
+      <div if.bind="dboAppointments.appointments">
+          <div class="card card-body mt-4" if.bind="dboAppointments.appointments.length == 0" style="text-align: center;">You have no appointments made so far.</div>
+          <div class="card card-body mt-3" if.bind="dboAppointments.appointments.length > 0">
+              <table class="display nowrap table table-hover table-striped table-bordered">
+                  <thead>
+                      <tr>
+                          <th>Datum afspraak</th>
+                          <th>Klant</th>
+                          <th>Status</th>
+                          <th>Toestand</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr repeat.for="appointment of dboAppointments.appointments">
+                          <td>${ dateConverter.view(appointment.appointmentDate) } ${ timeValueConverter.view(appointment.appointmentDate) }</td>
+                          <td>${ appointment.user.firstName } ${ appointment.user.lastName }</td>
+                          <td>${ statuses[appointment.status].name }</td>
+                          <td><a href="#" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#_appointment" click.delegate="initAppointment(appointment)">Visie</a></td>
+                      </tr>
+                  </tbody>
+              </table>
+
+              <div style="width: 100%;" if.bind="dboAppointments.appointments.length > 0">
+                <nav style="float: right" aria-label="...">
+                  <ul class="pagination">
+                    <li class.bind="(dboAppointments.page == 1)? 'page-item disabled' : 'page-item'">
+                      <a class="page-link" tabindex="-1" click.delegate="previous()">Vorige</a>
+                    </li>
+                    <li class.bind="((p + 1) == dboAppointments.page)? 'page-item active': 'page-item'" repeat.for="p of dboAppointments.pageCount"><a class="page-link" click.delegate="goToPage(p + 1)"> ${p + 1} <span class="sr-only" if.bind="isActive((p + 1), dboAppointments.page)">(current)</span></a></li>
+                    <li class.bind="(dboAppointments.page == dboAppointments.pageCount)? 'page-item disabled' : 'page-item'">
+                      <a class="page-link" click.delegate="next()">De volgende</a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+          </div>
+      </div>
+
+      <!--Create Account Modal-->
+      <div id="_appointment" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog" style="max-width: 850px;">
+              <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Afspraak</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                  <div class="row">
+                    <div class="col-md-5 col-xs-12">
+                      <div class="form-group">
+                        <label>Afdeling</label>
+                        <select class="form-control" value.bind="appointment.branchId" disabled>
+                            <option model.bind="undefined">Kiezen</option>
+                            <option repeat.for="branch of _storeService.store.branches" model.bind="branch.id">${ branch.name }</option>
+                        </select>
+                      </div>
+
+                      <span id="basic-addon1">Datum Afspraak</span>
+                      <div class="row">
+                        <div class="col-8">
+                          <input type="date" value.bind="appointmentDate" class="form-control mb-1" disabled>
+                        </div>
+                        <div class="col-4">
+                          <input type="time" value.bind="appointmentTime" class="form-control mb-1" disabled>
+                        </div>
+                      </div>
+
+                      <div class="row mt-3 mb-2">
+                        <label class="col-7">Klant Details</label>
+                      </div>
+
+                      <div class="form-group">
+                        <div class="row mb-2">
+                          <div class="col-md-6">
+                            <input type="text" value.bind="appointment.user.firstName" class="form-control" placeholder="Voornaam" disabled>
+                          </div>
+                          <div class="col-md-6">
+                            <input type="text" value.bind="appointment.user.lastName" class="form-control" placeholder="Achternaam" disabled>
+                          </div>
+                        </div>
+
+                        <div class="row mb-2">
+                          <div class="col-md-6">
+                            <input type="email" value.bind="appointment.user.contact.email" class="form-control" placeholder="Email" disabled>
+                          </div>
+                          <div class="col-md-6">
+                            <input type="tel" value.bind="appointment.user.contact.phone" class="form-control" placeholder="Telfoon" disabled>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-md-6 mb-2">
+                              <input type="text" value.bind="appointment.user.address.street" class="form-control" placeholder="Straat" disabled>
+                          </div>
+                          <div class="col-md-6 mb-2">
+                            <input type="text" value.bind="appointment.user.address.zipCode" class="form-control" placeholder="Postcode" disabled>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-md-12 mb-2">
+                              <input type="text" value.bind="appointment.user.address.city" class="form-control" placeholder="Stad" disabled>
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Toestand</label>
+                          <select class="form-control" value.bind="appointment.status" disabled>
+                            <option model.bind="undefined">Kiezen</option>
+                            <option repeat.for="appointmentstatus of statuses" model.bind="appointmentstatus.code">${ appointmentstatus.name }</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-7 col-xs-12">
+                      <div class="row">
+                        <div class="col-8">
+                          <label>Diensten</label>
+                        </div>
+                      </div>
+                      <div class="text-center mt-5" if.bind="appointment.services.length == 0" style="text-align: center; margin-top: 10px;">Nog geen services toegevoegd, voeg deze toe</div>
+                      <table if.bind="appointment.services.length > 0" class="display nowrap table table-hover table-striped table-bordered" style="margin-top: 10px;">
+                          <thead>
+                              <tr>
+                                  <th>Naam</th>
+                                  <th>Stilist</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <tr repeat.for="appointmentservice of appointment.services" if.bind="!appointmentservice.deleted">
+                                  <td>${ appointmentservice.service.name }</td>
+                                  <td>${ appointmentservice.stylist.user.firstName }</td>
+                              </tr>
+                          </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button if.bind="appointment.status == 3" type="button" class="btn btn-success btn-sm waves-effect" style="min-width: 120px; padding: .2rem .75rem;" click.delegate="viewInvoice()">Bekijk Factuur</button>
+                  <button type="button" class="btn btn-outline-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 120px; padding: .2rem .75rem;">Dichtbij</button>
+                </div>
+              </div>
+              <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+      </div>
+      <info.dialog></info.dialog>
+      <invoice.module invoice.bind="_invoice"></invoice.module>
+  </div>
+</template>

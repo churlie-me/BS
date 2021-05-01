@@ -1,0 +1,94 @@
+.bg-main {
+    background: lightgrey;
+    padding: 150px 20px;
+    text-align: center;
+}
+.bg-text{
+    font-size: 35px;
+}
+
+.navbar-main {
+    height: 40px;
+}
+
+.header-middle-padding-1 {
+    padding: 4px 0 0;
+}
+
+.align-items-center {
+    -ms-flex-align: center !important;
+    -webkit-box-align: center !important;
+    -webkit-align-items: center !important;
+    align-items: center !important;
+}
+
+.logo a {
+    display: block;
+    text-decoration-style: none;
+}
+
+.logo a img {
+    max-width: 100%;
+}
+
+._shop_name
+{
+    text-transform: uppercase;
+    color: #3d3e40;
+    font-size: 25px;
+    line-height: 2;
+}
+
+.header-action.header-action-flex {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: end;
+    -webkit-justify-content: flex-end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+}
+
+.header-action .same-style-2 {
+    line-height: 1;
+    margin-right: 30px;
+}
+.header-action .same-style-2.same-style-2-font-inc a {
+    font-size: 24px;
+    color: #000000;
+}
+.header-action .same-style-2:last-child {
+    margin-right: 0;
+}
+.header-action .same-style-2 a span.green {
+    background-color: #4dbdaf;
+}
+.header-action .same-style-2 a span.pro-count {
+    position: absolute;
+    top: -8px;
+    font-size: 12px;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    line-height: 19px;
+    color: #fff;
+    text-align: center;
+    left: 14px;
+    border-radius: 50px;
+    font-weight: 600;
+}
+.header-action .same-style-2.header-cart a span.cart-amount {
+    color: #df3434;
+    font-weight: 600;
+    font-size: 14px;
+    margin: 8px 0 0 16px;
+}
+
+.header-action .same-style-2.header-cart a {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    position: relative;
+}

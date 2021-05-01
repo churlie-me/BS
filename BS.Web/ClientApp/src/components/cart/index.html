@@ -1,0 +1,68 @@
+<template>
+    <div class="container">
+        <div class="row" style="padding: 80px 0px" if.bind="cart.items.length == 0">
+            <div class="col-4" style="margin: auto; text-align: center;">
+                <i class="icon icon-bag" style="font-size: 120px;"></i>
+                <div class="my-2">
+                    <label>Geen producten toegevoegd aan winkelwagen</label>
+                </div>
+                <a href="#/shop" class="btn btn-block btn-outline-secondary btn-sm">TERUG NAAR WINKEL</a>
+            </div>
+        </div>
+        <div class="row" style="padding: 40px 0px" if.bind="cart.items.length > 0">
+            <div class="col-9">
+                <table class="display nowrap table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>Naam</th>
+                            <th>Prijs</th>
+                            <th>Aantal</th>
+                            <th>Subtotaal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr repeat.for="orderItem of cart.items">
+                            <td>
+                                <img class="img-fluid" if.bind="orderItem.item.image" style="max-width: 80px;" src="data:'image/jpeg';base64,${orderItem.item.image}">
+                                <img class="img-fluid" if.bind="!orderItem.item.image" style="max-width: 80px;" src="http://placehold.it/400x400" alt="product">
+                                <label class="ml-2">${ orderItem.item.name }</label>
+                            </td>
+                            <td style="vertical-align: middle;">EUR ${ orderItem.price }</td>
+                            <td style="vertical-align: middle;">${ orderItem.qty }</td>
+                            <td style="vertical-align: middle;">EUR ${ orderItem.price * orderItem.qty }</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-3">
+                <div class="panel">
+                    <div class="panel-body">
+                        <h5 class="card-title">WINKELTOTAAL</h5>
+                        <div class="row">
+                            <div class="col-6">
+                                <h5>Subtotaal</h5>
+                            </div>
+                            <div class="col-6">
+                                <label>EUR ${ cart.getTotal() }</label>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                          <div class="col-6">
+                              <h5>Totaal</h5>
+                          </div>
+                          <div class="col-6">
+                              <label>EUR ${ cart.getTotal() }</label>
+                          </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <a href="#/checkout" class="btn btn-block btn-outline-secondary">GA NAAR DE KASSA</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

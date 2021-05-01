@@ -1,0 +1,98 @@
+<template>
+  <div class="admin-container">
+    <div class="row">
+      <h2>Job Applications</h2>
+    </div>
+    <div class="row">
+      <div class="col-4 card card-body">
+        <div class="row">
+          <div class="col-12">
+            <h3>${ job.title }</h3>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <h4>Job Overview</h4>
+            <p>${ job.description }</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <h4>Job Specifics</h4>
+            <div class="row">
+              <label class="col-4">Deadline</label>
+              <label class="col-1">:</label>
+              <label class="col-6">${ job.deadline }</label>
+            </div>
+            <div class="row">
+              <label class="col-4">Location</label>
+              <label class="col-1">:</label>
+              <label class="col-6">${ job.branch.name }</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-8">
+        <div class="row" if.bind="!dboJobApplication.applications">
+          <div class="card card-body">
+            <div class="col-3" style="text-align: center; margin: auto;">
+              <span class="spinner-border spinner-border-sm" style="width: 3rem; height: 3rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+              <label>Even geduld aub...</label>
+            </div>
+          </div>
+        </div>
+        <div class="row" if.bind="dboJobApplication.applications">
+          <div class="col-7"></div>
+          <div class="col-5 mb-3">
+            <div class="input-group">
+              <input type="text" value.bind="dboJobApplication.search" class="form-control" placeholder="Search Applicants" disabled.bind="(dboJobApplication.applications == undefined)">
+              <button class="input-group-text" id="basic-addon1"><i class="mdi mdi-magnify" click.delegate="applyFilter()"></i> Search</button>
+            </div>
+          </div>
+        </div>
+        <div class="row" if.bind="dboJobApplication.applications">
+          <div class="col-12">
+            <div class="card card-body">
+              <div if.bind="dboJobApplication.applications.length == 0" style="text-align: center;">No applications made so far.</div>
+              <table if.bind="dboJobApplication.applications.length > 0" class="display table table-hover table-striped table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Applicant</th>
+                      <th>Email</th>
+                      <th>Phone</th>
+                      <th>Submitted On</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr repeat.for="application of dboJobApplication.applications">
+                      <td>${ application.user.firstName } ${ application.user.lastName }</td>
+                      <td>${ application.user.contact.email }</td>
+                      <td>${ application.user.contact.tel }</td>
+                      <td>${ application.submittedOn }</td>
+                      <td>
+                        <button if.bind="application.resume" class="btn btn-outline-secondary btn-sm" click.delegate="base64toPDF(application)">Donwload</button>
+                      </td>
+                    </tr>
+                  </tbody>
+              </table>
+              <div style="width: 100%;" if.bind="dboJobApplication.applications.length > 0">
+                <nav style="float: right" aria-label="...">
+                  <ul class="pagination">
+                    <li class.bind="(dboJobApplication.page == 1)? 'page-item disabled' : 'page-item'">
+                      <a class="page-link" tabindex="-1" click.delegate="previous()">Previous</a>
+                    </li>
+                    <li class.bind="((p + 1) == dboJobApplication.page)? 'page-item active': 'page-item'" repeat.for="p of dboJobApplication.pageCount"><a class="page-link" click.delegate="goToPage(p + 1)"> ${p + 1} <span class="sr-only" if.bind="isActive((p + 1), dborequests.page)">(current)</span></a></li>
+                    <li class.bind="(dboJobApplication.page == dboJobApplication.pageCount)? 'page-item disabled' : 'page-item'">
+                      <a class="page-link" click.delegate="next()">Next</a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

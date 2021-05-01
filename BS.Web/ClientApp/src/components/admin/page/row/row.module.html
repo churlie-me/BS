@@ -1,0 +1,385 @@
+<template bindable="prow, column, rowmodule">
+  <div class="row">
+    <div class="col-12">
+      <button style="min-width: 80px !important;" type="submit" class="btn btn-outline-warning btn-sm bs-btn" click.delegate="rowmodule.setColumns(prow, 1)" disabled.bind="isBusy" title="1 Column">
+        <i class="mdi mdi-reorder-horizontal"></i>
+      </button>
+      <button style="min-width: 80px !important;" type="submit" class="btn btn-outline-warning btn-sm bs-btn" click.delegate="rowmodule.setColumns(prow, 2)" disabled.bind="isBusy" title="2 Columns">
+        <i class="mdi mdi-reorder-horizontal"></i>
+        <i class="mdi mdi-reorder-horizontal"></i>
+      </button>
+      <button if.bind="!column" style="min-width: 80px !important;" type="submit" class="btn btn-outline-warning btn-sm bs-btn" click.delegate="rowmodule.setColumns(prow, 3)" disabled.bind="isBusy" title="3 Columns">
+        <i class="mdi mdi-reorder-horizontal"></i>
+        <i class="mdi mdi-reorder-horizontal"></i>
+        <i class="mdi mdi-reorder-horizontal"></i>
+      </button>
+      <button if.bind="!column" style="min-width: 80px !important;" type="submit" class="btn btn-outline-warning btn-sm bs-btn" click.delegate="rowmodule.setColumns(prow, 4)" disabled.bind="isBusy" title="4 Columns">
+        <i class="mdi mdi-reorder-horizontal"></i>
+        <i class="mdi mdi-reorder-horizontal"></i>
+        <i class="mdi mdi-reorder-horizontal"></i>
+        <i class="mdi mdi-reorder-horizontal"></i>
+      </button>
+      <button type="submit" class="btn btn-sm btn-icon btn-pure btn-outline float-right" click.delegate="rowmodule.setRow(prow)" data-toggle="modal" data-target="#delete" disabled.bind="isBusy"><i class="icon-trash"></i></button>
+      <button type="button" class="btn btn-outline btn-pure btn-icon float-right" click.delegate="rowmodule.rowSettings(prow)" disabled.bind="isBusy"><i class="icon-settings"></i></button>
+      <button type="button" class="btn btn-outline btn-pure btn-icon float-right" click.delegate="rowmodule.dragRow(prow)" style="cursor: pointer;" disabled.bind="isBusy"><i class="icon-size-fullscreen"></i></button>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-${ 12/prow.columns.length }" repeat.for="_column of prow.columns">
+      <button type="button" class="btn btn-outline btn-pure btn-icon float-right" click.delegate="rowmodule.columnSettings(_column)" disabled.bind="isBusy"><i class="icon-settings"></i></button>
+      <div class="card card-body" style="width: 100%">
+        <div if.bind="_column.contents.length > 0" 
+             drop.trigger="rowmodule.drop(_column, $event)" 
+             dragover.trigger="rowmodule.allowDrop($event)" style="padding-bottom: 30px;">
+          <div repeat.for="_content of _column.contents" 
+               show.bind="_content.deleted == 0" 
+               draggable="true" 
+               dragstart.trigger="rowmodule.drag(_content, $event)" id.bind="_content.id">
+            <button if.bind="_content.contentType != 5" class="btn btn-secondary btn-sm btn-block mb-1" click.delegate="rowmodule.initContent(_content)" type="button" disabled.bind="isBusy">
+              ${ rowmodule.contentTypes[_content.contentType] }
+              <i class="icon-settings float-right mt-1"></i>
+            </button>
+            <div class="row" if.bind="_content.contentType == 5" style="margin-bottom: 3px; min-height: 30px; background: aliceblue; padding: 10px; border: 2px dashed rgb(47 47 47 / 20%);">
+              <row.module prow.bind="_content.row" column.bind="_column" rowmodule.bind="rowmodule" style="width: 100%;"></row.module>
+            </div>
+          </div>                  
+        </div>
+        <button type="type" class="btn btn-sm btn-icon btn-pure btn-outline float-right" data-toggle="modal" data-target="#builder" click.delegate="rowmodule.setColumn(_column, column)" disabled.bind="isBusy">+</button>
+      </div>
+    </div>
+  </div>
+
+  <!--Page Builder-->
+  <div id="builder" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form>
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Content Builder</h4>
+                    <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="row">
+                          <div class="col-4 mb-2">
+                            <button class="btn btn-outline-secondary btn-block btn-sm" click.delegate="rowmodule.setContent(2)">Image</button>
+                          </div>
+                          <div class="col-4 mb-2">
+                            <button class="btn btn-outline-secondary btn-block btn-sm" click.delegate="rowmodule.setContent(1)">Text</button>
+                          </div>
+                          <div class="col-4 mb-2">
+                            <button class="btn btn-outline-secondary btn-block btn-sm" click.delegate="rowmodule.setContent(0)">Header</button>
+                          </div>
+                          <div class="col-4 mb-2">
+                            <button class="btn btn-outline-secondary btn-block btn-sm" click.delegate="rowmodule.setContent(3)">Link</button>
+                          </div>
+                          <div class="col-4 mb-2">
+                            <button class="btn btn-outline-secondary btn-block btn-sm" click.delegate="rowmodule.setContent(4)">Space</button>
+                          </div>
+                          <div class="col-4 mb-2" if.bind="!rowmodule.nestingColumn">
+                            <button class="btn btn-outline-secondary btn-block btn-sm" click.delegate="rowmodule.setContent(5)">Row</button>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary bs-btn waves-effect btn-sm" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+
+  <!--Row Settings-->
+  <div id="_rowsettings" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form>
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Row Settings</h4>
+                    <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                      <label>Background Color</label><br>
+                      <input type="text" value.bind="rowmodule.row.backgroundColor" class="colorpicker form-control"/>
+                    </div>
+                    <div class="form-group">
+                      <label>Background Image</label>
+                      <div class="bgImage">
+                        <div class="image-area-3 .logo mt-4" style="width: 100% !important; min-height: 100px; height: 100% !important;">
+                          <img id="imageResult" src="data:'image/jpeg';base64,${rowmodule.row.backgroundImage}" alt="" style="max-height: fit-content;" class="img-fluid rounded shadow-sm mx-auto d-block">
+                        </div>
+                        <!-- Upload image input-->
+                        <input type="hidden" value.bind="rowmodule.row.backgroundImage">
+
+                        <div class="input-group mt-5 mb-3">
+                          <input id="backgroundImage" change.delegate="rowmodule.OnBackgroundImageChanged()" accept="image/png, image/jpeg" type="file" class="form-control border-0">
+                          <label id="upload-label" for="upload" class="btn btn-outline-secondary btn-block rounded-pill shadow-sm"> <i class="fa fa-cloud-upload mr-2 text-muted"></i> CHOOSE FILE</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group mt-1">
+                      <label>Content Containment</label>
+                      <div>
+                        <input type="radio" checked.bind="rowmodule.row.contentContainment" value="0" id="_boxContainment" name="containment">
+                        <label for="_boxContainment">Boxed</label>
+                      </div>
+                      <div>
+                        <input type="radio" checked.bind="rowmodule.row.contentContainment" value="1" id="_fullContainment" name="containment">
+                        <label for="_fullContainment">Full</label>
+                      </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button"class="btn btn-secondary btn-sm bs-btn waves-effect" data-dismiss="modal">Save</button>
+                    <button type="button" class="btn btn-outline-secondary bs-btn waves-effect btn-sm" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+
+  <!--Column Settings-->
+  <div id="_columnsettings" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form>
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Column Settings</h4>
+                    <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                      <label>Background Color</label><br>
+                      <input type="text" value.bind="rowmodule.column.backgroundColor" class="colorpicker form-control" id="bg-color"/>
+                    </div>
+                    <div class="form-group">
+                      <input type="checkbox" checked.bind="rowmodule.column.isElevated" id="_elevation" />
+                      <label for="_elevation">Elevate Column</label>
+                    </div>
+                    <div class="form-group">
+                      <label>Background Image</label>
+                      <div class="bgImage">
+                        <div class="image-area-3 .logo mt-4" style="width: 100% !important;">
+                          <img id="imageResult" src="data:'image/jpeg';base64,${rowmodule.column.backgroundImage}" alt="" class="img-fluid rounded shadow-sm mx-auto d-block">
+                        </div>
+                        <!-- Upload image input-->
+                        <input type="hidden" value.bind="rowmodule.column.backgroundImage">
+                        <div class="input-group mt-5 mb-3">
+                            <input id="backgroundImage" change.delegate="rowmodule.OnBackgroundImageChanged()" accept="image/png, image/jpeg" type="file" class="form-control border-0">
+                            <label id="upload-label" for="upload" class="btn btn-outline-secondary btn-block rounded-pill shadow-sm"> <i class="fa fa-cloud-upload mr-2 text-muted"></i> CHOOSE FILE</label>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm bs-btn waves-effect" data-dismiss="modal">Save</button>
+                    <button type="button" class="btn btn-outline-secondary bs-btn waves-effect btn-sm" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+
+  <!--Header-->
+  <div id="header" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form>
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Content Builder</h4>
+                    <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                      <label>Header Text</label>
+                      <input type="text" value.bind="rowmodule.content.title" class="form-control">
+                    </div>
+                    <div class="form-group">
+                      <label>SubHeader Text</label>
+                      <textarea value.bind="rowmodule.content.subTitle" class="form-control" rows="4"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary btn-sm bs-btn waves-effect" data-dismiss="modal">Save</button>
+                  <button type="button" class="btn btn-outline-danger btn-sm bs-btn waves-effect" data-toggle="modal" data-target="#delete" click.delegate="rowmodule.deleteContent()">Delete</button>
+                  <button type="button" class="btn btn-outline-secondary bs-btn waves-effect btn-sm" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+
+  <!--Space-->
+  <div id="space" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form>
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Content Builder</h4>
+                    <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                      <label>Space Height </label>
+                      <input type="number" value.bind="rowmodule.content.space" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm bs-btn waves-effect" data-dismiss="modal">Save</button>
+                    <button type="button" class="btn btn-outline-danger btn-sm bs-btn waves-effect" data-dismiss="modal" data-target="#delete" click.delegate="rowmodule.deleteContent()">Delete</button>
+                    <button type="button" class="btn btn-outline-secondary bs-btn waves-effect btn-sm" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+
+  <!--Text-->
+  <div id="text" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form>
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Content Builder</h4>
+                    <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                  <div class="row">
+                    <div class="col-7">
+                      <div class="form-group">
+                        <label>Text</label>
+                        <textarea value.bind="rowmodule.content.text" class="form-control" rows="4"></textarea>
+                      </div>
+                    </div>
+                    <div class="col-5">
+                      <div class="form-group">
+                        <label>Font Size</label>
+                        <input type="number" value.bind="rowmodule.content.fontSize" class="form-control">
+                      </div>
+                      <div class="form-group" style="width: 80% !important;">
+                        <label>Font Color</label>
+                        <input type="text" value.bind="rowmodule.content.textColor" class="colorpicker form-control" id="primary-color"/>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm bs-btn waves-effect" data-dismiss="modal">Save</button>
+                    <button type="button" class="btn btn-outline-danger btn-sm bs-btn waves-effect" data-target="#delete" click.delegate="rowmodule.deleteContent()">Delete</button>
+                    <button type="button" class="btn btn-outline-secondary bs-btn waves-effect btn-sm" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+
+  <!--Image-->
+  <div id="_image" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form>
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Content Builder</h4>
+                    <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="form-group">
+                        <label>Image</label>
+                        <div>
+                          <div class="image-area-3 .logo mt-4" style="width: 100% !important;">
+                            <img id="imageResult" src="data:'image/jpeg';base64,${rowmodule.content.image}" alt="" class="img-fluid rounded shadow-sm mx-auto d-block">
+                          </div>
+                          <!-- Upload image input-->
+                          <input type="hidden" value.bind="rowmodule.content.image">
+                          <div class="input-group mt-5 mb-3">
+                              <input id="image" change.delegate="rowmodule.OnImageChanged()" accept="image/png, image/jpeg" type="file" class="form-control border-0">
+                              <label id="upload-label" for="upload" class="btn btn-outline-secondary btn-block rounded-pill shadow-sm"> <i class="fa fa-cloud-upload mr-2 text-muted"></i> CHOOSE FILE</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm bs-btn waves-effect" data-dismiss="modal">Save</button>
+                    <button type="button" class="btn btn-outline-danger btn-sm bs-btn waves-effect" data-dismiss="modal" data-target="#delete" click.delegate="rowmodule.deleteContent()">Delete</button>
+                    <button type="button" class="btn btn-outline-secondary bs-btn waves-effect btn-sm" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>  
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+
+  <!--Link-->
+  <div id="link" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form>
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Content Builder</h4>
+                    <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                      <label>Url Text</label>
+                      <input type="text" value.bind="rowmodule.content.urlText" class="form-control">
+                    </div>
+                    <div class="form-group">
+                      <label>Url</label>
+                      <input type="url" value.bind="rowmodule.content.url" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm bs-btn waves-effect" data-dismiss="modal">Save</button>
+                    <button type="button" class="btn btn-outline-danger btn-sm bs-btn waves-effect" data-dismiss="modal" data-target="#delete" click.delegate="rowmodule.deleteContent()">Delete</button>
+                    <button type="button" class="btn btn-outline-secondary bs-btn waves-effect btn-sm" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+
+  <!--Delete Item-->
+  <div id="delete" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form>
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+                    <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true" #x_category>×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">Are you sure about deleting this ${ rowmodule.item }</div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" if.bind="rowmodule.item == 'Content'" class="btn btn-secondary btn-sm bs-btn waves-effect" data-dismiss="modal" click.delegate="rowmodule.confirmContentDelete()">Confirm</button>
+                  <button type="button" if.bind="rowmodule.item == 'Row'" click.delegate="rowmodule.deleteRow()" class="btn btn-secondary btn-sm bs-btn waves-effect" data-dismiss="modal">Confirm</button>
+                  <button type="button" class="btn btn-outline-secondary bs-btn waves-effect btn-sm" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+</template>

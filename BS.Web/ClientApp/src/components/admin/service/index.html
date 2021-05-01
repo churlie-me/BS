@@ -1,0 +1,430 @@
+<template>
+    <require from="../../../extensions/progress/progress.dialog.html"></require>
+    <div class="admin-container">
+        <form>
+            <div class="row">
+                <div class="col-md-10"></div>
+                <div class="col-md-2">
+                    <button type="button" click.delegate="SaveService()"  class="btn btn-block btn-secondary btn-sm">Save</button>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-8">
+                    <div class="card-title"><h6 class="ml-1 mt-1">Service Details</h6></div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <h6>Name</h6>
+                                <input type="text" value.bind="service.name" class="form-control" placeholder="Name">
+                            </div>
+                            <div class="form-group">
+                                <h6 class="col-md-12" style="padding: 0px">Category</h6>
+                                <div class="row">
+                                  <div class="col-10">
+                                    <select value.bind="service.categoryId" class="custom-select" id="inlineFormCustomSelect">
+                                        <option model.bind="null" selected>Choose...</option>
+                                        <option repeat.for="category of categories" model.bind="category.id" [selected]="service.categoryId==category.id">${ category.name }</option>
+                                    </select>
+                                  </div>
+                                  <div class="col-md-2" style="padding-right: 0px;">
+                                      <button type="button" class="btn btn-block btn-info btn-sm" data-toggle="modal" data-target="#category">Add</button>
+                                  </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <h6 class="control-label">Description</h6>
+                                <textarea rows="4" value.bind="service.description" class="form-control"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <h6>Type</h6>
+                                <div class="row">
+                                  <div class="col-10">
+                                    <select value.bind="service.serviceTypeId" class="custom-select" id="inlineFormCustomSelect">
+                                        <option model.bind="null" selected>Choose...</option>
+                                        <option model.bind="_type.id" repeat.for="_type of types">${ _type.type }</option>
+                                    </select>
+                                  </div>
+                                  <div class="col-2">
+                                    <button type="button" click.delegate="initType()" class="btn btn-sm btn-block btn-info btn-sm">Add</button>
+                                  </div>
+                                </div>
+                              </div>
+                        </div>
+                    </div>
+                    <div class="card-title" style="padding-left: 10px;padding-top: 5px;">
+                        <h6>Stylists</h6>
+                    </div>
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <div class="col-3" style="text-align: center; margin: auto;" if.bind="!service.accountBranchServices">
+                                  <span class="spinner-border spinner-border-sm" style="width: 3rem; height: 3rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+                                  <label>Loading...</label>
+                                </div>
+                                <div if.bind="service.accountBranchServices">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <!--<h4 class="card-title">Employees</h4>-->
+                                        </div>
+                                        <div class="col-4">
+                                          <button type="button" class="btn btn-info btn-sm btn-block ai-btn" data-toggle="modal" data-target="#service_accounts">Add</button>
+                                        </div>
+                                    </div>
+                                    <div class="card card-body mt-3" if.bind="service.accountBranchServices.length == 0" style="text-align: center; margin-top: 10px;">No stylists affiliated to this service yet.</div>
+                                    <table if.bind="service.accountBranchServices.length > 0" class="display nowrap table table-hover table-striped table-bordered" style="margin-top: 10px;">
+                                        <thead>
+                                            <tr>
+                                                <th>FirstName</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr repeat.for="serviceaccount of service.accountBranchServices" if.bind="!serviceaccount.deleted">
+                                                <td>${ serviceaccount.account.user.firstName }</td>
+                                                <td>
+                                                    <a href="#" class="btn btn-sm btn-icon btn-pure btn-outline" data-toggle="modal" data-target="#_deleteAccount" click.delegate="initAccount(serviceaccount)"><i class="icon-trash"></i></a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card-title"><h6 class="ml-1 mt-1">Price</h6></div>
+                    <div class="card">
+                        <div class="card-body">
+                            <input type="number" step=".01" value.bind="service.saleItem.price" class="form-control" placeholder="0.00">
+                        </div>
+                    </div>
+                    <div class="card-title"><h6 class="ml-1 mt-3">Duration (mins)</h6></div>
+                    <div class="card mt-2">
+                        <div class="card-body">
+                            <input type="number" step=".01" value.bind="service.duration" class="form-control" placeholder="0.00">
+                        </div>
+                    </div>
+                    <div class="card-title"><h6 class="ml-1 mt-3">Branches Affiliated</h6></div>
+                    <div class="card mt-2 card-body">
+                      <div class="col-3" style="text-align: center; margin: auto;" if.bind="!service.branchServices">
+                        <span class="spinner-border spinner-border-sm" style="width: 3rem; height: 3rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+                        <label>Loading...</label>
+                      </div>
+                      <div if.bind="service.branchServices">
+                        <div class="row">
+                            <div class="col-8">
+                            </div>
+                            <div class="col-4">
+                                <button type="button" class="btn btn-info btn-sm btn-block ai-btn" data-toggle="modal" data-target="#branch_services">Add</button>
+                            </div>
+                        </div>
+                        <div class="card card-body mt-3" if.bind="service.branchServices.length == 0" style="text-align: center; margin-top: 10px;">No branches affiliated to this service yet.</div>
+                        <table if.bind="service.branchServices.length > 0" class="display nowrap table table-hover table-striped table-bordered" style="margin-top: 10px;">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr repeat.for="branchService of service.branchServices" if.bind="!branchService.deleted">
+                                    <td>${ branchService.branch.name }</td>
+                                    <td>
+                                      <a class="btn btn-sm btn-icon btn-pure btn-outline" data-toggle="modal" data-target="#_deleteBranch" click.delegate="initBranch(branchService)"><i class="icon-trash"></i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!--Create Stylist Modal-->
+    <div id="service_stylist" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form submit.delegate="onCreateStylist()">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">Add Stylist</h4>
+                        <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true" #x_store>×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Stylist's Email Address</label>
+                            <input type="email" value.bind="_stylist.account.email" class="form-control" placeholder="Email Address">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-info ai-btn waves-effect">Save</button>
+                        <button type="button" class="btn btn-outline-info ai-btn waves-effect" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+    <!--Create Category Modal-->
+    <div id="category" if.bind="category" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">Category</h4>
+                        <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true" #x_category>×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" value.bind="data_category" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" click.delegate="OnCreateCategory()" class="btn btn-secondary bs-btn waves-effect btn-sm">Save</button>
+                        <button type="button" class="btn btn-outline-secondary bs-btn waves-effect btn-sm" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <!--Create Brand Modal-->
+    <div id="brand" if.bind="brand" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">Brand</h4>
+                        <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true" #x_category>×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" value.bind="data_brand" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" click.delegate="OnCreateBrand()" class="btn btn-info ai-btn waves-effect">Save</button>
+                        <button type="button" class="btn btn-outline-info ai-btn waves-effect" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <!--Create Type Modal-->
+    <div id="_type" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <form>
+                  <div class="modal-header">
+                      <h4 class="modal-title" id="myModalLabel">Service Type</h4>
+                      <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true" #x_category>×</button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="form-group">
+                      <label>Name</label>
+                      <input type="text" value.bind="servicetype.type" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                      <div class="row">
+                        <div class="col-sm-6 text-center">
+                          <label>Light Icon</label>
+                          <div class="image-area-4 mt-4" style="background-color: #3e3d3d;">
+                            <img id="imageResult" style="width: 100%;" src="data:'image/png';base64,${servicetype.lightIcon}" alt="" class="img-fluid rounded shadow-sm mx-auto d-block">
+                          </div>
+                          <!-- Upload image input-->
+                          <input type="hidden" value.bind="type.lightIcon">
+                          <div class="input-group mt-4 mb-4">
+                              <input id="lighticon" change.delegate="OnLightIconChanged()" accept="image/png, image/jpeg" type="file" class="form-control border-0">
+                              <label id="upload-label" for="upload" class="btn btn-light btn-block rounded-pill shadow-sm"> <i class="fa fa-cloud-upload mr-2 text-muted"></i> CHOOSE FILE</label>
+                          </div>
+                          <p class="font-italic mt-3 text-center">(Your icon should be in png format)</p>
+                        </div>
+                        <div class="col-sm-6 text-center">
+                          <label>Dark Icon</label>
+                          <div class="image-area-4 mt-4">
+                            <img id="imageResult" style="width: 100%;" src="data:'image/png';base64,${servicetype.darkIcon}" alt="" class="img-fluid rounded shadow-sm mx-auto d-block">
+                          </div>
+                          <!-- Upload image input-->
+                          <input type="hidden" value.bind="type.darkIcon">
+                          <div class="input-group mt-4 mb-4">
+                              <input id="darkicon" change.delegate="OnDarkIconChanged()" accept="image/png, image/jpeg" type="file" class="form-control border-0">
+                              <label id="upload-label" for="upload" class="btn btn-light btn-block rounded-pill shadow-sm"> <i class="fa fa-cloud-upload mr-2 text-muted"></i> CHOOSE FILE</label>
+                          </div>
+                          <p class="font-italic mt-3 text-center">(Your icon should be in png format)</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                      <button if.bind="!isBusy" type="button" click.delegate="OnCreateType()" class="btn btn-secondary bs-btn waves-effect btn-sm">Save</button>
+                      <button disabled.bind="isBusy" type="button" class="btn btn-outline-secondary bs-btn waves-effect btn-sm" data-dismiss="modal">Cancel</button>
+                      <button if.bind="isBusy" type="button" class="btn btn-secondary waves-effect btn-sm" style="width: 120px;">
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                          Please wait...
+                      </button>
+                  </div>
+              </form>
+          </div>
+          <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+  </div>
+
+  <!--Attach Branch Services Modal-->
+  <div id="branch_services" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+          <form submit.delegate="onSave()">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Store Services</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+              <label>Attach Branches</label>
+              <div if.bind="branches"> 
+                <div class="card card-body" if.bind="branches.length == 0" style="text-align: center;">No branches registered so far.</div>
+                <div style="width: 100%;" if.bind="branches.length > 0">
+                  <table class="display nowrap table table-hover table-striped table-bordered" style="margin-top: 10px;">
+                    <thead>
+                        <tr>
+                          <th></th>
+                          <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr repeat.for="branch of branches">
+                            <td><input id="${branch.id}" checked.bind="isChecked(branch)" click.delegate="onBranchSelected(branch)" type="checkbox"></td>
+                            <td>${ branch.name }</td>
+                        </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer" style="width:100%">
+              <button type="button" class="btn btn-outline-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 120px; padding: .2rem .75rem;">Cancel</button>
+              <button type="button" class="btn btn-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 120px; padding: .2rem .75rem;">Save</button>
+            </div>
+          </form>
+        </div>
+    </div>
+  </div>
+
+  <!--Attach Staff Modal-->
+  <div id="service_accounts" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+          <form submit.delegate="onSave()">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Staff Services</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+              <label>Attach Staff</label>
+              <div if.bind="!dboStaff.accounts"> 
+                <div class="col-3" style="text-align: center; margin: auto;">
+                  <span class="spinner-border spinner-border-sm" style="width: 3rem; height: 3rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+                  <label>Even geduld aub...</label>
+                </div>
+              </div>
+              <div if.bind="dboStaff.accounts"> 
+                <div class="card card-body" if.bind="dboStaff.accounts.length == 0" style="text-align: center;">No staff registered so far.</div>
+                <div style="width: 100%;" if.bind="dboStaff.accounts.length > 0">
+                  <table class="display nowrap table table-hover table-striped table-bordered" style="margin-top: 10px;">
+                    <thead>
+                        <tr>
+                          <th></th>
+                          <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      <tr repeat.for="staff of dboStaff.accounts">
+                          <td><input id="${staff.id}" checked.bind="isStaffChecked(staff)" click.delegate="onStaffSelected(staff)" type="checkbox"></td>
+                          <td>${ staff.user.firstName } ${ staff.user.lastName }</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div style="width: 100%;" if.bind="dboStaff.accounts.length > 0">
+                    <nav style="float: right" aria-label="...">
+                      <ul class="pagination">
+                        <li class.bind="(dboStaff.page == 1)? 'page-item disabled' : 'page-item'">
+                          <a class="page-link" tabindex="-1" click.delegate="previous()">Previous</a>
+                        </li>
+                        <li class.bind="((p + 1) == dboStaff.page)? 'page-item active': 'page-item'" repeat.for="p of dboStaff.pageCount"><a class="page-link" click.delegate="goToPage(p + 1)"> ${p + 1} <span class="sr-only" if.bind="isActive((p + 1), dboStaff.page)">(current)</span></a></li>
+                        <li class.bind="(dboStaff.page == dboStaff.pageCount)? 'page-item disabled' : 'page-item'">
+                          <a class="page-link" click.delegate="next()">Next</a>
+                        </li>
+                      </ul>
+                    </nav>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer" style="width:100%">
+              <button type="button" class="btn btn-outline-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 120px; padding: .2rem .75rem;">Cancel</button>
+              <button type="button" class="btn btn-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 120px; padding: .2rem .75rem;">Save</button>
+            </div>
+          </form>
+        </div>
+    </div>
+  </div>
+
+  <progress.dialog></progress.dialog>
+  <!--Delete Affiliated Branch Modal-->
+  <div id="_deleteBranch" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form submit.delegate="onDeleteAffiliatedBranch()">
+              <div class="modal-header" style="border: 0;padding: 0;">
+                <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true" #x_pleasewait>×</button>
+              </div>
+                <div class="modal-body" style="text-align: center;">
+                  <h4 class="card-title">Confirm Delete</h4>
+                  <label>Are you sure you want to delete this branch?</label>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 130px; padding: .2rem .75rem;">Cancel</button>
+                    <button type="submit" class="btn btn-secondary btn-sm waves-effect" style="min-width: 130px; padding: .2rem .75rem;">Save</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+
+  <!--Delete Affiliated Branch Modal-->
+  <div id="_deleteAccount" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form submit.delegate="onDeleteAffiliatedAccount()">
+              <div class="modal-header" style="border: 0;padding: 0;">
+                <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true" #x_pleasewait>×</button>
+              </div>
+                <div class="modal-body" style="text-align: center;">
+                  <h4 class="card-title">Confirm Delete</h4>
+                  <label>Are you sure you want to delete this account?</label>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 130px; padding: .2rem .75rem;">Cancel</button>
+                    <button type="submit" class="btn btn-secondary btn-sm waves-effect" style="min-width: 130px; padding: .2rem .75rem;">Save</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+</template>

@@ -1,0 +1,229 @@
+<template>
+    <require from="../../../extensions/progress/progress.dialog.html"></require>
+    <div class="admin-container">
+      <div class="row">
+        <div class="col-9">
+            <h3 class="card-title">Branches</h3>
+        </div>
+        <div class="col-3">
+            <button disabled.bind="!branches" class="btn btn-secondary btn-block btn-sm" data-toggle="modal" data-target="#branch" click.delegate="onInitBranch()">Create Branch</button>
+        </div>
+      </div>
+        <div class="card card-body" if.bind="!branches">
+          <div class="col-3" style="text-align: center; margin: auto;">
+            <span class="spinner-border spinner-border-sm" style="width: 3rem; height: 3rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+            <label>Even geduld aub...</label>
+          </div>
+        </div>
+        <div if.bind="branches">
+            <div class="card card-body" if.bind="branches.length == 0" style="text-align: center;">No branches so far.</div>
+            <div class="card card-body mt-2" if.bind="branches.length > 0">
+                <table class="display nowrap table table-hover table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Branch Name</th>
+                            <th>Street</th>
+                            <th>Contact</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr repeat.for="branch of branches">
+                            <td>${ branch.name }</td>
+                            <td>${ branch.address.street }</td>
+                            <td>${ branch.contact.tel }</td>
+                            <td>
+                                <div>
+                                    <a data-toggle="modal" data-target="#branch" click.delegate="onInitBranch(branch.id)" class="btn btn-sm btn-icon btn-pure btn-outline-secondary" style="min-width: 110px;"><i class="icon-note"></i> Profile</a>
+                                    <a data-toggle="modal" data-target="#warning" href="javascript:;" class="btn btn-sm btn-icon btn-pure btn-outline-secondary" click.delegate="onInitBranch(branch.id)" style="min-width: 110px;"><i class="icon-trash"></i> Delete</a>
+                                    <!--<a href="#/admin/services/?id=${ branch.id }" class="btn btn-sm btn-icon btn-outline-secondary" style="min-width: 110px;"><i class="icon-trash"></i> Services</a>
+                                    <a href="#/admin/appointments/?id=${ branch.id }" class="btn btn-sm btn-icon btn-outline-secondary" style="min-width: 110px;"><i class="icon-trash"></i> Appointments</a>
+                                    <a href="#/admin/products/?id=${ branch.id }" class="btn btn-sm btn-icon btn-outline-secondary" style="min-width: 110px;"><i class="icon-trash"></i> Products</a>-->
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!--Create Section Modal-->
+    <div id="branch" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form submit.delegate="onSaveBranch()">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Branch</h4>
+                    <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true" #x_store>×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="col-md-12 m-b-20">
+                            <label>Name</label>
+                            <input type="text" value.bind="branch.name" class="form-control" placeholder="Name">
+                        </div>
+                    </div>
+                    <div class="card">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#_address" role="tab"><span class="hidden-sm-up"><i class="ti-home"></i></span> <span class="hidden-xs-down">Address</span></a> </li>
+                            <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#_seats" role="tab"><span class="hidden-sm-up"><i class="ti-user"></i></span> <span class="hidden-xs-down">Seats</span></a> </li>
+                        </ul>
+                        <div class="tab-content tabcontent-border">
+                            <div class="tab-pane active" id="_address" role="tabpanel" style="padding: 10px 0px 0px 0px;">
+                                <div class="form-group">
+                                    <div class="col-md-12 m-b-20">
+                                        <label>Street</label>
+                                        <input type="text" value.bind="branch.address.street" class="form-control" placeholder="Luther str">
+                                    </div>
+                                    <div class="col-md-12 m-b-20">
+                                        <label>City</label>
+                                        <input type="text" value.bind="branch.address.city" class="form-control" placeholder="City Name">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12 m-b-20">
+                                        <label>Email</label>
+                                        <input type="text" value.bind="branch.contact.email" class="form-control" placeholder="e.g johndoe@example.com">
+                                    </div>
+                                    <div class="col-md-12 m-b-20">
+                                        <label>Phone</label>
+                                        <input type="text" value.bind="branch.contact.tel" class="form-control" placeholder="e.g +(000) 123 456">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="_seats" role="tabpanel" style="padding: 10px;">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <h3 class="card-title">Seats</h3>
+                                    </div>
+                                    <div class="col-4">
+                                        <button class="btn btn-secondary btn-block btn-sm" data-toggle="modal" data-target="#seat" click.delegate="onInitSeat()">Add Seat</button>
+                                    </div>
+                                </div>
+                                <div class="row" if.bind="branch.seats">
+                                    <div if.bind="branch.seats.length == 0"><label style="text-align: center; width: 100%;">No seats attached yet</label></div>
+                                    <div if.bind="branch.seats.length > 0" style="height: 200px; overflow-y: auto; width:100%">
+                                        <table class="display nowrap table table-hover table-striped table-bordered">
+                                          <thead>
+                                              <tr>
+                                                  <th>Seat No.</th>
+                                                  <th>Affiliated Staff</th>
+                                                  <th>Actions</th>
+                                              </tr>
+                                          </thead>
+                                          <tbody>
+                                            <tr repeat.for="seat of branch.seats" if.bind="seat.deleted == 0">
+                                              <td>${ seat.name }</td>
+                                              <td>${ seat.account.user.firstName } ${ seat.account.user.lastName }</td>
+                                              <td>
+                                                <a href="#" class="btn btn-sm btn-icon btn-pure btn-outline" data-toggle="modal" data-target="#seat" click.delegate="onInitSeat(seat.id)"><i class="icon-note"></i></a>
+                                                <a href="#" class="btn btn-sm btn-icon btn-pure btn-outline"><i class="icon-trash" data-toggle="modal" data-target="#_delete" click.delegate="onInitSeat(seat.id)"></i></a>
+                                              </td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row" if.bind="!branch.seats"><label style="text-align: center; width: 100%;">No seats attached yet</label></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-secondary waves-effect btn-sm" style="min-width: 120px;">Save</button>
+                    <button type="button" class="btn btn-outline-secondary waves-effect btn-sm" data-dismiss="modal" style="min-width: 120px;">Cancel</button>
+                </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <!--Create Seat Modal-->
+    <div id="seat" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form submit.delegate="onSaveSeat()">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">Seat</h4>
+                        <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true" #x_store>×</button>
+                    </div>
+                    <div class="modal-body" style="min-height: 267px;">
+                        <div class="form-group">
+                            <label>Seat No.</label>
+                            <input type="number" value.bind="seat.name" class="form-control" placeholder="001" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Staff</label>
+                            <select class="form-control" value.bind="seat.accountId" change.delegate="validateAssignment(seat)">
+                                <option model.bind="undefined">Choose</option>
+                                <option repeat.for="employee of employees" model.bind="employee.id">${ employee.user.firstName } ${ employee.user.lastName }</option>
+                            </select>
+                            <span style="color: #f00;">${ warning }</span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-secondary btn-sm waves-effect" style="min-width: 120px;">Save</button>
+                        <button type="button" class="btn btn-outline-secondary waves-effect btn-sm" disabled style="min-width: 120px;">Delete</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 120px;">Cancel</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <progress.dialog></progress.dialog>
+
+    <!--Delete Holiday Modal-->
+    <div id="_delete" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header" style="border: 0;padding: 0;">
+              <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true" #x_pleasewait>×</button>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+              <h4 class="card-title">Confirm Delete</h4>
+              <label>Are you sure you want to delete this Seat?</label>
+            </div>
+            <div class="modal-footer">
+              <button if.bind="!isBusy" type="button" class="btn btn-outline-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 130px; padding: .2rem .75rem;">Cancel</button>
+              <button if.bind="!isBusy" type="submit" class="btn btn-secondary btn-sm waves-effect" style="min-width: 130px; padding: .2rem .75rem;" click.delegate="onDeleteSeat()">Delete</button>
+              <button if.bind="isBusy" class="btn btn-secondary btn-sm" type="button" style="min-width: 130px; padding: .2rem .75rem;" disabled>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Even geduld aub...
+              </button>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+  </div>
+
+  <div id="warning" class="modal fade in" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="myModalLabel">Warning!!!</h4>
+                <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+              <div class="text-center"><label>Are you sure about deleting this branch?</label></div>
+            </div>
+            <div class="modal-footer">
+                <button disabled.bind="isBusy == true" type="button" class="btn btn-outline-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 120px; padding: .2rem .75rem;">Cancel</button>
+                <button if.bind="!isBusy" type="button" class="btn btn-secondary btn-sm waves-effect" style="min-width: 120px; padding: .2rem .75rem;" click.delegate="deleteBranch()">Delete</button>
+                <button if.bind="isBusy" type="button" class="btn btn-secondary waves-effect btn-sm" style="width: 120px;">
+                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Please wait...
+                </button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+</template>

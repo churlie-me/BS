@@ -1,0 +1,140 @@
+<template>
+  <div class="admin-container">
+    <div class="row">
+      <div class="col-9">
+          <h3 class="card-title">Jobs</h3>
+      </div>
+      <div class="col-3">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <form>
+          <div class="row">
+              <div class="col-md-9"><label style="font-weight: 500;">Add New Job</label></div>
+              <div class="col-md-3">
+                  <button type="button" click.delegate="saveJob()"  class="btn btn-block btn-secondary btn-sm">Save</button>
+              </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <h6>Job Title</h6>
+                <input type="text" value.bind="job.title" class="form-control" placeholder="Title">
+              </div>
+              <div class="form-group">
+                <h6 class="control-label">Description</h6>
+                <textarea rows="6" value.bind="job.description" class="form-control"></textarea>
+              </div>
+              <div class="form-group">
+                <h6>Job Deadline</h6>
+                <input type="date" value.bind="job.deadline" class="form-control">
+              </div>
+              <div class="form-group">
+                <input type="checkbox" id="isactive" checked.bind="job.isActive" class="fonm-control">
+                <label for="isactive">IsActive</label>
+              </div>
+              <div class="form-group">
+                <label>Job Station</label>
+                <select class="form-control" value.bind="job.branchId">
+                    <option model.bind="undefined">Choose</option>
+                    <option model.bind="branch.id" repeat.for="branch of _storeService.store.branches">${ branch.name }</option>
+                </select>
+            </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="col-6">
+        <div class="row mb-3">
+          <div class="col-5">
+          </div>
+          <div class="col-7">
+            <div class="row">
+              <div class="col-12">
+                <div class="input-group">
+                  <span class="input-group-text" id="basic-addon1"><i class="mdi mdi-magnify"></i></span>
+                  <input type="text" value.bind="dbojobs.search" class="form-control" placeholder="Search Jobs" keyup.trigger="_search()" disabled.bind="(dbojobs.jobs == undefined)">
+                  <button class="btn btn-secondary input-group-text" id="basic-addon1" style="background: #6c757d; color: #fff;">Search</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row card card-body" if.bind="!dbojobs.jobs">
+          <div class="col-3" style="text-align: center; margin: auto;">
+            <span class="spinner-border spinner-border-sm" style="width: 3rem; height: 3rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+            <label>Even geduld aub...</label>
+          </div>
+        </div>
+        <div class="row" if.bind="dbojobs.jobs">
+          <div class="col-12">
+            <div class="card card-body">
+              <div if.bind="dbojobs.jobs.length == 0" style="text-align: center;">No jobs posted so far.</div>
+              <table if.bind="dbojobs.jobs.length > 0" class="display table table-hover table-striped table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Title</th>
+                      <th>Deadline</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr repeat.for="job of dbojobs.jobs">
+                      <td>${ job.title }</td>
+                      <td>${ job.deadline }</td>
+                      <td>
+                        <a href="#/admin/jobs/?id=${job.id}" class="btn btn-sm btn-icon btn-pure btn-outline" click.delegate="initJob(job)"><i class="icon-note"></i></a>
+                        <a href="javascript:;" class="btn btn-sm btn-icon btn-pure btn-outline" data-toggle="modal" data-target="#_delete" click.delegate="initJob(job)"><i class="icon-trash"></i></a>
+                        <a href="#/admin/jobs/job/applications/${job.id}" class="btn btn-outline-secondary btn-sm" style="min-width: 150px;">Applications</a>
+                      </td>
+                    </tr>
+                  </tbody>
+              </table>
+              <div style="width: 100%;" if.bind="dbojobs.jobs.length > 0">
+                <nav style="float: right" aria-label="...">
+                  <ul class="pagination">
+                    <li class.bind="(dbojobs.page == 1)? 'page-item disabled' : 'page-item'">
+                      <a class="page-link" tabindex="-1" click.delegate="previous()">Previous</a>
+                    </li>
+                    <li class.bind="((p + 1) == dbojobs.page)? 'page-item active': 'page-item'" repeat.for="p of dbojobs.pageCount"><a class="page-link" click.delegate="goToPage(p + 1)"> ${p + 1} <span class="sr-only" if.bind="isActive((p + 1), dborequests.page)">(current)</span></a></li>
+                    <li class.bind="(dbojobs.page == dbojobs.pageCount)? 'page-item disabled' : 'page-item'">
+                      <a class="page-link" click.delegate="next()">Next</a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--Delete  Modal-->
+  <div id="_delete" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form submit.delegate="onDeleteJob()">
+              <div class="modal-header" style="border: 0;padding: 0;">
+                <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true" #x_pleasewait>×</button>
+              </div>
+                <div class="modal-body" style="text-align: center;">
+                  <h4 class="card-title">Confirm Delete</h4>
+                  <label>Are you sure you want to delete this job?</label>
+                </div>
+                <div class="modal-footer">
+                    <button if.bind="!isBusy" type="button" class="btn btn-outline-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 130px; padding: .2rem .75rem;">Cancel</button>
+                    <button if.bind="!isBusy" type="submit" class="btn btn-secondary btn-sm waves-effect" style="min-width: 130px; padding: .2rem .75rem;">Save</button>
+                    <button if.bind="isBusy" class="btn btn-secondary btn-sm" type="button" style="min-width: 130px; padding: .2rem .75rem;" disabled>
+                      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                      Even geduld aub...
+                  </button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+</template>

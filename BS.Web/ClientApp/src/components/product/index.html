@@ -1,0 +1,54 @@
+<template>
+    <div class="row" if.bind="!product" style="padding: 300px 0px;">
+      <div class="col-3" style="text-align: center; margin: auto;">
+        <span class="spinner-border spinner-border-sm" style="width: 3rem; height: 3rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+        <label>Even geduld aub...</label>
+      </div>
+    </div>
+    <div if.bind="product" style="position: relative;">
+        <div class="bg-main" if.bind="!product.background" style="margin-bottom: 600px;">
+            <span>Product Background Image</span>
+        </div>
+        <img class="bg-image img-fluid" if.bind="product.background" src="data:'image/jpeg';base64,${product.background}" style="margin-bottom: 400px; height: 450px; width: 100%;">
+        <div class="product" style="margin-bottom: 20px;width: 100%;position: absolute;top: 20%;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-5" style="text-align: center; padding-top: 65px;">
+                        <img class="img-fluid" if.bind="product.image" style="width: 100%; border-radius: 3px;" src="data:'image/jpeg';base64,${product.image}">
+                        <img class="img-fluid" if.bind="!product.image" style="width: 70%;" src="../../resources/placeholder.jpg" alt="product">
+                    </div>
+                    <div class="col-md-7">
+                        <div class="card" style="min-height: 300px; border-radius: 3px;">
+                            <div class="card-body">
+                                <h4 style="text-transform: uppercase;" class="mb-1">${ product.name }</h4>
+                                <h4 style="text-transform: uppercase; font-weight: bold;">EUR ${ product.saleItem.price }</h4>
+                                <div class="" style="margin: 30px 0px;">
+                                  <span>${ product.description }</span>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                  <div class="quantity buttons_added">
+                                    <button type="button" click.delegate="minus()" value="-" class="minus">-</button>
+                                    <input type="number" value.bind="qty" id="quantity_5fabd58963938" class="form-control input-text qty text" step="1" min="1" max="" name="quantity" value="1" title="Qty" size="4" inputmode="numeric">
+                                    <button type="button" click.delegate="plus()" value="+" class="plus">+</button>
+                                  </div>
+                                  <div class="col">
+                                    <button class="col-4 btn btn-secondary btn-cart" style="height: 100%; min-width: 200px;" click.delegate="addItem()">Voeg toe aan winkelkar</button>
+                                  </div>
+                                </div>
+                                <hr>
+                                <div class="" if.bind="product.instructions.length > 0" style="margin: 30px 0px;">
+                                    <h4>HOE MIJ TE GEBRUIKEN</h4>
+                                    <div repeat.for="instruction of product.instructions">
+                                        <h6>${ instruction.title }</h6>
+                                        <p>${ instruction.description}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

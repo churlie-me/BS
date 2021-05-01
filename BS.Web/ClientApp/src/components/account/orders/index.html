@@ -1,0 +1,69 @@
+<template>
+  <!--<require from="./receipt.html"></require>-->
+  <require from="../../admin/invoice/invoice.module.html"></require>
+    <div slot="_content">
+        <div class="row mb-3">
+            <div class="col-12">
+                <h3>Mijn Bestellingen</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12" if.bind="!dboorder.orders">
+              <div class="col-3" style="text-align: center; margin: auto;">
+                <span class="spinner-border spinner-border-sm" style="width: 3rem; height: 3rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+                <label>Even geduld aub...</label>
+              </div>
+            </div>
+            <div if.bind="dboorder.orders" class="col-12">
+                <div class="card card-body mt-4" if.bind="dboorder.orders.length == 0" style="text-align: center;">No orders made so far.</div>
+                <div class="card card-body mt-3" if.bind="dboorder.orders.length > 0">
+                    <table class="display nowrap table table-hover table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Bestelnr.</th>
+                                <th>Besteldatum</th>
+                                <th>Status</th>
+                                <th>Totale Bestelling</th>
+                                <th>Toestand</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr repeat.for="order of dboorder.orders">
+                                <td>${ order.orderNo }</td>
+                                <td>${ order.orderDate }</td>
+                                <td>${ statuses[order.status] }</td>
+                                <td>${ order.orderTotal }</td>
+                                <td>
+                                  <button class="btn btn-outline-secondary btn-sm mr-2" click.delegate="viewOrder(order)" style="min-width: 60px;">Visie</button>
+                                  <button if.bind="!isBusy && order.status != 1" class="btn btn-outline-danger btn-sm" click.delegate="cancelOrder(order)" style="min-width: 60px;">Annuleren</button>
+                                  <button if.bind="isBusy && order.id == _order.id" class="btn btn-secondary btn-sm" type="button" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    Wacht...
+                                  </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div style="width: 100%;" if.bind="dboorder.orders.length > 0">
+                      <nav style="float: right" aria-label="...">
+                        <ul class="pagination">
+                          <li class.bind="(dboorder.page == 1)? 'page-item disabled' : 'page-item'">
+                            <a class="page-link" tabindex="-1" click.delegate="previous()">Vorige</a>
+                          </li>
+                          <li class.bind="((p + 1) == dboorder.page)? 'page-item active': 'page-item'" repeat.for="p of dboorder.pageCount"><a class="page-link" click.delegate="goToPage(p + 1)"> ${p + 1} <span class="sr-only" if.bind="((p + 1) == dboorder.page)">(current)</span></a></li>
+                          <li class.bind="(dboorder.page == dboorder.pageCount)? 'page-item disabled' : 'page-item'">
+                            <a class="page-link" click.delegate="next()">De volgende</a>
+                          </li>
+                        </ul>
+                      </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Receipt-->
+        <!--<receipt order.bind="_order" store.bind="_storeService.store"></receipt>-->
+        <invoice.module invoice.bind="_invoice"></invoice.module>
+    </div>
+</template>

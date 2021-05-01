@@ -1,0 +1,41 @@
+<template>
+    <div class="container" style="margin-top: 80px; margin-bottom: 80px;">
+        <div class="row">
+            <div class="col-md-4" style="text-align:center; margin: 25px auto;">
+                <!--<img src="../assets/images/logo.png" style="width:50%;">-->
+                <span style="font-weight: bold;font-size: 25px;">Inloggen</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-5" style="margin:auto">
+                <form>
+                    <div class="form-group">
+                        <label style="text-align: center; color: #f00; width: 100%;" if.bind="authenticationFailed">Wrong username or password</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="email" value.bind="email" placeholder="Email" disabled.bind="isBusy"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" id="password" value.bind="password" placeholder="Wachtwoord" disabled.bind="isBusy"/>
+                    </div>
+                    <div class="form-group">
+                        <button if.bind="!isBusy" type="submit" class="btn btn-secondary btn-sm btn-block" click.delegate="login()">INLOGGEN</button>
+                        <button if.bind="isBusy" class="btn btn-secondary btn-sm btn-block" type="button" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Even geduld aub...
+                        </button>
+                    </div>
+                    <div class="form-group m-b-10">
+                        <div class="col-md-12">
+                          <div class="checkbox checkbox-primary float-left p-b-10">
+                            <input id="checkbox-signup" type="checkbox" disabled.bind="isBusy">
+                            <label for="checkbox-signup"> Onthouden </label>
+                          </div>
+                          <a href="javascript:void(0)" id="to-recover" class="text-dark float-right"><i class="fa fa-lock m-r-5"></i> Watchwood vergeten?</a> </div>
+                      </div>
+                </form>
+                <a class="btn btn-outline-secondary btn-sm" href="#/signup" style="width: 100%" disabled.bind="isBusy">MAAK ER EENI</a>
+            </div>
+        </div>
+    </div>
+</template>

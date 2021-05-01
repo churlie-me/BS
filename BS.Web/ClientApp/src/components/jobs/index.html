@@ -1,0 +1,93 @@
+<template>
+  <div style="background: #fff;">
+    <div style.bind="bindBackgroundStyles()">
+      <div class="container">
+        <div class="row">
+          <div class="col-3" style="margin: auto">
+            <h2 class="text-center" style="color: #fff;">Jobs</h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <h5 style="color: #fff;">Ontdek onze vacatures</h5>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-10">
+            <input type="text" value.bind="dbojobs.search" class="form-control" placeholder="Jobs zoeken" disabled.bind="(dbojobs.jobs == undefined)">
+          </div>
+          <div class="col-2">
+            <button class="btn btn-secondary btn-block" click.delegate="applyFilter()"><i class="mdi mdi-magnify"></i> Zoeken</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-3"></div>
+        <div class="col-9">
+          <div class="row" if.bind="!dbojobs.jobs">
+            <div class="card card-body">
+              <div class="col-3" style="text-align: center; margin: auto;">
+                <span class="spinner-border spinner-border-sm" style="width: 3rem; height: 3rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+                <label>Even geduld aub...</label>
+              </div>
+            </div>
+          </div>
+          <div class="row" if.bind="dbojobs.jobs">
+            <div class="col-12">
+              <div class="card card-body">
+                <div if.bind="dbojobs.jobs.length == 0" style="text-align: center;min-height: 300px;padding-top: 50px;">Tot dusver geen vacatures die aan uw zoekcriteria voldoen</div>
+                <div if.bind="dbojobs.jobs.length > 0">
+                  <div class="row" repeat.for="job of dbojobs.jobs">
+                    <div class="col-3">
+                      <img style="width: 175px;border: 1px solid;margin: auto;border-radius: 5px;" src="data:'image/jpeg';base64,${_storeService.store.logo}"/>
+                    </div>
+                    <div class="col-9">
+                      <div class="row">
+                        <h3 class="col-7" style="font-weight: 500;">${ job.title }</h3>
+                      </div>
+                      <div class="row">
+                        <label class="col-2">Deadline</label>
+                        <label class="col-1">:</label>
+                        <label class="col-6">${ job.deadline }</label>
+                      </div>
+                      <div class="row">
+                        <label class="col-2">Plaats</label>
+                        <label class="col-1">:</label>
+                        <label class="col-6">${ job.branch.name }</label>
+                      </div>
+                      <div class="row">
+                        <div class="col-12">
+                          ${ job.description }
+                        </div>
+                      </div>
+                      <div class="row mt-2">
+                        <div class="col-12">
+                          <a href="#/jobs/job/${job.id}" style="float:right; min-width: 165px;" class="btn btn-outline-secondary">Lees verder...</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-5" style="width: 100%;" if.bind="dbojobs.jobs.length > 0">
+                  <nav style="float: right" aria-label="...">
+                    <ul class="pagination">
+                      <li class.bind="(dbojobs.page == 1)? 'page-item disabled' : 'page-item'">
+                        <a class="page-link" tabindex="-1" click.delegate="previous()">Vorige</a>
+                      </li>
+                      <li class.bind="((p + 1) == dbojobs.page)? 'page-item active': 'page-item'" repeat.for="p of dbojobs.pageCount"><a class="page-link" click.delegate="goToPage(p + 1)"> ${p + 1} <span class="sr-only" if.bind="isActive((p + 1), dborequests.page)">(current)</span></a></li>
+                      <li class.bind="(dbojobs.page == dbojobs.pageCount)? 'page-item disabled' : 'page-item'">
+                        <a class="page-link" click.delegate="next()">De volgende</a>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

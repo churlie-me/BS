@@ -1,0 +1,200 @@
+<template>
+  <div class="admin-container">
+    <require from="./branchRevenue/branchRevenue.html"></require>
+    <require from="./productrevenue/productrevenue.html"></require>
+    <require from="./servicerevenue/servicerevenue.html"></require>
+    <require from="./seatrevenue/seatrevenue.html"></require>
+    <require from="../../../extensions/progress/progress.dialog.html"></require>
+    <div class="row">
+      <div class="col-9">
+          <h3 class="card-title">Reports</h3>
+      </div>
+      <div class="col-3">
+        
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3 col-sm-12">
+        <div class="card">
+          <div class="card-body">
+            <h4>Service Revenue</h4>
+            <label>per seat for a selected period</label>
+
+            <div>
+              <a href="#" data-toggle="modal" data-target="#_seatRevenue">Open</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-12">
+        <div class="card">
+          <div class="card-body">
+            <h4>Total Revenue</h4>
+            <label>per service for a selected period</label>
+
+            <div>
+              <a href="#" data-toggle="modal" data-target="#_serviceRevenue">Open</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-12">
+        <div class="card">
+          <div class="card-body">
+            <h4>Total Revenue</h4>
+            <label>per branch for a selected period</label>
+            <div>
+              <a href="#" data-toggle="modal" data-target="#_branchRevenue">Open</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-12">
+        <div class="card">
+          <div class="card-body">
+            <h4>Total Revenue</h4>
+            <label>per product for a selected period</label>
+
+            <div>
+              <a href="#" data-toggle="modal" data-target="#_productRevenue">Open</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--Create Product Revenue Modal-->
+  <div id="_productRevenue" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form submit.delegate="getProductRevenue()">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Product Revenue </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" #x_category>×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>From</label>
+                        <input type="date" value.bind="dboReport.from" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                      <label>To</label>
+                      <input type="date" value.bind="dboReport.to" class="form-control" required>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 120px; padding: .2rem .75rem;">Cancel</button>
+                    <button type="submit" class="btn btn-secondary btn-sm waves-effect" style="min-width: 120px; padding: .2rem .75rem;">Preview</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+
+  <!--Create Service Revenue Modal-->
+  <div id="_serviceRevenue" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form submit.delegate="getServiceRevenue()">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Service Revenue</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" #x_category>×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>From</label>
+                        <input type="date" value.bind="dboReport.from" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                      <label>To</label>
+                      <input type="date" value.bind="dboReport.to" class="form-control" required>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 120px; padding: .2rem .75rem;">Cancel</button>
+                    <button type="submit" class="btn btn-secondary btn-sm waves-effect" style="min-width: 120px; padding: .2rem .75rem;">Preview</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+
+  <!--Create Seat Revenue Modal-->
+  <div id="_seatRevenue" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form submit.delegate="getSeatRevenue()">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Seat Revenue </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>From</label>
+                        <input type="date" value.bind="dboServicePerSeatReport.from" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                      <label>To</label>
+                      <input type="date" value.bind="dboServicePerSeatReport.to" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                      <label>Seat No. (Optional)</label>
+                      <select value.bind="dboServicePerSeatReport.seatId" class="custom-select" id="inlineFormCustomSelect" required>
+                        <option model.bind="null" selected>Choose...</option>
+                        <option repeat.for="_seat of _seats" model.bind="_seat.id" [selected]="dboServicePerSeatReport.seatId==_seat.id">${ _seat.name }</option>
+                      </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 120px; padding: .2rem .75rem;">Cancel</button>
+                    <button type="submit" class="btn btn-secondary btn-sm waves-effect" style="min-width: 120px; padding: .2rem .75rem;">Preview</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+
+  <!--Create Branch Revenue Modal-->
+  <div id="_branchRevenue" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form submit.delegate="getBranchRevenue()">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Branch Revenue </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" #x_category>×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>From</label>
+                        <input type="date" value.bind="dboReport.from" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                      <label>To</label>
+                      <input type="date" value.bind="dboReport.to" class="form-control" required>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 120px; padding: .2rem .75rem;">Cancel</button>
+                    <button type="submit" class="btn btn-secondary btn-sm waves-effect" style="min-width: 120px; padding: .2rem .75rem;">Preview</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+
+  <branchRevenue branchpr.bind="_dboBranchRevenues" store.bind="_storeService.store" dboreport.bind="dboReport" dateprinted.bind="_datePrinted"></branchRevenue>
+  <productRevenue dpr.bind="_dboProductRevenues" store.bind="_storeService.store" dboreport.bind="dboReport" dateprinted.bind="_datePrinted"></productRevenue>
+  <serviceRevenue spr.bind="_dboServiceRevenues" store.bind="_storeService.store" dboreport.bind="dboReport" dateprinted.bind="_datePrinted"></serviceRevenue>
+  <seatRevenue stpr.bind="_dboServicePerSeatRevenues" store.bind="_storeService.store" dboreport.bind="dboServicePerSeatReport" dateprinted.bind="_datePrinted"></seatRevenue>
+  <!--dialog-->
+  <progress.dialog></progress.dialog>
+</template>

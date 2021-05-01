@@ -1,0 +1,115 @@
+<template>
+    <require from="./products.css"></require>
+    <div style.bind="bindBackgroundStyles()">
+      <div class="container">
+        <div class="row">
+          <div class="col-3" style="margin: auto">
+            <h2 class="text-center" style="color: #fff;">Winkel</h2>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-10">
+            <input type="text" value.bind="dboproducts.search" class="form-control" placeholder="Zoek Producten" disabled.bind="(dboproducts.products == undefined)">
+          </div>
+          <div class="col-2">
+            <button class="btn btn-secondary btn-block" click.delegate="filter(undefined, undefined, dboproducts.search)"><i class="mdi mdi-magnify"></i> Zoeken</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container" style="padding-top: 10px; padding-bottom: 40px;">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="card" if.bind="categories">
+                    <div class="card-body">
+                        <h6 style="font-weight: bold;">Categorieën</h6>
+                        <div repeat.for="category of categories">
+                          <a href="#/shop/?category=${category.id}" click.delegate="filter(category.id, undefined)"><span>${ category.name }</span></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card" if.bind="brands" style="margin-top: 10px;">
+                    <div class="card-body">
+                        <h6 style="font-weight: bold;">Merken</h6>
+                        <div repeat.for="brand of brands">
+                          <a href="#/shop/?brand=${brand.id}" click.delegate="filter(undefined, brand.id)"><span>${ brand.name }</span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9 order-1 order-lg-2">
+                <div class="row card card-body" if.bind="!dboproducts.products" style="padding: 160px 0px;">
+                  <div class="col-3" style="text-align: center; margin: auto;">
+                    <span class="spinner-border spinner-border-sm" style="width: 3rem; height: 3rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+                    <label>Even geduld aub...</label>
+                  </div>
+                </div>
+                <div class="shop-product-wrapper" if.bind="dboproducts.products">
+                    <!-- shop product top wrap start -->
+                    <div class="shop-top-bar" if.bind="dboproducts.products.length > 0">
+                        <div class="row align-items-center">
+                            <div class="col-lg-7 col-md-6 order-2 order-md-1">
+                                <div class="top-bar-left">
+                                    <div class="product-view-mode">
+                                        <a class="active" href="#" data-target="grid-view" data-toggle="tooltip" title="" data-original-title="Grid View"><i class="fa fa-th"></i></a>
+                                        <a href="#" data-target="list-view" data-toggle="tooltip" title="" data-original-title="List View"><i class="fa fa-list"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- shop product top wrap start -->
+
+                    <div class="card card-body text-center" if.bind="dboproducts.products.length == 0">
+                        <label>Geen artikelen in winkelwagen</label>
+                    </div>
+                    <!-- product item list wrapper start -->
+                    <div class="shop-product-wrap grid-view row mbn-30" if.bind="dboproducts.products.length > 0">
+                        <!-- product single item start -->
+                        <div class="col-md-3 col-sm-6" repeat.for="product of dboproducts.products">
+                            <!-- product grid start -->
+                            <div class="product-item">
+                                <figure class="product-thumb">
+                                    <a href="#/product?id=${ product.id }">
+                                        <img class="img-fluid" style="min-height: 193.75px;" if.bind="product.image" src="data:'image/jpeg';base64,${product.image}">
+                                        <img class="img-fluid" style="min-height: 193.75px;" if.bind="!product.image" src="http://placehold.it/400x400" alt="product">
+                                    </a>
+                                    <div class="button-group">
+                                        <a href="#" data-toggle="tooltip" data-placement="left" title="" data-original-title="Add to wishlist"><i class="pe-7s-like"></i></a>
+                                        <a href="#" data-toggle="tooltip" data-placement="left" title="" data-original-title="Add to Compare"><i class="pe-7s-refresh-2"></i></a>
+                                        <a href="#" data-toggle="modal" data-target="#quick_view"><span data-toggle="tooltip" data-placement="left" title="" data-original-title="Quick View"><i class="pe-7s-search"></i></span></a>
+                                    </div>
+                                    <div class="cart-hover">
+                                        <a href="javasrcipt:;" class="btn btn-block btn-dark btn-cart" click.delegate="addItem(product)">Voeg toe aan winkelkar</a>
+                                    </div>
+                                </figure>
+                                <div class="product-caption text-center">
+                                    <h6>${ product.name }</h6>
+                                </div>
+                            </div>
+                            <!-- product grid end -->
+                        </div>
+                        <!-- product single item start -->
+                    </div>
+                    <!-- product item list wrapper end -->
+
+                    <!-- start pagination area -->
+                    <div style="width: 100%;" if.bind="dboproducts.products.length > 0">
+                      <nav style="float: right" aria-label="...">
+                        <ul class="pagination">
+                          <li class.bind="(dboproducts.page == 1)? 'page-item disabled' : 'page-item'">
+                            <a class="page-link" tabindex="-1" click.delegate="previous()">Vorige</a>
+                          </li>
+                          <li class.bind="((p + 1) == dboproducts.page)? 'page-item active': 'page-item'" repeat.for="p of dboproducts.pageCount"><a class="page-link" click.delegate="goToPage(p + 1)"> ${p + 1} <span class="sr-only" if.bind="((p + 1) == dboproducts.page)">(current)</span></a></li>
+                          <li class.bind="(dboproducts.page == dboproducts.pageCount)? 'page-item disabled' : 'page-item'">
+                            <a class="page-link" click.delegate="next()">De volgende</a>
+                          </li>
+                        </ul>
+                      </nav>
+                    </div>
+                    <!-- end pagination area -->
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,128 @@
+<template bindable="service, authentication">
+    <aside class="left-sidebar" data-sidebarbg="skin5">
+        <!-- Sidebar scroll-->
+        <div class="scroll-sidebar">
+            <!-- Sidebar navigation-->
+            <nav class="sidebar-nav">
+                <ul id="sidebarnav" class="in">
+                    <li class="sidebar-item">
+                        <a class="sidebar-link waves-effect waves-dark sidebar-link active" href="#/admin/" aria-expanded="false">
+                            <i class="mdi mdi-av-timer"></i>
+                            <span class="hide-menu">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item" if.bind="service.store">
+                        <a class="sidebar-link waves-effect waves-dark sidebar-link" href="#/admin/appointments/" aria-expanded="false">
+                            <i class="mdi mdi-calendar"></i>
+                            <span class="hide-menu">Appointments</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item" if.bind="service.store">
+                      <a class="sidebar-link waves-effect waves-dark sidebar-link" href="#/admin/orders/" aria-expanded="false">
+                          <i class="mdi mdi-receipt"></i>
+                          <span class="hide-menu">Orders</span>
+                      </a>
+                  </li>
+                    <li class="sidebar-item" if.bind="service.store && authentication.account.type == 1">
+                        <a class="sidebar-link waves-effect waves-dark sidebar-link" href="#/admin/products/" aria-expanded="false">
+                            <i class="mdi mdi-bulletin-board"></i>
+                            <span class="hide-menu">Products</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item" if.bind="service.store && authentication.account.type == 1">
+                        <a class="sidebar-link waves-effect waves-dark sidebar-link" href="#/admin/services/" aria-expanded="false">
+                            <i class="mdi mdi-face"></i>
+                            <span class="hide-menu">Services</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item" if.bind="service.store">
+                      <a class="sidebar-link waves-effect waves-dark sidebar-link" href="#/admin/users/customers/" aria-expanded="false">
+                        <i class="mdi mdi-account-multiple-outline"></i>
+                        <span class="hide-menu">Customers</span>
+                      </a>
+                    </li>
+                    <li class="sidebar-item" if.bind="service.store && authentication.account.type == 1">
+                      <a class="has-arrow sidebar-link waves-effect waves-dark sidebar-link" href="#/admin/reports/" aria-expanded="false">
+                        <i class="mdi mdi-developer-board"></i>
+                        <span class="hide-menu">Reports</span>
+                      </a>
+                      <ul aria-expanded="false" class="collapse">
+                        <li class="sidebar-item">
+                          <a class="sidebar-link waves-effect waves-dark sidebar-link" href="#/admin/reports/" aria-expanded="false">
+                            <i class="mdi mdi-developer-board"></i>
+                            <span class="hide-menu">Revenue Reports</span>
+                          </a>
+                        </li>
+                        <li class="sidebar-item">
+                          <a class="sidebar-link waves-effect waves-dark sidebar-link" href="#/admin/requests/" aria-expanded="false">
+                            <i class="mdi mdi-cellphone-link"></i>
+                            <span class="hide-menu">Contact Requests</span>
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                    <li class="sidebar-item" if.bind="service.store && authentication.account.type == 1">
+                      <a class="has-arrow sidebar-link waves-effect waves-dark sidebar-link" href="#/admin/pages/" aria-expanded="false">
+                        <i class="mdi mdi-animation"></i>
+                        <span class="hide-menu">Pages</span>
+                      </a>
+                      <ul aria-expanded="false" class="collapse">
+                        <li class="sidebar-item">
+                          <a class="sidebar-link waves-effect waves-dark sidebar-link" href="#/admin/pages/" aria-expanded="false">
+                            <i class="mdi mdi-file-multiple"></i>
+                            <span class="hide-menu">Branding Pages</span>
+                          </a>
+                        </li>
+                        <li class="sidebar-item">
+                          <a class="sidebar-link waves-effect waves-dark sidebar-link" href="#/admin/posts/" aria-expanded="false">
+                            <i class="mdi mdi-newspaper"></i>
+                            <span class="hide-menu">News Posts</span>
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                    <li class="sidebar-item" if.bind="service.store && authentication.account.type == 1">
+                      <a class="sidebar-link waves-effect waves-dark sidebar-link" href="#/admin/jobs/" aria-expanded="false">
+                        <i class="mdi mdi-briefcase"></i>
+                        <span class="hide-menu">Jobs</span>
+                      </a>
+                    </li> 
+                    <li class="sidebar-item" if.bind="service.store && authentication.account.type == 1">
+                      <a class="has-arrow sidebar-link waves-effect waves-dark sidebar-link" href="#/admin/store/" aria-expanded="false">
+                        <i class="mdi mdi-settings"></i>
+                        <span class="hide-menu">Settings</span>
+                      </a>
+                      <ul aria-expanded="false" class="collapse">
+                        <li class="sidebar-item">
+                          <a class="sidebar-link waves-effect waves-dark sidebar-link" href="#/admin/store/" aria-expanded="false">
+                            <i class="mdi mdi-store"></i>
+                            <span class="hide-menu">Store</span>
+                          </a>
+                        </li>
+                        <li class="sidebar-item">
+                          <a class="sidebar-link waves-effect waves-dark sidebar-link" href="#/admin/users/" aria-expanded="false">
+                            <i class="mdi mdi-account-multiple"></i>
+                            <span class="hide-menu">Staff</span>
+                          </a>
+                        </li>
+                        <li class="sidebar-item">
+                          <a class="sidebar-link waves-effect waves-dark sidebar-link" href="#/admin/holidays/" aria-expanded="false">
+                            <i class="mdi mdi-calendar-multiple"></i>
+                            <span class="hide-menu">Holidays</span>
+                          </a>
+                        </li>
+                        <li class="sidebar-item">
+                          <a class="sidebar-link waves-effect waves-dark sidebar-link" href="#/admin/branches" aria-expanded="false">
+                            <i class="mdi mdi-lock-pattern"></i>
+                            <span class="hide-menu">Branches</span>
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                </ul>
+            </nav>
+            <!-- End Sidebar navigation -->
+        </div>
+        <!-- End Sidebar scroll-->
+    </aside>
+</template>

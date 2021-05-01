@@ -1,0 +1,273 @@
+<template bindable="appmodule">
+  <require from="../../../../extensions/info/info.dialog.html"></require>
+  <require from="../../invoice/invoice.module.html"></require>
+  <div id="appointment" class="modal fade in" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 850px;">
+        <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="myModalLabel">Appointment</h4>
+                <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+              <div class="row" if.bind="!appmodule.dboservices.services && appmodule.appointment.status != 3">
+                <div class="col-3" style="text-align: center; margin: auto;">
+                  <span class="spinner-border spinner-border-sm" style="width: 3rem; height: 3rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+                  <label>Even geduld aub...</label>
+                </div>
+              </div>
+
+              <div class="row" if.bind="appmodule.dboservices.services">
+                <div class="col-5">
+                  <div style="width: 100%;">
+                    <div class="form-group">
+                      <label>Branch</label>
+                      <select class="form-control" value.bind="appmodule.appointment.branchId" disabled.bind="appmodule.isBusy || appmodule.appointment.status == 3">
+                          <option model.bind="undefined">Choose</option>
+                          <option repeat.for="branch of appmodule.branches" model.bind="branch.id">${ branch.name }</option>
+                      </select>
+                    </div>
+    
+                    <span id="basic-addon1">Appointment Date</span>
+                    <div class="row">
+                      <div class="col-8">
+                        <input type="date" value.bind="appmodule.appointmentDate" class="form-control mb-1" disabled.bind="appmodule.isBusy || appmodule.appointment.status == 3">
+                      </div>
+                      <div class="col-4">
+                        <input type="time" value.bind="appmodule.appointmentTime" class="form-control mb-1" disabled.bind="appmodule.isBusy || appmodule.appointment.status == 3">
+                      </div>
+                    </div>
+                    <div class="row mt-3 mb-2">
+                      <label class="col-7">Customer Details</label>
+                      <div class="col-5">
+                        <button class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#customer" disabled.bind="appmodule.isBusy || appmodule.appointment.status == 3">Existing Customer?</button>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row mb-2">
+                            <div class="col-md-6">
+                              <input type="text" value.bind="appmodule.appointment.user.firstName" class="form-control" placeholder="First Name" disabled.bind="appmodule.isBusy || appmodule.appointment.status == 3">
+                            </div>
+                            <div class="col-md-6">
+                              <input type="text" value.bind="appmodule.appointment.user.lastName" class="form-control" placeholder="Last Name" disabled.bind="appmodule.isBusy || appmodule.appointment.status == 3">
+                            </div>
+                        </div>
+                        <div class="row mb-2" if.bind="appmodule.authenticationService.account.type == 1">
+                          <div class="col-md-6">
+                            <input type="email" value.bind="appmodule.appointment.user.contact.email" class="form-control" placeholder="Email" disabled.bind="appmodule.isBusy || appmodule.appointment.status == 3">
+                          </div>
+                          <div class="col-md-6">
+                            <input type="tel" value.bind="appmodule.appointment.user.contact.phone" class="form-control" placeholder="Tel" disabled.bind="appmodule.isBusy || appmodule.appointment.status == 3">
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6 mb-2">
+                              <input type="text" value.bind="appmodule.appointment.user.address.street" class="form-control" placeholder="Street" disabled.bind="appmodule.isBusy || appmodule.appointment.status == 3">
+                          </div>
+                          <div class="col-md-6 mb-2">
+                            <input type="text" value.bind="appmodule.appointment.user.address.zipCode" class="form-control" placeholder="Zipcode" disabled.bind="appmodule.isBusy || appmodule.appointment.status == 3">
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-12 mb-2">
+                              <input type="text" value.bind="appmodule.appointment.user.address.city" class="form-control" placeholder="City" disabled.bind="appmodule.isBusy || appmodule.appointment.status == 3">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label>Status</label>
+                          <select class="form-control" value.bind="appmodule.appointment.status" disabled.bind="appmodule.isBusy || appmodule.appointment.status == 3">
+                            <option model.bind="undefined">Choose</option>
+                            <option repeat.for="appointmentstatus of appmodule.statuses" model.bind="appointmentstatus.id">${ appointmentstatus.status }</option>
+                          </select>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-7">
+                  <div class="row">
+                    <div class="col-8">
+                      <label>Services</label>
+                    </div>
+                    <div class="col-4">
+                        <button disabled.bind="appmodule.isBusy || appmodule.appointment.status == 3" type="button" class="btn btn-info btn-sm btn-block ai-btn" data-toggle="modal" data-target="#addservices">Add</button>
+                    </div>
+                  </div>
+                  <div class="text-center mt-5" if.bind="appmodule.appointment.services.length == 0" style="text-align: center; margin-top: 10px;">No services added yet, please add</div>
+                  <table if.bind="appmodule.appointment.services.length > 0" class="display nowrap table table-hover table-striped table-bordered" style="margin-top: 10px;">
+                      <thead>
+                          <tr>
+                              <th>Name</th>
+                              <th>Stylist</th>
+                              <th if.bind="appmodule.appointment.status != 3">Action</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr repeat.for="appointmentservice of appmodule.appointment.services" if.bind="!appointmentservice.deleted">
+                              <td>${ appointmentservice.service.name }</td>
+                              <td>${ appointmentservice.stylist.user.firstName }</td>
+                              <td if.bind="appmodule.appointment.status != 3">
+                                <button class="btn btn-sm btn-icon btn-pure btn-outline" click.delegate="appmodule.initService(appointmentservice)" disabled.bind="appmodule.isBusy"><i class="icon-trash"></i></button>
+                              </td>
+                          </tr>
+                      </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button disabled.bind="appmodule.isBusy == true" if.bind="appmodule.appointment.status == 3" type="button" class="btn btn-success btn-sm waves-effect" style="min-width: 120px; padding: .2rem .75rem;" click.delegate="appmodule.viewInvoice()">View Invoice</button>
+              <button disabled.bind="appmodule.isBusy == true" if.bind="appmodule.appointment.status == 2" type="button" class="btn btn-success btn-sm waves-effect" style="min-width: 120px; padding: .2rem .75rem;" click.delegate="appmodule.createInvoice()">Invoice</button>
+              <button disabled.bind="appmodule.isBusy == true" type="button" class="btn btn-outline-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 120px; padding: .2rem .75rem;">Cancel</button>
+              <button if.bind="!appmodule.isBusy" disabled.bind="appmodule.appointment.status == 3" type="button" class="btn btn-secondary btn-sm waves-effect" style="min-width: 120px; padding: .2rem .75rem;" click.delegate="appmodule.saveAppointment()">Save</button>
+              <button if.bind="appmodule.isBusy" type="button" class="btn btn-secondary waves-effect btn-sm" style="width: 120px;">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  Please wait...
+              </button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<!--Attach Services Modal-->
+<div id="addservices" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+        <form submit.delegate="onSave()">
+          <div class="modal-header">
+              <h4 class="modal-title" id="myModalLabel">Add Services</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+          <div class="modal-body">
+            <div if.bind="!appmodule.dboservices.services"> 
+              <div class="col-3" style="text-align: center; margin: auto;">
+                <span class="spinner-border spinner-border-sm" style="width: 3rem; height: 3rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+                <label>Even geduld aub...</label>
+              </div>
+            </div>
+            <div if.bind="appmodule.dboservices.services"> 
+              <div class="card card-body" if.bind="appmodule.dboservices.services.length == 0" style="text-align: center;">No services registered so far.</div>
+              <div style="width: 100%;" if.bind="appmodule.dboservices.services.length > 0">
+                <table class="display nowrap table table-hover table-striped table-bordered" style="margin-top: 10px;">
+                  <thead>
+                      <tr>
+                        <th></th>
+                        <th>Name</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                    <tr repeat.for="service of appmodule.dboservices.services">
+                        <td><input id="${service.id}" checked.bind="appmodule.isServiceChecked(service)" click.delegate="appmodule.onServiceSelected(service)" type="checkbox"></td>
+                        <td>${ service.name }</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div style="width: 100%;" if.bind="appmodule.dboservices.services.length > 0">
+                  <nav style="float: right" aria-label="...">
+                    <ul class="pagination">
+                      <li class.bind="(appmodule.dboservices.page == 1)? 'page-item disabled' : 'page-item'">
+                        <a class="page-link" tabindex="-1" click.delegate="appmodule.previous()">Previous</a>
+                      </li>
+                      <li class.bind="((p + 1) == appmodule.dboservices.page)? 'page-item active': 'page-item'" repeat.for="p of appmodule.dboservices.pageCount"><a class="page-link" click.delegate="appmodule.goToPage(p + 1)"> ${p + 1} <span class="sr-only" if.bind="(p + 1) == appmodule.dboservices.page">(current)</span></a></li>
+                      <li class.bind="(appmodule.dboservices.page == appmodule.dboservices.pageCount)? 'page-item disabled' : 'page-item'">
+                        <a class="page-link" click.delegate="appmodule.next()">Next</a>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer" style="width:100%">
+            <button type="button" class="btn btn-outline-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 120px; padding: .2rem .75rem;">Cancel</button>
+            <button type="button" class="btn btn-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 120px; padding: .2rem .75rem;">Save</button>
+          </div>
+        </form>
+      </div>
+  </div>
+</div>
+
+<!--Select Stylist Modal-->
+<div id="appointmentservice" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+        <form submit.delegate="onAppointmentServiceSaves()">
+          <div class="modal-header">
+              <h4 class="modal-title" id="myModalLabel">Stylist</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Service</label>
+              <select class="form-control" value.bind="appmodule.appointmentservice.serviceId" disabled>
+                  <option model.bind="undefined">Choose</option>
+                  <option repeat.for="service of appmodule.dboservices.services" model.bind="service.id">${ service.name }</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Staff</label>
+              <select class="form-control" value.bind="appmodule.appointmentservice.stylistId" disabled.bind="appmodule.appointmentservice.serviceId == undefined">
+                  <option model.bind="undefined">Choose</option>
+                  <option repeat.for="employee of appmodule.dboStaff.accounts" model.bind="employee.id">${ employee.user.firstName }</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer" style="width:100%">
+            <button type="button" class="btn btn-outline-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 120px; padding: .2rem .75rem;">Cancel</button>
+            <button type="button" class="btn btn-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 120px; padding: .2rem .75rem;" click.delegate="appmodule.addService()">Save</button>
+          </div>
+        </form>
+      </div>
+  </div>
+</div>
+
+<div id="customer" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title" id="myModalLabel">Customer</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <div class="input-group">
+              <input type="text" placeholder="Search customers" class="form-control" value.bind="appmodule.user" change.delegate="appmodule.searchUsers($event.target.value)">
+              <div class="search-addon input-group-addon"><i class="ti-search"></i></div>
+            </div>
+            <ul if.bind="appmodule.customers" class="user-autocomplete-search">
+              <li repeat.for="customer of appmodule.customers" click.delegate="appmodule.onUserSelected(customer)">${ customer.firstName } ${ customer.lastName }</li>
+            </ul>
+          </div>
+        </div>
+        <div class="modal-footer" style="width:100%">
+          <button type="button" class="btn btn-outline-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 120px; padding: .2rem .75rem;">Cancel</button>
+          <button type="button" class="btn btn-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 120px; padding: .2rem .75rem;" click.delegate="appmodule.addService()">Save</button>
+        </div>
+      </div>
+  </div>
+</div>
+
+<div id="warning" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" >
+      <div class="modal-content">
+          <div class="modal-header" style="border: 0;padding: 0;">
+              <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true" #x_pleasewait>×</button>
+          </div>
+          <div class="modal-body" style="text-align: center;">
+              <div class="card-body">
+                  <h4 class="card-title">${ appmodule.message.title }</h4>
+                  <label>${ appmodule.message.message }</label>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-sm waves-effect" data-dismiss="modal" style="min-width: 120px; padding: .2rem .75rem;">Cancel</button>
+            <button type="button" class="btn btn-secondary btn-sm waves-effect" data-dismiss="modal" click.delegate="appmodule.deleteService()" style="min-width: 120px; padding: .2rem .75rem;">Ok</button>
+          </div>
+      </div>
+      <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<info.dialog message.bind="appmodule.message"></info.dialog>
+<invoice.module invoice.bind="appmodule.invoice"></invoice.module>
+</template>

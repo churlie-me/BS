@@ -1,0 +1,86 @@
+<template>
+  <div style="background: #fff;">
+    <div style.bind="bindBackgroundStyles()">
+      <div class="container">
+        <div class="row">
+          <div class="col-3" style="margin: auto">
+            <h2 class="text-center" style="color: #fff;">Nieuws</h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <h5 style="color: #fff;">Ontdek ons ​​nieuws</h5>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-10">
+            <input type="text" value.bind="dboPost.search" class="form-control" placeholder="Zoek nieuwsberichten" disabled.bind="(dboPost.posts == undefined)">
+          </div>
+          <div class="col-2">
+            <button class="btn btn-secondary btn-block" click.delegate="applyFilter()"><i class="mdi mdi-magnify"></i> Zoeken</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-2"></div>
+        <div class="col-10">
+          <div class="row" if.bind="!dboPost.posts">
+            <div class="card card-body">
+              <div class="col-3" style="text-align: center; margin: auto;">
+                <span class="spinner-border spinner-border-sm" style="width: 3rem; height: 3rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+                <label>Even geduld aub...</label>
+              </div>
+            </div>
+          </div>
+          <div class="row" if.bind="dboPost.posts">
+            <div class="col-12">
+              <div class="card card-body">
+                <div if.bind="dboPost.posts.length == 0" style="text-align: center;min-height: 300px;padding-top: 50px;">Tot nu toe zijn er geen berichten die aan uw zoekcriteria voldoen.</div>
+                <div if.bind="dboPost.posts.length > 0">
+                  <div class="row mb-3" repeat.for="post of dboPost.posts">
+                    <div class="col-3">
+                      <img if.bind="post.image" style="width: 100%;border: 1px solid;margin: auto;border-radius: 5px;" src="data:'image/jpeg';base64,${post.image}"/>
+                    </div>
+                    <div class="col-9">
+                      <div class="row">
+                        <h3 class="col-8" style="font-weight: 500;">${ post.title }</h3>
+                      </div>
+                      <div class="row">
+                        <label class="col-2">Gemaakt op :</label>
+                        <label class="col-6">${ _dateConverter.view(post.createdOn) }</label>
+                      </div>
+                      <div class="row">
+                        <label class="col-12" if.bind="post.content.length > 100">${ post.content.substring(0, 300) + "..." }</label>
+                        <label class="col-12" if.bind="post.content.length == 100">${ post.content }</label>
+                      </div>
+                      <div class="row mt-2">
+                        <div class="col-12">
+                          <a href="#/news/post/${post.id}" style="float:right; min-width: 165px;" class="btn btn-outline-secondary">Lees verder...</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-5" style="width: 100%;" if.bind="dboPost.posts.length > 0">
+                  <nav style="float: right" aria-label="...">
+                    <ul class="pagination">
+                      <li class.bind="(dboPost.page == 1)? 'page-item disabled' : 'page-item'">
+                        <a class="page-link" tabindex="-1" click.delegate="previous()">Vorige</a>
+                      </li>
+                      <li class.bind="((p + 1) == dboPost.page)? 'page-item active': 'page-item'" repeat.for="p of dboPost.pageCount"><a class="page-link" click.delegate="goToPage(p + 1)"> ${p + 1} <span class="sr-only" if.bind="isActive((p + 1), dborequests.page)">(current)</span></a></li>
+                      <li class.bind="(dboPost.page == dboPost.pageCount)? 'page-item disabled' : 'page-item'">
+                        <a class="page-link" click.delegate="next()">De volgende</a>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

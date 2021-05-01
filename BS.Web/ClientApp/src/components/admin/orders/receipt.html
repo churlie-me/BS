@@ -1,0 +1,138 @@
+<template bindable="order,store">
+<!--Create User Modal-->
+<div id="receipt" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="padding: 0px !important;">
+  <div class="modal-dialog" style="max-width: 100%; margin-top: 0px !important; margin-bottom: 0px !important; height: 100%;">
+      <div class="modal-content" style="border: 0px;border-radius: 0px;height: 100%;">
+        <div class="modal-header" style="background: #6c757d; color: #fff;">
+          <h4 class="modal-title" id="myModalLabel">Receipt</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: #fff;">×</button>
+        </div>
+        <div class="modal-body" style="background: #efefef; overflow-y: auto;">
+          <div class="container" style="padding-right: 0;">
+            <div class="row mb-3">
+              <div class="col-12">
+                <span class="float-right hidden-print">
+                  <a href="javascript:;" class="btn btn-sm bs-btn btn-info m-b-10 p-l-5"><i class="fa fa-file t-plus-1 text-danger fa-fw fa-lg"></i> Export as PDF</a>
+                  <a href="javascript:;" onclick="window.print()" class="btn bs-btn btn-sm btn-warning m-b-1 p-l-5"><i class="fa fa-print t-plus-1 fa-fw fa-lg"></i> Print</a>
+                </span>
+              </div>
+            </div>
+          </div>
+        <div class="container" style="background: #fff;">
+          <header class="py-3 px-5">
+            <div class="row">
+                <div class="col-6">
+                    <a target="_blank" href="#">
+                      <img class="img-fluid" if.bind="store.logo" style="max-height: 100px;" src="data:'image/jpeg';base64,${store.logo}">
+                      <img if.bind="!store.logo" src="http://placehold.it/300x64" data-holder-rendered="true" />
+                    </a>
+                </div>
+                <div class="col-6">
+                  <div class="float-right" style="text-align: right;">
+                    <h2 class="name">
+                        <a target="_blank" href="#" style="color: #000000;">${ store.name }</a>
+                    </h2>
+                    Street Address<br>
+                    City, Zip Code<br>
+                    Phone: (123) 456-7890<br>
+                  </div>
+                </div>
+            </div>
+            <hr>
+          </header>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="invoice px-5">
+                <!-- begin invoice-header -->
+                <div class="row">
+                    <div class="col-6 invoice-to">
+                      <strong>Billed To</strong>
+                      <address class="m-t-5 m-b-5">
+                          ${ order.user.firstName } ${ order.user.lastName }<br>
+                          ${ order.user.address.street }<br>
+                          ${ order.user.address.city }<br>
+                          Phone: ${ order.user.contact.tel }<br>
+                      </address>
+                    </div>
+                    <div class="col-6 invoice-date" style="text-align: right;">
+                      <strong>Invoice</strong>
+                      <div class="invoice-detail">
+                          # ${ order.orderNo }<br>
+                      </div>
+                      <div class="date text-inverse m-t-5">${ order.orderDate }</div>
+                    </div>
+                </div>
+                <!-- end invoice-header -->
+                <!-- begin invoice-content -->
+                <div class="invoice-content">
+                    <!-- begin table-responsive -->
+                    <div style="min-height: 500px;">
+                      <h3>ORDER SUMMARY</h3>
+                      <table class="table table-striped">
+                        <thead>
+                          <tr class="line">
+                            <td><strong>#</strong></td>
+                            <td><strong>ITEM</strong></td>
+                            <td><strong>QTY</strong></td>
+                            <td class="text-right"><strong>PRICE</strong></td>
+                            <td class="text-right"><strong>SUBTOTAL</strong></td>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr repeat.for="item of order.orderItems">
+                            <td>${ order.orderItems.indexOf(item) + 1 }</td>
+                            <td><strong>${ item.article.name }</strong></td>
+                            <td>${ item.quantity }</td>
+                            <td class="text-right">EUR ${ item.price }</td>
+                            <td class="text-right">EUR ${ item.price * item.quantity}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <div class="row" style="margin-top: 100px">
+                        <div class="col-8">
+                          <!-- begin invoice-note -->
+                          <div class="invoice-note">
+                            <p class="extra-notes">
+                              <strong>Extra Notes</strong><br>
+                              Please take note that goods or services once sold or rendered are not refundable.<br>
+                              Thanks a lot.
+                            </p>
+                          </div>
+                          <!-- end invoice-note -->
+                        </div>
+                        <div class="col-4">
+                          <table class="table table-striped float-right" style="max-width: 200px;">
+                            <tr>
+                              <td class="text-right"><strong>Taxes</strong></td>
+                              <td class="text-right"><strong>N/A</strong></td>
+                            </tr>	
+                            <tr>
+                              <td class="text-right"><strong>Total</strong></td>
+                              <td class="text-right"><strong>EUR ${ order.orderTotal }</strong></td>
+                            </tr>
+                          </table>
+                        </div>
+                      </div>
+                    <!-- end table-responsive -->
+                </div>
+                <!-- end invoice-content -->
+                <hr>
+                <!-- begin invoice-footer -->
+                <div class="invoice-footer">
+                    <p class="text-center m-b-5 f-w-600">
+                      THANK YOU FOR YOUR BUSINESS
+                    </p>
+                    <p class="text-center">
+                      Invoice was created on a computer and is valid without the signature and seal.
+                    </p>
+                </div>
+                <!-- end invoice-footer -->
+              </div>
+          </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

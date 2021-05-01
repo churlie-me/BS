@@ -1,0 +1,128 @@
+<template>
+  <div style="background: #fff">
+    <div style.bind="bindBackgroundStyles()">
+      <div class="container">
+        <div class="row">
+          <div class="col-12" style="height: 100px"></div>
+        </div>
+        <div class="row">
+          <div class="col-3" style="margin: auto">
+            <h2 class="text-center" style="color: #fff;">${ job.title }</h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12" style="text-align: center;">
+            <button disabled.bind="!job" class="btn btn-success" style="min-width: 170px; margin: auto" data-toggle="modal" data-target="#_application" click.delegate="apply()">Nu toepassen</button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12" style="height: 100px"></div>
+        </div>
+      </div>
+    </div>
+    <div class="container py-5" style="min-height: 300px">
+      <div class="card card-body" if.bind="!job">
+        <div class="col-3" style="text-align: center; margin: auto;">
+          <span class="spinner-border spinner-border-sm" style="width: 3rem; height: 3rem; margin-bottom: 20px;" role="status" aria-hidden="true"></span><br>
+          <label>Even geduld aub...</label>
+        </div>
+      </div>
+      <div class="row" if.bind="job">
+        <div class="col-8">
+          <h4>Taakoverzicht</h4>
+          <p>${ job.description }</p>
+        </div>
+        <div class="col-4">
+          <h4>Functiegegevens</h4>
+          <div class="row">
+            <label class="col-2">Deadline</label>
+            <label class="col-1">:</label>
+            <label class="col-6">${ job.deadline }</label>
+          </div>
+          <div class="row">
+            <label class="col-2">Plaats</label>
+            <label class="col-1">:</label>
+            <label class="col-6">${ job.branch.name }</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--Application-->
+  <div id="_application" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form submit.delegate="submitApplication()">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Sollicitatie</h4>
+                    <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                      <div class="form-group col-6">
+                        <input type="text" placeholder="First Name" value.bind="application.user.firstName" class="colorpicker form-control" id="bg-color"/>
+                      </div>
+                      <div class="form-group col-6">
+                        <input type="text" placeholder="Last Name" value.bind="application.user.lastName" class="colorpicker form-control" id="bg-color"/>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <input type="text" placeholder="Email" value.bind="application.user.contact.email" class="form-control">
+                    </div>
+                    <div class="form-group">
+                      <input type="text" placeholder="Phone" value.bind="application.user.contact.tel" class="form-control">
+                    </div>
+                    <fieldset class="form-group">
+                      <label>Upload CV</label>
+                      <label style="color: #ff0000; font-style: italic;">(Moet in pdf-formaat zijn)</label>
+                      <label class="custom-file d-block">
+                          <input type="file" id="resume" class="custom-file-input" change.delegate="onFileChanged($event)">
+                          <span class="custom-file-control" id="resume-lbl">Kies bestand...</span>
+                      </label>
+                    </fieldset>
+                    <div class="form-group">
+                      <label>Motivatie</label>
+                      <textarea class="form-control" rows="5" value.bind="application.motivation"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                  <button if.bind="!isBusy" type="button" class="btn btn-outline-secondary bs-btn waves-effect btn-sm" data-dismiss="modal">Annuleren</button>
+                  <button if.bind="!isBusy" type="submit" class="btn btn-secondary btn-sm bs-btn waves-effect">Van toepassing zijn</button>
+                  <button if.bind="isBusy" class="btn btn-secondary btn-block" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Wacht alsjeblieft...
+                  </button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+
+  <!--Application Notice-->
+  <div id="_application_notice" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Toepassingsmededeling</h4>
+                    <button type="button" style="visibility: hidden;" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                      <h2 class="text-center" style="width: 100%">Dank u</h2>
+                    </div>
+                    <div class="form-group">
+                      <label class="text-center">Uw aanvraag is ontvangen, we zullen u op de hoogte stellen zodra u op de shortlist staat</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary bs-btn waves-effect btn-sm" data-dismiss="modal">Ok</button>
+                </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+</template>
